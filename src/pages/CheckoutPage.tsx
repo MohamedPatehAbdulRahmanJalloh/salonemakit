@@ -56,7 +56,8 @@ const CheckoutPage = () => {
       clearCart();
       toast.success("Order placed successfully!");
     } catch (error) {
-      toast.error("Failed to place order. Please try again.");
+      const message = error instanceof Error ? error.message : "Failed to place order. Please try again.";
+      toast.error(message);
     }
   };
 
