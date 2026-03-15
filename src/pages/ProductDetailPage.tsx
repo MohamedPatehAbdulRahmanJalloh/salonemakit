@@ -251,6 +251,7 @@ const ProductDetailPage = () => {
                 </button>
               ))}
             </div>
+            <SizeGuide category={product.category} />
           </div>
         )}
 
