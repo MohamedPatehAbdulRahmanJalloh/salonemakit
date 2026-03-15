@@ -33,7 +33,12 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef(0);
+  const { addViewed } = useRecentlyViewed();
 
+  // Track recently viewed
+  useEffect(() => {
+    if (id) addViewed(id);
+  }, [id, addViewed]);
   const wishlisted = product ? isInWishlist(product.id) : false;
 
   // Build image array: main image + extra images
