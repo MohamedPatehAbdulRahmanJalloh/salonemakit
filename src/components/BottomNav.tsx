@@ -1,19 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ShoppingCart, ClipboardList, User } from "lucide-react";
+import { Home, Search, ShoppingCart, Heart, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/hooks/useWishlist";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
   { to: "/search", icon: Search, label: "Category" },
   { to: "/cart", icon: ShoppingCart, label: "Cart" },
-  { to: "/orders", icon: ClipboardList, label: "Orders" },
-  { to: "/admin", icon: User, label: "Admin" },
+  { to: "/wishlist", icon: Heart, label: "Wishlist" },
+  { to: "/auth", icon: User, label: "Account" },
 ];
 
 const BottomNav = () => {
   const location = useLocation();
   const { totalItems, justAdded } = useCart();
+  const { wishlistCount } = useWishlist();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border/50">
@@ -21,6 +23,7 @@ const BottomNav = () => {
         {navItems.map(({ to, icon: Icon, label }) => {
           const active = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
           const isCart = label === "Cart";
+          const isWishlist = label === "Wishlist";
           return (
             <Link
               key={to}
@@ -43,6 +46,11 @@ const BottomNav = () => {
                     )}
                   >
                     {totalItems}
+                  </span>
+                )}
+                {isWishlist && wishlistCount > 0 && (
+                  <span className="absolute -top-2 -right-2.5 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {wishlistCount}
                   </span>
                 )}
               </div>
