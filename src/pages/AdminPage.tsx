@@ -407,7 +407,24 @@ const AdminPage = () => {
               </select>
               <Input placeholder="Badge (HOT, NEW, -20%)" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="rounded-xl" />
             </div>
-            <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl" />
+            {/* Image upload or URL */}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl flex-1" />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="h-10 px-3 rounded-xl bg-accent text-accent-foreground flex items-center gap-1.5 text-xs font-semibold shrink-0"
+                >
+                  {uploading ? "..." : <><Upload className="h-3.5 w-3.5" /> Upload</>}
+                </button>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </div>
+              {form.image && (
+                <img src={form.image} alt="Preview" className="h-20 w-20 rounded-xl object-cover border border-border" />
+              )}
+            </div>
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
             <Input placeholder="Sizes (S, M, L, XL)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
             <label className="flex items-center gap-2 text-sm">
