@@ -87,6 +87,23 @@ const CheckoutPage = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+        <div className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <LogIn className="h-10 w-10 text-accent" />
+        </div>
+        <h2 className="text-lg font-bold">Sign in to checkout</h2>
+        <p className="text-sm text-muted-foreground mt-1">Create an account or sign in to place your order</p>
+        <Link to="/auth?redirect=/checkout">
+          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-2xl px-8 gap-2">
+            <LogIn className="h-4 w-4" /> Sign In / Sign Up
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="pb-20">
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 pt-4 pb-3 flex items-center gap-3">
