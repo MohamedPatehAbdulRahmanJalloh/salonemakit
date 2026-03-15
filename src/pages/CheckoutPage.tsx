@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
 import { SIERRA_LEONE_DISTRICTS } from "@/data/products";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
