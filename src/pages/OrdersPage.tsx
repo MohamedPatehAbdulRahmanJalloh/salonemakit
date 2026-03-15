@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 
 const statusConfig: Record<string, { label: string; icon: any; color: string }> = {
   pending: { label: "Pending", icon: Clock, color: "text-orange bg-orange/10" },
-  confirmed: { label: "Confirmed", icon: CheckCircle, color: "text-blue-600 bg-blue-100" },
-  processing: { label: "Processing", icon: Package, color: "text-purple-600 bg-purple-100" },
-  shipped: { label: "Shipped", icon: Truck, color: "text-indigo-600 bg-indigo-100" },
+  confirmed: { label: "Confirmed", icon: CheckCircle, color: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30" },
+  processing: { label: "Processing", icon: Package, color: "text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30" },
+  shipped: { label: "Shipped", icon: Truck, color: "text-indigo-600 bg-indigo-100 dark:text-indigo-400 dark:bg-indigo-900/30" },
   delivered: { label: "Delivered", icon: CheckCircle, color: "text-accent bg-accent/10" },
   cancelled: { label: "Cancelled", icon: ClipboardList, color: "text-destructive bg-destructive/10" },
 };
@@ -18,68 +18,71 @@ const statusConfig: Record<string, { label: string; icon: any; color: string }> 
 const OrdersPage = () => {
   const { data: orders = [], isLoading } = useOrders();
 
-  if (isLoading) {
-    return (
-      <div className="pb-20 px-4 pt-6 space-y-3">
-        <h1 className="text-lg font-bold mb-3">My Orders</h1>
-        {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
-      </div>
-    );
-  }
-
-  if (orders.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-          <ClipboardList className="h-10 w-10 text-muted-foreground/40" />
-        </div>
-        <h2 className="text-lg font-bold">No Orders Yet</h2>
-        <p className="text-sm text-muted-foreground mt-1">Your order history will appear here</p>
-        <Link to="/search">
-          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-2xl px-8">Start Shopping</Button>
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="pb-20">
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 pt-6 pb-3">
-        <h1 className="text-lg font-bold">My Orders ({orders.length})</h1>
-      </div>
+    <div className="pb-20 bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
+        <div className="px-4 py-2.5">
+          <h1 className="text-sm font-bold">My Orders</h1>
+        </div>
+      </header>
 
-      <div className="px-4 pt-3 space-y-3">
-        {orders.map((order) => {
-          const status = statusConfig[order.status] || statusConfig.pending;
-          const StatusIcon = status.icon;
-          return (
-            <Link key={order.id} to={`/order/${order.id}`} className="block">
-              <div className="bg-secondary rounded-2xl p-4 space-y-3 hover:bg-secondary/80 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(order.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                    </p>
-                    <p className="text-sm font-bold mt-0.5">{formatPrice(order.total)}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className={cn("flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold", status.color)}>
-                      <StatusIcon className="h-3 w-3" />
-                      {status.label}
+      {isLoading ? (
+        <div className="px-4 pt-3 space-y-2">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-lg" />
+          ))}
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+          <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-3">
+            <ClipboardList className="h-8 w-8 text-muted-foreground/40" />
+          </div>
+          <h2 className="text-sm font-bold">No Orders Yet</h2>
+          <p className="text-xs text-muted-foreground mt-1">Your order history will appear here</p>
+          <Link to="/search">
+            <Button className="mt-5 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
+              Start Shopping
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="px-4 pt-3 space-y-2">
+          {orders.map((order) => {
+            const status = statusConfig[order.status] || statusConfig.pending;
+            const StatusIcon = status.icon;
+            const itemCount = (order as any).order_items?.length || 0;
+            return (
+              <Link key={order.id} to={`/order/${order.id}`} className="block">
+                <div className="bg-card border border-border rounded-lg p-3 hover:bg-secondary/50 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">
+                        {new Date(order.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      </p>
+                      <p className="text-sm font-extrabold mt-0.5">{formatPrice(order.total)}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn("flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold", status.color)}>
+                        <StatusIcon className="h-3 w-3" />
+                        {status.label}
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                    <span>📍 {order.district}</span>
+                    <span>•</span>
+                    <span>{order.payment_method === "orange_money" ? "Orange Money" : "COD"}</span>
+                    <span>•</span>
+                    <span>{itemCount} item{itemCount !== 1 ? "s" : ""}</span>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground space-y-0.5">
-                  <p>📍 {order.district}</p>
-                  <p>💳 {order.payment_method === "orange_money" ? "Orange Money" : "Cash on Delivery"}</p>
-                  <p>📦 {(order as any).order_items?.length || 0} item(s)</p>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

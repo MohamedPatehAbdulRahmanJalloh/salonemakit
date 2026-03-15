@@ -4,9 +4,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, LogIn, UserPlus } from "lucide-react";
+import { ArrowLeft, LogIn, UserPlus, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo.png";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -39,21 +40,32 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="pb-20 min-h-screen">
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 pt-4 pb-3 flex items-center gap-3">
-        <button onClick={() => navigate("/")} className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <h1 className="text-lg font-bold">{mode === "login" ? "Sign In" : "Create Account"}</h1>
-      </div>
+    <div className="pb-20 min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
+        <div className="px-4 py-2.5 flex items-center gap-3">
+          <button onClick={() => navigate("/")} className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <h1 className="text-sm font-bold">{mode === "login" ? "Sign In" : "Create Account"}</h1>
+        </div>
+      </header>
 
       <div className="px-6 pt-8 max-w-sm mx-auto">
-        <div className="flex gap-2 mb-8">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="SaloneMakit" className="h-12 w-12 rounded-lg mb-2" />
+          <h2 className="text-base font-extrabold text-primary">SaloneMakit</h2>
+          <p className="text-[10px] text-accent font-bold uppercase tracking-[0.15em]">Di Place Fo Shop</p>
+        </div>
+
+        {/* Toggle */}
+        <div className="flex gap-0 mb-6 bg-secondary rounded-lg p-0.5">
           <button
             onClick={() => setMode("login")}
             className={cn(
-              "flex-1 py-2.5 rounded-full text-sm font-semibold transition-all",
-              mode === "login" ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
+              "flex-1 py-2.5 rounded-md text-xs font-bold transition-all",
+              mode === "login" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
             )}
           >
             Sign In
@@ -61,43 +73,45 @@ const AuthPage = () => {
           <button
             onClick={() => setMode("signup")}
             className={cn(
-              "flex-1 py-2.5 rounded-full text-sm font-semibold transition-all",
-              mode === "signup" ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
+              "flex-1 py-2.5 rounded-md text-xs font-bold transition-all",
+              mode === "signup" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
             )}
           >
             Sign Up
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Email</label>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="email"
-              placeholder="your@email.com"
+              placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="rounded-xl h-12"
+              className="pl-10 h-12 rounded-lg bg-secondary border-none text-sm"
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Password</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="password"
-              placeholder="••••••••"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-xl h-12"
+              className="pl-10 h-12 rounded-lg bg-secondary border-none text-sm"
               minLength={6}
             />
           </div>
-          <Button type="submit" disabled={loading} className="w-full h-12 rounded-xl text-sm font-bold bg-accent hover:bg-accent/90">
-            {loading ? "Please wait..." : mode === "login" ? (
-              <><LogIn className="h-4 w-4 mr-2" /> Sign In</>
-            ) : (
-              <><UserPlus className="h-4 w-4 mr-2" /> Create Account</>
-            )}
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full h-12 rounded-lg text-sm font-bold bg-accent text-accent-foreground hover:bg-accent/90"
+          >
+            {loading ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
           </Button>
+
           {mode === "login" && (
             <button
               type="button"
@@ -112,12 +126,16 @@ const AuthPage = () => {
                 if (error) toast.error(error.message);
                 else toast.success("Password reset link sent to your email!");
               }}
-              className="text-xs text-accent font-medium text-center w-full"
+              className="text-xs text-accent font-medium text-center w-full block pt-1"
             >
               Forgot password?
             </button>
           )}
         </form>
+
+        <p className="text-[10px] text-muted-foreground text-center mt-6 leading-relaxed">
+          By continuing, you agree to SaloneMakit's Terms of Service and Privacy Policy
+        </p>
       </div>
     </div>
   );

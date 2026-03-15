@@ -1,14 +1,15 @@
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
-import { Minus, Plus, Trash2, ShoppingBag, LogIn } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, LogIn, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (items.length === 0) {
     return (
@@ -16,10 +17,10 @@ const CartPage = () => {
         <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center mb-4">
           <ShoppingBag className="h-10 w-10 text-muted-foreground/40" />
         </div>
-        <h2 className="text-lg font-bold">Your cart is empty</h2>
-        <p className="text-sm text-muted-foreground mt-1">Start shopping to add items</p>
+        <h2 className="text-base font-bold">Your cart is empty</h2>
+        <p className="text-xs text-muted-foreground mt-1">Start shopping to add items</p>
         <Link to="/search">
-          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-2xl px-8">
+          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
             Browse Products
           </Button>
         </Link>
@@ -28,12 +29,18 @@ const CartPage = () => {
   }
 
   return (
-    <div className="pb-48">
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 pt-6 pb-3">
-        <h1 className="text-lg font-bold">Cart ({items.length} items)</h1>
-      </div>
+    <div className="pb-44 bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
+        <div className="px-4 py-2.5 flex items-center gap-3">
+          <button onClick={() => navigate(-1)} className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <h1 className="text-sm font-bold flex-1">Shopping Bag ({items.length})</h1>
+        </div>
+      </header>
 
-      <div className="px-4 pt-3 space-y-3">
+      <div className="px-4 pt-3 space-y-2">
         <AnimatePresence>
           {items.map((item) => (
             <motion.div
@@ -42,67 +49,69 @@ const CartPage = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="flex gap-3 bg-secondary rounded-2xl p-3"
+              className="flex gap-3 bg-card border border-border rounded-lg p-3"
             >
               <img
                 src={item.product.image}
                 alt={item.product.name}
-                className="w-20 h-24 object-cover rounded-xl"
+                className="w-20 h-24 object-cover rounded-md"
               />
-              <div className="flex-1 flex flex-col justify-between">
+              <div className="flex-1 flex flex-col justify-between min-w-0">
                 <div>
-                  <h3 className="text-sm font-semibold line-clamp-1">{item.product.name}</h3>
+                  <h3 className="text-xs font-medium line-clamp-2 leading-tight">{item.product.name}</h3>
                   {item.selectedSize && (
-                    <p className="text-xs text-muted-foreground">Size: {item.selectedSize}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Size: {item.selectedSize}</p>
                   )}
-                  <p className="text-sm font-bold text-accent mt-1">{formatPrice(item.product.price)}</p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm font-extrabold text-foreground">{formatPrice(item.product.price)}</p>
+                  <div className="flex items-center gap-0">
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                      className="h-8 w-8 rounded-xl bg-background flex items-center justify-center border border-border"
+                      className="h-7 w-7 rounded-l-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
-                    <span className="text-sm font-bold w-5 text-center">{item.quantity}</span>
+                    <span className="h-7 w-8 flex items-center justify-center text-xs font-bold border-y border-border bg-background">
+                      {item.quantity}
+                    </span>
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                      className="h-8 w-8 rounded-xl bg-background flex items-center justify-center border border-border"
+                      className="h-7 w-7 rounded-r-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.product.id)}
-                    className="h-8 w-8 rounded-xl bg-destructive/10 flex items-center justify-center text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
                 </div>
               </div>
+              <button
+                onClick={() => removeItem(item.product.id)}
+                className="self-start h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* Bottom Summary */}
-      <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border/50 p-4">
-        <div className="max-w-lg mx-auto space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Subtotal</span>
-            <span className="text-lg font-bold">{formatPrice(totalPrice)}</span>
+      {/* Bottom checkout bar */}
+      <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border p-3 safe-area-bottom z-40">
+        <div className="max-w-lg mx-auto flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-[10px] text-muted-foreground">Total</p>
+            <p className="text-base font-extrabold">{formatPrice(totalPrice)}</p>
           </div>
           {user ? (
-            <Link to="/checkout" className="block">
-              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl" size="lg">
-                Proceed to Checkout
+            <Link to="/checkout" className="flex-1">
+              <Button className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-lg text-xs">
+                Checkout
               </Button>
             </Link>
           ) : (
-            <Link to="/auth?redirect=/checkout" className="block">
-              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl gap-2" size="lg">
-                <LogIn className="h-5 w-5" />
+            <Link to="/auth?redirect=/checkout" className="flex-1">
+              <Button className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-lg text-xs gap-1.5">
+                <LogIn className="h-4 w-4" />
                 Sign In to Checkout
               </Button>
             </Link>

@@ -6,11 +6,12 @@ import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  User, Heart, ShoppingBag, ClipboardList, LogOut, ChevronRight,
-  Shield, Tag, HelpCircle, Bell, MessageCircle, Gift, Star, Truck,
-  Moon, Sun, BarChart3, Instagram
+  User, Heart, ClipboardList, LogOut, ChevronRight,
+  Shield, Tag, HelpCircle, MessageCircle, Gift, Star, Truck,
+  Moon, Sun, BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
   const { user, isAdmin, signOut } = useAuth();
@@ -22,17 +23,15 @@ const ProfilePage = () => {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-6">
-        <div className="h-24 w-24 rounded-full bg-secondary flex items-center justify-center mb-5">
-          <User className="h-12 w-12 text-muted-foreground/40" />
-        </div>
-        <h2 className="text-xl font-bold text-primary">Welcome to SaloneMakit</h2>
-        <p className="text-sm text-muted-foreground mt-1 text-center">Sign in to track orders, save favorites, and more</p>
-        <div className="flex gap-3 mt-6 w-full max-w-xs">
+        <img src={logo} alt="SaloneMakit" className="h-16 w-16 rounded-xl mb-4" />
+        <h2 className="text-base font-extrabold text-primary">Welcome to SaloneMakit</h2>
+        <p className="text-xs text-muted-foreground mt-1 text-center">Sign in to track orders, save favorites, and more</p>
+        <div className="flex gap-3 mt-5 w-full max-w-xs">
           <Link to="/auth" className="flex-1">
-            <Button className="w-full h-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-xl font-bold">Sign In</Button>
+            <Button className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg font-bold text-xs">Sign In</Button>
           </Link>
           <Link to="/auth" className="flex-1">
-            <Button variant="outline" className="w-full h-12 rounded-xl font-bold border-accent text-accent">Register</Button>
+            <Button variant="outline" className="w-full h-11 rounded-lg font-bold text-xs border-accent text-accent">Register</Button>
           </Link>
         </div>
       </div>
@@ -56,92 +55,86 @@ const ProfilePage = () => {
     {
       title: "My Stuff",
       items: [
-        { icon: Heart, label: "Wishlist", value: `${wishlistCount} items`, to: "/wishlist" },
-        { icon: Tag, label: "My Coupons", value: "", to: "/search" },
-        { icon: Star, label: "My Reviews", value: "", to: "/orders" },
+        { icon: Heart, label: "Wishlist", value: `${wishlistCount}`, to: "/wishlist" },
+        { icon: Tag, label: "Coupons", value: "", to: "/search" },
+        { icon: Star, label: "Reviews", value: "", to: "/orders" },
       ],
     },
     ...(isAdmin ? [{
       title: "Admin",
       items: [
-        { icon: Shield, label: "Admin Dashboard", value: "", to: "/admin" },
-        { icon: BarChart3, label: "Sales Analytics", value: "", to: "/admin/analytics" },
+        { icon: Shield, label: "Dashboard", value: "", to: "/admin" },
+        { icon: BarChart3, label: "Analytics", value: "", to: "/admin/analytics" },
       ],
     }] : []),
     {
-      title: "Support & Settings",
+      title: "Support",
       items: [
         { icon: MessageCircle, label: "WhatsApp Support", value: "", to: "https://wa.me/23278928111", external: true },
         { icon: HelpCircle, label: "Help Center", value: "", to: "/" },
-        { icon: Bell, label: "Notifications", value: "", to: "/" },
-        { icon: Gift, label: "Refer a Friend", value: "Coming Soon", to: "/" },
+        { icon: Gift, label: "Refer a Friend", value: "Soon", to: "/" },
       ],
     },
   ];
 
   return (
-    <div className="pb-20">
+    <div className="pb-20 bg-background">
       {/* Profile Header */}
-      <div className="bg-primary px-4 pt-8 pb-6">
-        <div className="flex items-center gap-4">
-          <div className="h-16 w-16 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center">
-            <span className="text-2xl font-bold text-accent-foreground">
+      <div className="bg-primary px-4 pt-6 pb-5">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center">
+            <span className="text-lg font-bold text-accent-foreground">
               {(user.email?.[0] || "U").toUpperCase()}
             </span>
           </div>
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-primary-foreground">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-sm font-bold text-primary-foreground truncate">
               {user.email?.split("@")[0] || "User"}
             </h2>
-            <p className="text-xs text-primary-foreground/70">{user.email}</p>
+            <p className="text-[10px] text-primary-foreground/60 truncate">{user.email}</p>
             {isAdmin && (
-              <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-bold">
-                <Shield className="h-3 w-3" /> Admin
+              <span className="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[9px] font-bold">
+                <Shield className="h-2.5 w-2.5" /> Admin
               </span>
             )}
           </div>
-          {/* Dark mode toggle */}
           <button
             onClick={toggleTheme}
-            className="h-10 w-10 rounded-full bg-primary-foreground/10 flex items-center justify-center"
+            className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center"
           >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5 text-accent" />
-            ) : (
-              <Moon className="h-5 w-5 text-primary-foreground" />
-            )}
+            {theme === "dark" ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-primary-foreground" />}
           </button>
         </div>
 
         {/* Order Stats */}
-        <div className="grid grid-cols-4 gap-2 mt-5">
+        <div className="grid grid-cols-4 gap-1.5 mt-4">
           {[
             { label: "Pending", count: pendingOrders, emoji: "⏳" },
             { label: "Processing", count: confirmedOrders, emoji: "📋" },
             { label: "Shipped", count: shippedOrders, emoji: "🚚" },
             { label: "Delivered", count: deliveredOrders, emoji: "✅" },
           ].map((stat) => (
-            <Link to="/orders" key={stat.label} className="bg-primary-foreground/10 rounded-xl p-2.5 text-center">
-              <p className="text-lg font-bold text-primary-foreground">{stat.count}</p>
-              <p className="text-[9px] text-primary-foreground/70 font-medium">{stat.emoji} {stat.label}</p>
+            <Link to="/orders" key={stat.label} className="bg-primary-foreground/10 rounded-lg p-2 text-center">
+              <p className="text-base font-bold text-primary-foreground">{stat.count}</p>
+              <p className="text-[8px] text-primary-foreground/60 font-medium">{stat.emoji} {stat.label}</p>
             </Link>
           ))}
         </div>
 
         {totalSpent > 0 && (
-          <div className="mt-3 bg-primary-foreground/10 rounded-xl p-3 text-center">
-            <p className="text-[10px] text-primary-foreground/70 font-medium">Total Spent</p>
-            <p className="text-lg font-extrabold text-accent">{formatPrice(totalSpent)}</p>
+          <div className="mt-2 bg-primary-foreground/10 rounded-lg p-2.5 text-center">
+            <p className="text-[9px] text-primary-foreground/60">Total Spent</p>
+            <p className="text-sm font-extrabold text-accent">{formatPrice(totalSpent)}</p>
           </div>
         )}
       </div>
 
-      {/* Menu Sections */}
-      <div className="px-4 pt-4 space-y-4">
+      {/* Menu */}
+      <div className="px-4 pt-3 space-y-3">
         {menuSections.map((section) => (
           <div key={section.title}>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{section.title}</p>
-            <div className="bg-card rounded-xl border border-border/50 overflow-hidden">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">{section.title}</p>
+            <div className="bg-card rounded-lg border border-border overflow-hidden">
               {section.items.map((item: any, i: number) => {
                 const Wrapper = item.external ? "a" : Link;
                 const linkProps = item.external
@@ -152,14 +145,14 @@ const ProfilePage = () => {
                     key={item.label}
                     {...(linkProps as any)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3.5 hover:bg-secondary transition-colors",
-                      i < section.items.length - 1 && "border-b border-border/50"
+                      "flex items-center gap-3 px-3 py-3 hover:bg-secondary/50 transition-colors",
+                      i < section.items.length - 1 && "border-b border-border"
                     )}
                   >
-                    <item.icon className="h-5 w-5 text-accent" />
-                    <span className="flex-1 text-sm font-medium text-foreground">{item.label}</span>
-                    {item.value && <span className="text-xs text-muted-foreground font-medium">{item.value}</span>}
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                    <item.icon className="h-4 w-4 text-accent" />
+                    <span className="flex-1 text-xs font-medium">{item.label}</span>
+                    {item.value && <span className="text-[10px] text-muted-foreground">{item.value}</span>}
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
                   </Wrapper>
                 );
               })}
@@ -167,38 +160,16 @@ const ProfilePage = () => {
           </div>
         ))}
 
-        {/* Social Media Links */}
-        <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Follow Us</p>
-          <div className="flex gap-3">
-            <a href="https://instagram.com/salonemakit" target="_blank" rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
-              <Instagram className="h-5 w-5 text-accent" />
-              <span className="text-xs font-medium">Instagram</span>
-            </a>
-            <a href="https://facebook.com/salonemakit" target="_blank" rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
-              <span className="text-lg">📘</span>
-              <span className="text-xs font-medium">Facebook</span>
-            </a>
-            <a href="https://tiktok.com/@salonemakit" target="_blank" rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
-              <span className="text-lg">🎵</span>
-              <span className="text-xs font-medium">TikTok</span>
-            </a>
-          </div>
-        </div>
-
         {/* Sign Out */}
         <button
           onClick={async () => { await signOut(); navigate("/"); }}
-          className="w-full flex items-center gap-3 px-4 py-3.5 bg-destructive/5 rounded-xl border border-destructive/20 hover:bg-destructive/10 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-3 bg-destructive/5 rounded-lg border border-destructive/20 hover:bg-destructive/10 transition-colors"
         >
-          <LogOut className="h-5 w-5 text-destructive" />
-          <span className="text-sm font-medium text-destructive">Sign Out</span>
+          <LogOut className="h-4 w-4 text-destructive" />
+          <span className="text-xs font-medium text-destructive">Sign Out</span>
         </button>
 
-        <p className="text-center text-[10px] text-muted-foreground pt-2 pb-4">SaloneMakit v1.0 • Made in Sierra Leone 🇸🇱</p>
+        <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakit v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
     </div>
   );
