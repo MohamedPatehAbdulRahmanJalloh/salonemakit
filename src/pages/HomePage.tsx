@@ -31,7 +31,7 @@ const HomePage = () => {
             <img src={logo} alt="SaloneMakit" className="h-9 w-9 object-contain rounded-lg" />
             <div>
               <h1 className="text-base font-extrabold text-foreground leading-none tracking-tight">SaloneMakit</h1>
-              <p className="text-[9px] text-accent font-semibold uppercase tracking-widest">Sierra Leone Fashion</p>
+              <p className="text-[9px] text-accent font-semibold uppercase tracking-widest">Di Place Fo Shop</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
