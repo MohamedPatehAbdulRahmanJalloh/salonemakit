@@ -211,6 +211,9 @@ const AdminPage = () => {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <h1 className="text-lg font-bold flex-1">Admin Dashboard</h1>
+        <button onClick={() => navigate("/admin/analytics")} className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center">
+          <BarChart3 className="h-4 w-4 text-accent" />
+        </button>
         <button onClick={signOut} className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-full bg-secondary">Sign Out</button>
       </div>
 
