@@ -135,8 +135,15 @@ const ProductDetailPage = () => {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex gap-2">
-            <button className="h-10 w-10 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
-              <Share2 className="h-4 w-4 text-foreground" />
+            <button
+              onClick={() => {
+                const url = window.location.href;
+                const text = `Check out ${product.name} for ${formatPrice(product.price)} on SaloneMakit! 🛍️\n${url}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+              }}
+              className="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center shadow-sm"
+            >
+              <Share2 className="h-4 w-4 text-white" />
             </button>
             <button
               onClick={handleWishlist}
