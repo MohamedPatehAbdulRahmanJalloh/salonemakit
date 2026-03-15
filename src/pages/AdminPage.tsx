@@ -28,7 +28,7 @@ const emptyProduct = {
 const AdminPage = () => {
   const navigate = useNavigate();
   const { user, isAdmin, signOut, loading: authLoading } = useAuth();
-  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: products = [], isLoading: productsLoading } = useProducts(undefined, true);
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
   const [activeTab, setActiveTab] = useState<"products" | "orders">("products");
   const [showForm, setShowForm] = useState(false);
