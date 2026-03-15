@@ -1,8 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
+import SizeGuide from "@/components/SizeGuide";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -31,7 +33,12 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef(0);
+  const { addViewed } = useRecentlyViewed();
 
+  // Track recently viewed
+  useEffect(() => {
+    if (id) addViewed(id);
+  }, [id, addViewed]);
   const wishlisted = product ? isInWishlist(product.id) : false;
 
   // Build image array: main image + extra images
@@ -244,6 +251,7 @@ const ProductDetailPage = () => {
                 </button>
               ))}
             </div>
+            <SizeGuide category={product.category} />
           </div>
         )}
 

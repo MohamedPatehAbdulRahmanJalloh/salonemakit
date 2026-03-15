@@ -1,9 +1,11 @@
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Search, ShoppingCart, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useAuth } from "@/hooks/useAuth";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import logo from "@/assets/logo.png";
 import model1 from "@/assets/model-1.jpg";
 import model2 from "@/assets/model-2.jpg";
@@ -11,6 +13,7 @@ import model3 from "@/assets/model-3.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
 import FlashSaleBanner from "@/components/FlashSaleBanner";
 import BannerCarousel from "@/components/BannerCarousel";
+import { toast } from "sonner";
 
 const CATEGORY_IMAGES = [
   { id: "men", label: "Men", image: model2 },
@@ -21,13 +24,42 @@ const CATEGORY_IMAGES = [
   { id: "accessories", label: "Accessories", image: model1 },
 ];
 
+const PROMO_MESSAGES = [
+  "🔥 Flash Sale! Up to 50% off on selected items!",
+  "🎉 Free delivery on orders above Le 200,000!",
+  "✨ New arrivals just dropped — check them out!",
+  "💰 Use code SALONE10 for 10% off your first order!",
+];
+
 const HomePage = () => {
   const { totalItems } = useCart();
   const { user } = useAuth();
   const { data: products = [], isLoading } = useProducts();
+  const { recentIds } = useRecentlyViewed();
 
   const newArrivals = products.slice(0, 6);
   const trending = products.slice(6, 12);
+
+  // Recently viewed products
+  const recentlyViewed = useMemo(() => {
+    if (recentIds.length === 0 || products.length === 0) return [];
+    return recentIds
+      .map((id) => products.find((p) => p.id === id))
+      .filter(Boolean)
+      .slice(0, 8) as typeof products;
+  }, [recentIds, products]);
+
+  // Promo notification toast on first visit per session
+  useEffect(() => {
+    const shown = sessionStorage.getItem("promo-shown");
+    if (!shown) {
+      const msg = PROMO_MESSAGES[Math.floor(Math.random() * PROMO_MESSAGES.length)];
+      setTimeout(() => {
+        toast(msg, { duration: 5000 });
+        sessionStorage.setItem("promo-shown", "true");
+      }, 2000);
+    }
+  }, []);
 
   return (
     <div className="pb-20 bg-background">
@@ -97,6 +129,22 @@ const HomePage = () => {
           ))}
         </div>
       </section>
+
+      {/* Recently Viewed */}
+      {recentlyViewed.length > 0 && (
+        <section className="mt-6 px-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-primary">Recently Viewed 👀</h2>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4">
+            {recentlyViewed.map((p) => (
+              <div key={p.id} className="min-w-[150px] w-[150px]">
+                <ProductCard product={p} compact />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* New Arrivals */}
       <section className="mt-6 px-4">
