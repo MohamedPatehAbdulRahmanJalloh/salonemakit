@@ -17,9 +17,12 @@ interface CreateOrderInput {
 
 export const useCreateOrder = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   return useMutation({
     mutationFn: async (input: CreateOrderInput) => {
+      if (!user) throw new Error("You must be logged in to place an order");
+      
       // Create order
       const { data: order, error: orderError } = await supabase
         .from("orders")
@@ -32,6 +35,7 @@ export const useCreateOrder = () => {
           subtotal: input.subtotal,
           delivery_fee: input.deliveryFee,
           total: input.total,
+          user_id: user.id,
         })
         .select()
         .single();
