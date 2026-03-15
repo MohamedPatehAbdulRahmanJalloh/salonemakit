@@ -23,7 +23,7 @@ export interface Order {
   address: string;
   phone: string;
   customerName: string;
-  paymentMethod: "cod";
+  paymentMethod: "cod" | "orange_money";
   status: "pending" | "confirmed" | "delivered";
   createdAt: Date;
 }
