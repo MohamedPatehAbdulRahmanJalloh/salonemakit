@@ -93,11 +93,20 @@ const CartPage = () => {
             <span className="text-sm text-muted-foreground">Subtotal</span>
             <span className="text-lg font-bold">{formatPrice(totalPrice)}</span>
           </div>
-          <Link to="/checkout" className="block">
-            <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl" size="lg">
-              Proceed to Checkout
-            </Button>
-          </Link>
+          {user ? (
+            <Link to="/checkout" className="block">
+              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl" size="lg">
+                Proceed to Checkout
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/auth?redirect=/checkout" className="block">
+              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl gap-2" size="lg">
+                <LogIn className="h-5 w-5" />
+                Sign In to Checkout
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>
