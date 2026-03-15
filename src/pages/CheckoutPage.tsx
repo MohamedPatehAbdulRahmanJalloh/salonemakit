@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
 import { SIERRA_LEONE_DISTRICTS } from "@/data/products";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ type PaymentMethod = "cod" | "orange_money";
 
 const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
@@ -82,6 +84,23 @@ const CheckoutPage = () => {
           Continue Shopping
         </Button>
       </motion.div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+        <div className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <LogIn className="h-10 w-10 text-accent" />
+        </div>
+        <h2 className="text-lg font-bold">Sign in to checkout</h2>
+        <p className="text-sm text-muted-foreground mt-1">Create an account or sign in to place your order</p>
+        <Link to="/auth?redirect=/checkout">
+          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-2xl px-8 gap-2">
+            <LogIn className="h-4 w-4" /> Sign In / Sign Up
+          </Button>
+        </Link>
+      </div>
     );
   }
 
