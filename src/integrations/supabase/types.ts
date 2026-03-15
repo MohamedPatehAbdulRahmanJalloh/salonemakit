@@ -144,6 +144,7 @@ export type Database = {
           status: string
           subtotal: number
           total: number
+          user_id: string | null
         }
         Insert: {
           address: string
@@ -157,6 +158,7 @@ export type Database = {
           status?: string
           subtotal: number
           total: number
+          user_id?: string | null
         }
         Update: {
           address?: string
@@ -170,6 +172,7 @@ export type Database = {
           status?: string
           subtotal?: number
           total?: number
+          user_id?: string | null
         }
         Relationships: []
       }
