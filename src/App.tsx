@@ -37,6 +37,7 @@ const App = () => (
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <BottomNav />
