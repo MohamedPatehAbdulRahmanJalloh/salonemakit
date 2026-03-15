@@ -2,6 +2,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import banner1 from "@/assets/banner-1.jpg";
+import banner2 from "@/assets/banner-2.jpg";
+import model1 from "@/assets/model-1.jpg";
 
 interface BannerSlide {
   image: string;
@@ -14,7 +17,7 @@ interface BannerSlide {
 
 const BANNERS: BannerSlide[] = [
   {
-    image: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=400&fit=crop",
+    image: banner1,
     tag: "🔥 Hot Deals",
     title: "Up to",
     highlight: "50% OFF",
@@ -22,20 +25,20 @@ const BANNERS: BannerSlide[] = [
     link: "/search",
   },
   {
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=400&fit=crop",
-    tag: "✨ New Season",
-    title: "Fresh",
-    highlight: "Arrivals",
-    subtitle: "Trending Styles Just In",
+    image: banner2,
+    tag: "✨ New Collection",
+    title: "Sierra Leone",
+    highlight: "Style",
+    subtitle: "Traditional & Modern African Fashion",
     link: "/search?category=women",
   },
   {
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop",
-    tag: "👟 Shoes Collection",
-    title: "Step Up",
-    highlight: "Your Game",
-    subtitle: "Premium Footwear Collection",
-    link: "/search?category=shoes",
+    image: model1,
+    tag: "👗 Country Cloth",
+    title: "Authentic",
+    highlight: "Salone Fashion",
+    subtitle: "Premium African Attire Collection",
+    link: "/search?category=men",
   },
 ];
 
