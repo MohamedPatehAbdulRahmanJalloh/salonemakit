@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
