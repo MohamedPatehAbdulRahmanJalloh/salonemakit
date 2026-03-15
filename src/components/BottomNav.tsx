@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, LayoutGrid, ShoppingCart, ClipboardList, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/hooks/useWishlist";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -9,7 +8,7 @@ const navItems = [
   { to: "/search", icon: LayoutGrid, label: "Categories" },
   { to: "/cart", icon: ShoppingCart, label: "Cart" },
   { to: "/orders", icon: ClipboardList, label: "Orders" },
-  { to: "/auth", icon: User, label: "Profile" },
+  { to: "/profile", icon: User, label: "Profile" },
 ];
 
 const BottomNav = () => {
