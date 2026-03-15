@@ -16,30 +16,39 @@ interface CreateOrderInput {
 
 export const useCreateOrder = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (input: CreateOrderInput) => {
-      // Create order
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          customer_name: input.customerName,
-          phone: input.phone,
-          district: input.district,
-          address: input.address,
-          payment_method: input.paymentMethod,
-          subtotal: input.subtotal,
-          delivery_fee: input.deliveryFee,
-          total: input.total,
-        })
-        .select()
-        .single();
-      
-      if (orderError) throw orderError;
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-      // Create order items
+      if (authError || !user) {
+        throw new Error("Please sign in again to place your order.");
+      }
+
+      const orderId = crypto.randomUUID();
+
+      const { error: orderError } = await supabase.from("orders").insert({
+        id: orderId,
+        customer_name: input.customerName,
+        phone: input.phone,
+        district: input.district,
+        address: input.address,
+        payment_method: input.paymentMethod,
+        subtotal: input.subtotal,
+        delivery_fee: input.deliveryFee,
+        total: input.total,
+        user_id: user.id,
+      });
+
+      if (orderError) {
+        throw new Error(orderError.message);
+      }
+
       const orderItems = input.items.map((item) => ({
-        order_id: order.id,
+        order_id: orderId,
         product_id: item.product.id,
         product_name: item.product.name,
         product_price: item.product.price,
@@ -48,9 +57,11 @@ export const useCreateOrder = () => {
       }));
 
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        throw new Error(itemsError.message);
+      }
 
-      return order;
+      return { id: orderId };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
