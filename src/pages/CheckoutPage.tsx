@@ -18,6 +18,7 @@ type PaymentMethod = "cod" | "orange_money";
 
 const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
