@@ -69,7 +69,7 @@ const CheckoutPage = () => {
           Your order will be delivered to {orderDistrict}.
           {paymentMethod === "cod"
             ? ` Pay ${formatPrice(grandTotal)} on delivery.`
-            : " You will receive an Orange Money payment prompt shortly."}
+            : ` Please send ${formatPrice(grandTotal)} to Orange Money number +232 78 928 111, then your order will be processed.`}
         </p>
         <Button
           onClick={() => navigate("/")}
@@ -162,7 +162,7 @@ const CheckoutPage = () => {
               </div>
               <div className="flex-1">
                 <p className="text-sm font-bold">Orange Money</p>
-                <p className="text-xs text-muted-foreground">Pay via Orange Money mobile wallet</p>
+                <p className="text-xs text-muted-foreground">Send to: <span className="font-semibold text-orange">+232 78 928 111</span></p>
               </div>
               <div className={cn(
                 "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0",
