@@ -44,22 +44,22 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
       className="group relative"
     >
       <Link to={`/product/${product.id}`} className="block">
-        <div className={`relative overflow-hidden rounded-2xl bg-secondary ${compact ? "aspect-square" : "aspect-[3/4]"}`}>
+        <div className={`relative overflow-hidden rounded-xl bg-secondary ${compact ? "aspect-square" : "aspect-[3/4]"}`}>
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
           {/* Wishlist button */}
           <button
             onClick={handleWishlist}
-            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all active:scale-90"
+            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center transition-all active:scale-90"
           >
             <Heart
               className={cn(
                 "h-4 w-4 transition-colors",
-                wishlisted ? "fill-destructive text-destructive" : "text-foreground"
+                wishlisted ? "fill-destructive text-destructive" : "text-muted-foreground"
               )}
             />
           </button>
@@ -79,8 +79,8 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
         </div>
         <div className="mt-2 px-0.5">
           {!compact && <p className="text-[10px] text-muted-foreground capitalize tracking-wide">{product.category}</p>}
-          <h3 className="text-sm font-semibold leading-tight line-clamp-1">{product.name}</h3>
-          <p className="text-sm font-bold text-accent mt-0.5">{formatPrice(product.price)}</p>
+          <h3 className="text-sm font-semibold leading-tight line-clamp-1 text-foreground">{product.name}</h3>
+          <p className="text-sm font-bold text-primary mt-0.5">{formatPrice(product.price)}</p>
         </div>
       </Link>
     </motion.div>
