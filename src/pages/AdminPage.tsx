@@ -4,18 +4,116 @@ import { useOrders } from "@/hooks/useOrders";
 import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, X, Trash2, Edit2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+const emptyProduct = {
+  name: "",
+  price: "",
+  category: "men",
+  image: "",
+  description: "",
+  sizes: "",
+  in_stock: true,
+};
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  const { user, isAdmin, signOut, loading: authLoading } = useAuth();
   const { data: products = [], isLoading: productsLoading } = useProducts();
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
   const [activeTab, setActiveTab] = useState<"products" | "orders">("products");
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(emptyProduct);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+
+  // Redirect to auth if not logged in
+  if (!authLoading && !user) {
+    navigate("/auth");
+    return null;
+  }
+
+  if (!authLoading && !isAdmin) {
+    return (
+      <div className="pb-20 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+        <Package className="h-12 w-12 text-muted-foreground mb-4" />
+        <h2 className="text-lg font-bold mb-2">Access Denied</h2>
+        <p className="text-sm text-muted-foreground mb-4">You don't have admin privileges. Contact the store owner.</p>
+        <Button onClick={() => navigate("/")} variant="outline" className="rounded-full">Go Home</Button>
+      </div>
+    );
+  }
+
+  const handleSave = async () => {
+    if (!form.name || !form.price || !form.image) {
+      toast.error("Name, price, and image are required");
+      return;
+    }
+    setSaving(true);
+    const payload = {
+      name: form.name.trim(),
+      price: parseInt(form.price),
+      category: form.category,
+      image: form.image.trim(),
+      description: form.description.trim(),
+      sizes: form.sizes ? form.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
+      in_stock: form.in_stock,
+    };
+
+    let error;
+    if (editingId) {
+      ({ error } = await supabase.from("products").update(payload).eq("id", editingId));
+    } else {
+      ({ error } = await supabase.from("products").insert(payload));
+    }
+
+    setSaving(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(editingId ? "Product updated!" : "Product added!");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setShowForm(false);
+      setForm(emptyProduct);
+      setEditingId(null);
+    }
+  };
+
+  const handleEdit = (product: any) => {
+    setForm({
+      name: product.name,
+      price: String(product.price),
+      category: product.category,
+      image: product.image,
+      description: product.description || "",
+      sizes: product.sizes?.join(", ") || "",
+      in_stock: product.in_stock ?? true,
+    });
+    setEditingId(product.id);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Product deleted");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    }
+  };
 
   return (
     <div className="pb-20">
@@ -23,7 +121,10 @@ const AdminPage = () => {
         <button onClick={() => navigate("/")} className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-bold">Admin Dashboard</h1>
+        <h1 className="text-lg font-bold flex-1">Admin Dashboard</h1>
+        <button onClick={signOut} className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-full bg-secondary">
+          Sign Out
+        </button>
       </div>
 
       {/* Stats */}
@@ -46,7 +147,7 @@ const AdminPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 px-4 mb-4">
+      <div className="flex gap-2 px-4 mb-4 items-center">
         <button
           onClick={() => setActiveTab("products")}
           className={cn(
@@ -65,6 +166,14 @@ const AdminPage = () => {
         >
           Orders ({orders.length})
         </button>
+        {activeTab === "products" && (
+          <button
+            onClick={() => { setForm(emptyProduct); setEditingId(null); setShowForm(true); }}
+            className="ml-auto h-9 w-9 rounded-full bg-accent text-accent-foreground flex items-center justify-center"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -81,11 +190,13 @@ const AdminPage = () => {
                   <p className="text-xs text-muted-foreground capitalize">{product.category}</p>
                   <p className="text-sm font-bold text-accent">{formatPrice(product.price)}</p>
                 </div>
-                <div className={cn(
-                  "text-[10px] font-semibold px-2 py-1 rounded-full",
-                  product.in_stock ? "bg-accent/10 text-accent" : "bg-destructive/10 text-destructive"
-                )}>
-                  {product.in_stock ? "In Stock" : "Out"}
+                <div className="flex gap-1.5">
+                  <button onClick={() => handleEdit(product)} className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Edit2 className="h-3.5 w-3.5 text-primary" />
+                  </button>
+                  <button onClick={() => handleDelete(product.id)} className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                  </button>
                 </div>
               </div>
             ))
@@ -117,6 +228,38 @@ const AdminPage = () => {
           )
         )}
       </div>
+
+      {/* Add/Edit Product Dialog */}
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="max-w-[95vw] sm:max-w-md rounded-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingId ? "Edit Product" : "Add Product"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 pt-2">
+            <Input placeholder="Product name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-xl" />
+            <Input placeholder="Price (in Leones) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="rounded-xl" />
+            <select
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="w-full h-10 rounded-xl border border-input bg-background px-3 text-sm"
+            >
+              {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
+                <option key={cat.id} value={cat.id}>{cat.label}</option>
+              ))}
+            </select>
+            <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl" />
+            <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
+            <Input placeholder="Sizes (comma separated: S, M, L)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.in_stock} onChange={(e) => setForm({ ...form, in_stock: e.target.checked })} />
+              In Stock
+            </label>
+            <Button onClick={handleSave} disabled={saving} className="w-full rounded-xl bg-accent hover:bg-accent/90">
+              {saving ? "Saving..." : editingId ? "Update Product" : "Add Product"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
