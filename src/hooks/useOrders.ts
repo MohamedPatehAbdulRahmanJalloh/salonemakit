@@ -19,13 +19,21 @@ export const useCreateOrder = () => {
 
   return useMutation({
     mutationFn: async (input: CreateOrderInput) => {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
+      // Get fresh session
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData?.session?.user;
 
-      if (authError || !user) {
-        throw new Error("Please sign in again to place your order.");
+      if (!user) {
+        // Try refreshing the session
+        const { data: refreshData } = await supabase.auth.refreshSession();
+        if (!refreshData?.session?.user) {
+          throw new Error("Session expired. Please sign in again.");
+        }
+      }
+
+      const currentUser = user || (await supabase.auth.getSession()).data.session?.user;
+      if (!currentUser) {
+        throw new Error("Not authenticated. Please sign in.");
       }
 
       const orderId = crypto.randomUUID();
@@ -40,11 +48,12 @@ export const useCreateOrder = () => {
         subtotal: input.subtotal,
         delivery_fee: input.deliveryFee,
         total: input.total,
-        user_id: user.id,
+        user_id: currentUser.id,
       });
 
       if (orderError) {
-        throw new Error(orderError.message);
+        console.error("Order insert error:", orderError);
+        throw new Error(`Order failed: ${orderError.message}`);
       }
 
       const orderItems = input.items.map((item) => ({
@@ -58,7 +67,8 @@ export const useCreateOrder = () => {
 
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
       if (itemsError) {
-        throw new Error(itemsError.message);
+        console.error("Order items insert error:", itemsError);
+        throw new Error(`Order items failed: ${itemsError.message}`);
       }
 
       return { id: orderId };
@@ -73,6 +83,11 @@ export const useOrders = () => {
   return useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData?.session?.user) {
+        return [];
+      }
+      
       const { data, error } = await supabase
         .from("orders")
         .select("*, order_items(*)")
