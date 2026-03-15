@@ -5,17 +5,20 @@ import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/logo.png";
+import model1 from "@/assets/model-1.jpg";
+import model2 from "@/assets/model-2.jpg";
+import model3 from "@/assets/model-3.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
 import FlashSaleBanner from "@/components/FlashSaleBanner";
 import BannerCarousel from "@/components/BannerCarousel";
 
 const CATEGORY_IMAGES = [
-  { id: "men", label: "Men", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" },
-  { id: "women", label: "Women", image: "https://images.unsplash.com/photo-1590400516695-36e8d208be6b?w=300&h=300&fit=crop" },
+  { id: "men", label: "Men", image: model2 },
+  { id: "women", label: "Women", image: model3 },
   { id: "shoes", label: "Shoes", image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=300&fit=crop" },
   { id: "bags", label: "Bags", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=300&h=300&fit=crop" },
   { id: "perfumes", label: "Perfume & Beauty", image: "https://images.unsplash.com/photo-1541643600914-78b084753601?w=300&h=300&fit=crop" },
-  { id: "accessories", label: "Accessories", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=300&h=300&fit=crop" },
+  { id: "accessories", label: "Accessories", image: model1 },
 ];
 
 const HomePage = () => {
