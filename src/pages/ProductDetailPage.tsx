@@ -1,8 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
+import SizeGuide from "@/components/SizeGuide";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
