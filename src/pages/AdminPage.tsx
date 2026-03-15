@@ -86,6 +86,21 @@ const AdminPage = () => {
     );
   }
 
+  // Image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+    if (error) { toast.error("Upload failed: " + error.message); setUploading(false); return; }
+    const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+    setForm({ ...form, image: urlData.publicUrl });
+    setUploading(false);
+    toast.success("Image uploaded!");
+  };
+
   // Product CRUD
   const handleSave = async () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
