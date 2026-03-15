@@ -32,7 +32,7 @@ const AuthPage = () => {
       toast.success("Check your email to verify your account");
     } else {
       toast.success("Welcome back!");
-      navigate("/admin");
+      navigate("/");
     }
   };
 
