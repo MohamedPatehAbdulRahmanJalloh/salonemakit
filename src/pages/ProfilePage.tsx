@@ -1,17 +1,20 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useOrders } from "@/hooks/useOrders";
 import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  User, Heart, ShoppingBag, ClipboardList, Settings, LogOut, ChevronRight,
-  Shield, Tag, HelpCircle, Bell, MessageCircle, Gift, Star, Truck
+  User, Heart, ShoppingBag, ClipboardList, LogOut, ChevronRight,
+  Shield, Tag, HelpCircle, Bell, MessageCircle, Gift, Star, Truck,
+  Moon, Sun, BarChart3, Instagram
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ProfilePage = () => {
   const { user, isAdmin, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { wishlistCount } = useWishlist();
   const { data: orders = [] } = useOrders();
@@ -62,6 +65,7 @@ const ProfilePage = () => {
       title: "Admin",
       items: [
         { icon: Shield, label: "Admin Dashboard", value: "", to: "/admin" },
+        { icon: BarChart3, label: "Sales Analytics", value: "", to: "/admin/analytics" },
       ],
     }] : []),
     {
@@ -96,6 +100,17 @@ const ProfilePage = () => {
               </span>
             )}
           </div>
+          {/* Dark mode toggle */}
+          <button
+            onClick={toggleTheme}
+            className="h-10 w-10 rounded-full bg-primary-foreground/10 flex items-center justify-center"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5 text-accent" />
+            ) : (
+              <Moon className="h-5 w-5 text-primary-foreground" />
+            )}
+          </button>
         </div>
 
         {/* Order Stats */}
@@ -113,7 +128,6 @@ const ProfilePage = () => {
           ))}
         </div>
 
-        {/* Total Spent */}
         {totalSpent > 0 && (
           <div className="mt-3 bg-primary-foreground/10 rounded-xl p-3 text-center">
             <p className="text-[10px] text-primary-foreground/70 font-medium">Total Spent</p>
@@ -153,6 +167,28 @@ const ProfilePage = () => {
           </div>
         ))}
 
+        {/* Social Media Links */}
+        <div>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Follow Us</p>
+          <div className="flex gap-3">
+            <a href="https://instagram.com/salonemakit" target="_blank" rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
+              <Instagram className="h-5 w-5 text-accent" />
+              <span className="text-xs font-medium">Instagram</span>
+            </a>
+            <a href="https://facebook.com/salonemakit" target="_blank" rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
+              <span className="text-lg">📘</span>
+              <span className="text-xs font-medium">Facebook</span>
+            </a>
+            <a href="https://tiktok.com/@salonemakit" target="_blank" rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 bg-card border border-border/50 rounded-xl py-3 hover:bg-secondary transition-colors">
+              <span className="text-lg">🎵</span>
+              <span className="text-xs font-medium">TikTok</span>
+            </a>
+          </div>
+        </div>
+
         {/* Sign Out */}
         <button
           onClick={async () => { await signOut(); navigate("/"); }}
@@ -162,7 +198,6 @@ const ProfilePage = () => {
           <span className="text-sm font-medium text-destructive">Sign Out</span>
         </button>
 
-        {/* App version */}
         <p className="text-center text-[10px] text-muted-foreground pt-2 pb-4">SaloneMakit v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
     </div>
