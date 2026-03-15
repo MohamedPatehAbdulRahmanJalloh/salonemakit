@@ -44,13 +44,17 @@ const CountdownTimer = ({ endsAt }: { endsAt: string }) => {
   const pad = (n: number) => n.toString().padStart(2, "0");
 
   return (
-    <div className="flex items-center gap-0.5">
-      {[timeLeft.hours, timeLeft.minutes, timeLeft.seconds].map((val, i) => (
+    <div className="flex items-center gap-1">
+      {[
+        { val: timeLeft.hours, label: "h" },
+        { val: timeLeft.minutes, label: "m" },
+        { val: timeLeft.seconds, label: "s" },
+      ].map((t, i) => (
         <div key={i} className="flex items-center gap-0.5">
-          <span className="bg-foreground text-background text-[11px] font-bold px-1 py-0.5 rounded-sm min-w-[22px] text-center">
-            {pad(val)}
+          <span className="bg-background/90 text-foreground text-xs font-bold px-1.5 py-0.5 rounded-md min-w-[28px] text-center">
+            {pad(t.val)}
           </span>
-          {i < 2 && <span className="text-destructive-foreground text-[10px] font-bold">:</span>}
+          {i < 2 && <span className="text-background/70 text-xs font-bold">:</span>}
         </div>
       ))}
     </div>
@@ -64,23 +68,26 @@ const FlashSaleBanner = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
+      className="mx-4 mt-3"
     >
       <Link to="/search" className="block">
-        <div className="bg-destructive px-4 py-2.5 flex items-center justify-between">
+        <div className="rounded-2xl bg-destructive px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-destructive-foreground fill-destructive-foreground" />
+            <div className="h-8 w-8 rounded-full bg-background/20 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-destructive-foreground" />
+            </div>
             <div>
               <p className="text-xs font-bold text-destructive-foreground">
-                {sale.title}
+                ⚡ {sale.title}
               </p>
               {sale.subtitle && (
                 <p className="text-[10px] text-destructive-foreground/80">{sale.subtitle}</p>
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-end gap-1">
             <span className="text-xs font-extrabold text-destructive-foreground">
               {sale.discount_percent}% OFF
             </span>

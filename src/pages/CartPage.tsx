@@ -1,14 +1,12 @@
 import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
-import { Minus, Plus, Trash2, ShoppingBag, LogIn } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
-  const { user } = useAuth();
 
   if (items.length === 0) {
     return (
@@ -93,20 +91,11 @@ const CartPage = () => {
             <span className="text-sm text-muted-foreground">Subtotal</span>
             <span className="text-lg font-bold">{formatPrice(totalPrice)}</span>
           </div>
-          {user ? (
-            <Link to="/checkout" className="block">
-              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl" size="lg">
-                Proceed to Checkout
-              </Button>
-            </Link>
-          ) : (
-            <Link to="/auth?redirect=/checkout" className="block">
-              <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl gap-2" size="lg">
-                <LogIn className="h-5 w-5" />
-                Sign In to Checkout
-              </Button>
-            </Link>
-          )}
+          <Link to="/checkout" className="block">
+            <Button className="w-full h-13 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-2xl" size="lg">
+              Proceed to Checkout
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
