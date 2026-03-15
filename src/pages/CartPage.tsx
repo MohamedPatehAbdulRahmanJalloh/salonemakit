@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
+  const { user } = useAuth();
 
   if (items.length === 0) {
     return (
