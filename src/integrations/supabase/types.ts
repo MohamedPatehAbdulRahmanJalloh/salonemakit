@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          discount_amount: number
+          discount_percent: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          min_order_amount: number
+          used_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_amount?: number
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_amount?: number
+          used_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_amount?: number
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_amount?: number
+          used_count?: number
+        }
+        Relationships: []
+      }
+      flash_sales: {
+        Row: {
+          created_at: string
+          discount_percent: number
+          ends_at: string
+          id: string
+          is_active: boolean
+          starts_at: string
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          discount_percent?: number
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          subtitle?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          discount_percent?: number
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string

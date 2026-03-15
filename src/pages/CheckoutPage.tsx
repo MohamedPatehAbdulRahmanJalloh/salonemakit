@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import CouponInput from "@/components/CouponInput";
 
 type PaymentMethod = "cod" | "orange_money";
 
@@ -25,9 +26,12 @@ const CheckoutPage = () => {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [orderDistrict, setOrderDistrict] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
   const deliveryFee = 25000;
-  const grandTotal = totalPrice + deliveryFee;
+  const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
+  const grandTotal = discountedSubtotal + deliveryFee;
 
   const canSubmit = name.trim() && phone.trim() && district && address.trim() && items.length > 0 && !createOrder.isPending;
 
@@ -41,7 +45,7 @@ const CheckoutPage = () => {
         address,
         paymentMethod,
         items,
-        subtotal: totalPrice,
+        subtotal: discountedSubtotal,
         deliveryFee,
         total: grandTotal,
       });
@@ -174,6 +178,24 @@ const CheckoutPage = () => {
           </div>
         </section>
 
+        {/* Coupon Code */}
+        <section>
+          <h2 className="text-sm font-bold mb-3">Coupon Code</h2>
+          <CouponInput
+            subtotal={totalPrice}
+            onApply={(discount, code) => {
+              setCouponDiscount(discount);
+              setAppliedCode(code);
+            }}
+            onRemove={() => {
+              setCouponDiscount(0);
+              setAppliedCode(null);
+            }}
+            appliedCode={appliedCode}
+            discount={couponDiscount}
+          />
+        </section>
+
         {/* Order Summary */}
         <section className="bg-secondary rounded-2xl p-4 space-y-2.5">
           <h3 className="text-sm font-bold mb-2">Order Summary</h3>
@@ -188,6 +210,12 @@ const CheckoutPage = () => {
               <span className="text-muted-foreground">Subtotal</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
+            {couponDiscount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-accent font-semibold">Coupon Discount</span>
+                <span className="text-accent font-semibold">-{formatPrice(couponDiscount)}</span>
+              </div>
+            )}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Delivery Fee</span>
               <span>{formatPrice(deliveryFee)}</span>

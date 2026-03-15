@@ -6,6 +6,7 @@ import { useProducts } from "@/hooks/useProducts";
 import logo from "@/assets/logo.png";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import FlashSaleBanner from "@/components/FlashSaleBanner";
 
 const CATEGORY_IMAGES = [
   { id: "men", label: "Men", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop", emoji: "👔" },
@@ -85,6 +86,9 @@ const HomePage = () => {
           </Link>
         </div>
       </motion.div>
+
+      {/* Flash Sale Banner */}
+      <FlashSaleBanner />
 
       {/* Categories */}
       <section className="mt-5 px-4">
