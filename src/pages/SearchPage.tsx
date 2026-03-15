@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, ChevronDown, ArrowUpDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
@@ -55,31 +55,21 @@ const SearchPage = () => {
 
   const filtered = useMemo(() => {
     let results = products;
-
-    // Category
     if (activeCategory !== "all") {
       results = results.filter((p) => p.category === activeCategory);
     }
-
-    // Search
     if (query.trim()) {
       const q = query.toLowerCase();
       results = results.filter(
         (p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
       );
     }
-
-    // Price range
     results = results.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
-
-    // Sizes
     if (selectedSizes.length > 0) {
       results = results.filter((p) =>
         p.sizes?.some((s) => selectedSizes.includes(s))
       );
     }
-
-    // Sort
     switch (sortBy) {
       case "price_low":
         results = [...results].sort((a, b) => a.price - b.price);
@@ -93,35 +83,42 @@ const SearchPage = () => {
       default:
         break;
     }
-
     return results;
   }, [activeCategory, query, products, priceRange, selectedSizes, sortBy]);
 
   return (
-    <div className="pb-20">
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 pt-4 pb-3">
-        <div className="flex items-center gap-2 mb-3">
-          <h1 className="text-lg font-bold flex-1">Browse</h1>
+    <div className="pb-20 bg-background">
+      {/* SHEIN-style sticky header */}
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
+        <div className="px-4 py-2.5 flex items-center gap-2">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search products..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-9 bg-secondary border-none h-9 rounded-full text-xs"
+            />
+          </div>
 
-          {/* Sort button */}
+          {/* Sort */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="h-9 px-3 rounded-full bg-secondary flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                <ArrowUpDown className="h-3.5 w-3.5" />
-                Sort
+              <button className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
               </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-3xl">
+            <SheetContent side="bottom" className="rounded-t-2xl">
               <SheetHeader>
-                <SheetTitle>Sort By</SheetTitle>
+                <SheetTitle className="text-sm">Sort By</SheetTitle>
               </SheetHeader>
-              <div className="space-y-1 mt-4 pb-6">
+              <div className="space-y-1 mt-3 pb-6">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.value}
                     onClick={() => setSortBy(opt.value)}
                     className={cn(
-                      "w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all",
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all",
                       sortBy === opt.value ? "bg-accent text-accent-foreground" : "hover:bg-secondary"
                     )}
                   >
@@ -132,22 +129,19 @@ const SearchPage = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Filter button */}
+          {/* Filter */}
           <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
-              <button className="h-9 px-3 rounded-full bg-secondary flex items-center gap-1.5 text-xs font-semibold text-muted-foreground relative">
-                <SlidersHorizontal className="h-3.5 w-3.5" />
-                Filter
+              <button className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center shrink-0 relative">
+                <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
                 {hasActiveFilters && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-accent-foreground text-[9px] font-bold flex items-center justify-center">
-                    !
-                  </span>
+                  <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-destructive" />
                 )}
               </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-3xl max-h-[80vh] overflow-y-auto">
+            <SheetContent side="bottom" className="rounded-t-2xl max-h-[80vh] overflow-y-auto">
               <SheetHeader>
-                <SheetTitle className="flex items-center justify-between">
+                <SheetTitle className="flex items-center justify-between text-sm">
                   Filters
                   {hasActiveFilters && (
                     <button onClick={clearFilters} className="text-xs text-accent font-semibold">
@@ -156,11 +150,9 @@ const SearchPage = () => {
                   )}
                 </SheetTitle>
               </SheetHeader>
-
-              <div className="space-y-6 mt-4 pb-6">
-                {/* Price Range */}
+              <div className="space-y-5 mt-3 pb-6">
                 <div>
-                  <p className="text-sm font-bold mb-3">Price Range</p>
+                  <p className="text-xs font-bold mb-3">Price Range</p>
                   <Slider
                     min={0}
                     max={maxPrice}
@@ -169,22 +161,20 @@ const SearchPage = () => {
                     onValueChange={(val) => setPriceRange(val as [number, number])}
                     className="mb-2"
                   />
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="flex justify-between text-[10px] text-muted-foreground">
                     <span>{formatPrice(priceRange[0])}</span>
                     <span>{formatPrice(priceRange[1])}</span>
                   </div>
                 </div>
-
-                {/* Sizes */}
                 <div>
-                  <p className="text-sm font-bold mb-3">Size</p>
+                  <p className="text-xs font-bold mb-3">Size</p>
                   <div className="flex flex-wrap gap-2">
                     {ALL_SIZES.map((size) => (
                       <button
                         key={size}
                         onClick={() => toggleSize(size)}
                         className={cn(
-                          "h-10 min-w-[44px] px-3 rounded-xl text-sm font-semibold border-2 transition-all",
+                          "h-9 min-w-[40px] px-3 rounded-lg text-xs font-semibold border transition-all",
                           selectedSizes.includes(size)
                             ? "bg-accent text-accent-foreground border-accent"
                             : "bg-background border-border"
@@ -195,10 +185,9 @@ const SearchPage = () => {
                     ))}
                   </div>
                 </div>
-
                 <Button
                   onClick={() => setFiltersOpen(false)}
-                  className="w-full h-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-2xl font-bold"
+                  className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg font-bold text-sm"
                 >
                   Show {filtered.length} Results
                 </Button>
@@ -206,27 +195,17 @@ const SearchPage = () => {
             </SheetContent>
           </Sheet>
         </div>
+      </header>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="pl-9 bg-secondary border-none h-11 rounded-2xl"
-          />
-        </div>
-      </div>
-
-      {/* Category filters */}
-      <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide">
+      {/* Category pills - horizontal scroll */}
+      <div className="flex gap-1.5 overflow-x-auto px-4 py-2.5 scrollbar-hide border-b border-border">
         <button
           onClick={() => setSearchParams({})}
           className={cn(
-            "px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all",
+            "px-3.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all shrink-0",
             activeCategory === "all"
-              ? "bg-accent text-accent-foreground shadow-md"
-              : "bg-secondary text-secondary-foreground"
+              ? "bg-foreground text-background"
+              : "bg-secondary text-muted-foreground"
           )}
         >
           All
@@ -236,10 +215,10 @@ const SearchPage = () => {
             key={cat.id}
             onClick={() => setSearchParams({ category: cat.id })}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all",
+              "px-3.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all shrink-0",
               activeCategory === cat.id
-                ? "bg-accent text-accent-foreground shadow-md"
-                : "bg-secondary text-secondary-foreground"
+                ? "bg-foreground text-background"
+                : "bg-secondary text-muted-foreground"
             )}
           >
             {cat.icon} {cat.label}
@@ -249,55 +228,62 @@ const SearchPage = () => {
 
       {/* Active filter tags */}
       {hasActiveFilters && (
-        <div className="flex gap-2 px-4 pb-2 flex-wrap">
+        <div className="flex gap-1.5 px-4 py-2 flex-wrap">
           {selectedSizes.map((s) => (
             <button
               key={s}
               onClick={() => toggleSize(s)}
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold"
             >
-              Size: {s} <X className="h-3 w-3" />
+              Size: {s} <X className="h-2.5 w-2.5" />
             </button>
           ))}
           {(priceRange[0] > 0 || priceRange[1] < maxPrice) && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold">
               {formatPrice(priceRange[0])} – {formatPrice(priceRange[1])}
             </span>
           )}
         </div>
       )}
 
-      {/* Results */}
-      <div className="px-4">
-        <p className="text-xs text-muted-foreground mb-3">{filtered.length} products found</p>
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i}>
-                <Skeleton className="aspect-[3/4] rounded-2xl" />
-                <Skeleton className="h-4 mt-2 w-3/4" />
-                <Skeleton className="h-4 mt-1 w-1/2" />
-              </div>
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-muted-foreground text-sm">No products found</p>
-            {hasActiveFilters && (
-              <button onClick={clearFilters} className="text-accent text-sm font-semibold mt-2">
-                Clear filters
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {filtered.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        )}
+      {/* Results count */}
+      <div className="px-4 py-2">
+        <p className="text-[10px] text-muted-foreground">{filtered.length} items</p>
       </div>
+
+      {/* Product Grid — SHEIN edge-to-edge */}
+      {isLoading ? (
+        <div className="grid grid-cols-2 gap-[1px] bg-border">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-background">
+              <Skeleton className="aspect-[3/4]" />
+              <div className="p-2">
+                <Skeleton className="h-3 w-3/4 mb-1" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-4xl mb-3">🔍</p>
+          <p className="text-sm font-medium text-foreground">No products found</p>
+          <p className="text-xs text-muted-foreground mt-1">Try a different search or filter</p>
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="text-accent text-xs font-semibold mt-3">
+              Clear filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-[1px] bg-border">
+          {filtered.map((p) => (
+            <div key={p.id} className="bg-background">
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
