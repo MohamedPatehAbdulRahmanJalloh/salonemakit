@@ -7,7 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, CheckCircle, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+
+type PaymentMethod = "cod" | "orange_money";
 
 const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -17,6 +20,7 @@ const CheckoutPage = () => {
   const [phone, setPhone] = useState("");
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
 
   const deliveryFee = 25000;
   const grandTotal = totalPrice + deliveryFee;
@@ -41,11 +45,14 @@ const CheckoutPage = () => {
         </div>
         <h1 className="text-xl font-bold">Order Confirmed!</h1>
         <p className="text-sm text-muted-foreground mt-2 max-w-xs">
-          Your order will be delivered to {district}. Pay {formatPrice(grandTotal)} on delivery.
+          Your order will be delivered to {district}.
+          {paymentMethod === "cod"
+            ? ` Pay ${formatPrice(grandTotal)} on delivery.`
+            : " You will receive an Orange Money payment prompt shortly."}
         </p>
         <Button
           onClick={() => navigate("/")}
-          className="mt-8 bg-primary text-primary-foreground"
+          className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90"
         >
           Continue Shopping
         </Button>
@@ -68,19 +75,8 @@ const CheckoutPage = () => {
           <h2 className="text-sm font-semibold flex items-center gap-2">
             <Truck className="h-4 w-4" /> Delivery Information
           </h2>
-          <Input
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="bg-secondary border-none"
-          />
-          <Input
-            placeholder="Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            type="tel"
-            className="bg-secondary border-none"
-          />
+          <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="bg-secondary border-none" />
+          <Input placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className="bg-secondary border-none" />
           <Select value={district} onValueChange={setDistrict}>
             <SelectTrigger className="bg-secondary border-none">
               <SelectValue placeholder="Select District" />
@@ -91,25 +87,62 @@ const CheckoutPage = () => {
               ))}
             </SelectContent>
           </Select>
-          <Input
-            placeholder="Delivery Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="bg-secondary border-none"
-          />
+          <Input placeholder="Delivery Address" value={address} onChange={(e) => setAddress(e.target.value)} className="bg-secondary border-none" />
         </section>
 
-        {/* Payment */}
+        {/* Payment Method */}
         <section>
-          <h2 className="text-sm font-semibold mb-2">Payment Method</h2>
-          <div className="bg-accent/10 border border-accent/30 rounded-xl p-3 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center">
-              <span className="text-accent-foreground text-lg">💵</span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Cash on Delivery</p>
-              <p className="text-xs text-muted-foreground">Pay when you receive your order</p>
-            </div>
+          <h2 className="text-sm font-semibold mb-3">Payment Method</h2>
+          <div className="space-y-2">
+            {/* Cash on Delivery */}
+            <button
+              onClick={() => setPaymentMethod("cod")}
+              className={cn(
+                "w-full rounded-xl p-3 flex items-center gap-3 border-2 transition-colors text-left",
+                paymentMethod === "cod"
+                  ? "border-accent bg-accent/5"
+                  : "border-border bg-secondary"
+              )}
+            >
+              <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                <span className="text-lg">💵</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold">Cash on Delivery</p>
+                <p className="text-xs text-muted-foreground">Pay when you receive your order</p>
+              </div>
+              <div className={cn(
+                "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0",
+                paymentMethod === "cod" ? "border-accent" : "border-muted-foreground/30"
+              )}>
+                {paymentMethod === "cod" && <div className="h-2.5 w-2.5 rounded-full bg-accent" />}
+              </div>
+            </button>
+
+            {/* Orange Money */}
+            <button
+              onClick={() => setPaymentMethod("orange_money")}
+              className={cn(
+                "w-full rounded-xl p-3 flex items-center gap-3 border-2 transition-colors text-left",
+                paymentMethod === "orange_money"
+                  ? "border-[hsl(var(--orange))] bg-[hsl(var(--orange))]/5"
+                  : "border-border bg-secondary"
+              )}
+            >
+              <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "hsl(24, 95%, 53%, 0.1)" }}>
+                <span className="text-lg font-bold" style={{ color: "hsl(24, 95%, 53%)" }}>OM</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold">Orange Money</p>
+                <p className="text-xs text-muted-foreground">Pay via Orange Money mobile wallet</p>
+              </div>
+              <div className={cn(
+                "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0",
+                paymentMethod === "orange_money" ? "border-[hsl(24,95%,53%)]" : "border-muted-foreground/30"
+              )}>
+                {paymentMethod === "orange_money" && <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "hsl(24, 95%, 53%)" }} />}
+              </div>
+            </button>
           </div>
         </section>
 
@@ -132,9 +165,15 @@ const CheckoutPage = () => {
         <Button
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="w-full h-12 bg-accent text-accent-foreground hover:bg-accent/90 font-semibold disabled:opacity-50"
+          className={cn(
+            "w-full h-12 font-semibold disabled:opacity-50",
+            paymentMethod === "orange_money"
+              ? "text-white hover:opacity-90"
+              : "bg-accent text-accent-foreground hover:bg-accent/90"
+          )}
+          style={paymentMethod === "orange_money" ? { backgroundColor: "hsl(24, 95%, 53%)" } : undefined}
         >
-          Place Order — {formatPrice(grandTotal)}
+          {paymentMethod === "orange_money" ? "Pay with Orange Money" : "Place Order"} — {formatPrice(grandTotal)}
         </Button>
       </div>
     </div>

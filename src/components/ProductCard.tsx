@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
+  compact?: boolean;
 }
 
 const formatPrice = (price: number) => {
-  return `Le ${price.toLocaleString()}`;
+  return `Le ${(price / 1000).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, compact }: ProductCardProps) => {
   const { addItem } = useCart();
 
   return (
@@ -23,7 +24,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="group relative"
     >
       <Link to={`/product/${product.id}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-secondary">
+        <div className={`relative overflow-hidden rounded-xl bg-secondary ${compact ? "aspect-square" : "aspect-[3/4]"}`}>
           <img
             src={product.image}
             alt={product.name}
@@ -31,22 +32,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
             loading="lazy"
           />
         </div>
-        <div className="mt-2 pr-8">
-          <p className="text-xs text-muted-foreground capitalize">{product.category}</p>
-          <h3 className="text-sm font-medium leading-tight line-clamp-1">{product.name}</h3>
-          <p className="text-sm font-bold mt-0.5">{formatPrice(product.price)}</p>
+        <div className="mt-1.5 pr-7">
+          {!compact && <p className="text-[10px] text-muted-foreground capitalize">{product.category}</p>}
+          <h3 className="text-xs font-medium leading-tight line-clamp-1">{product.name}</h3>
+          <p className="text-xs font-bold mt-0.5">{formatPrice(product.price)}</p>
         </div>
       </Link>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          addItem(product, product.sizes[0]);
-        }}
-        className="absolute bottom-[52px] right-2 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg transition-transform active:scale-90"
-        aria-label={`Add ${product.name} to cart`}
-      >
-        <Plus className="h-4 w-4" />
-      </button>
+      {!compact && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            addItem(product, product.sizes[0]);
+          }}
+          className="absolute bottom-[52px] right-2 h-7 w-7 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-lg transition-transform active:scale-90"
+          aria-label={`Add ${product.name} to cart`}
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </button>
+      )}
     </motion.div>
   );
 };

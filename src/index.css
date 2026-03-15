@@ -7,37 +7,40 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
+    --foreground: 220 20% 15%;
 
-    --card: 0 0% 96%;
-    --card-foreground: 0 0% 10%;
+    --card: 0 0% 98%;
+    --card-foreground: 220 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 220 20% 15%;
 
-    --primary: 0 0% 0%;
+    --primary: 213 70% 28%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 220 20% 15%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 15% 95%;
+    --muted-foreground: 220 10% 50%;
 
-    --accent: 138 71% 42%;
+    --accent: 145 63% 32%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 138 71% 42%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 145 63% 32%;
 
     --radius: 0.75rem;
 
-    --success: 138 71% 42%;
+    --success: 145 63% 32%;
     --success-foreground: 0 0% 100%;
+
+    --orange: 24 95% 53%;
+    --orange-foreground: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -46,29 +49,31 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 138 71% 42%;
+    --sidebar-ring: 145 63% 32%;
   }
 
   .dark {
-    --background: 0 0% 5%;
+    --background: 220 20% 7%;
     --foreground: 0 0% 95%;
-    --card: 0 0% 10%;
+    --card: 220 20% 10%;
     --card-foreground: 0 0% 95%;
-    --popover: 0 0% 8%;
+    --popover: 220 20% 8%;
     --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 15%;
+    --primary: 213 70% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 15%;
     --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
+    --muted: 220 15% 15%;
     --muted-foreground: 0 0% 60%;
-    --accent: 138 71% 42%;
+    --accent: 145 63% 38%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 138 71% 42%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 145 63% 38%;
+    --orange: 24 95% 53%;
+    --orange-foreground: 0 0% 100%;
   }
 }
 
@@ -91,5 +96,12 @@
   @keyframes cartBounce {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.3); }
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
