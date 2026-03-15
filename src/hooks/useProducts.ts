@@ -2,11 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/data/types";
 
-export const useProducts = (category?: string) => {
+export const useProducts = (category?: string, showAll = false) => {
   return useQuery({
-    queryKey: ["products", category],
+    queryKey: ["products", category, showAll],
     queryFn: async (): Promise<Product[]> => {
-      let query = supabase.from("products").select("*").eq("in_stock", true).order("created_at", { ascending: false });
+      let query = supabase.from("products").select("*").order("created_at", { ascending: false });
+      if (!showAll) {
+        query = query.eq("in_stock", true);
+      }
       if (category && category !== "all") {
         query = query.eq("category", category);
       }
