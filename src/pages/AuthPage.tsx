@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, LogIn, UserPlus } from "lucide-react";
@@ -95,6 +96,25 @@ const AuthPage = () => {
               <><UserPlus className="h-4 w-4 mr-2" /> Create Account</>
             )}
           </Button>
+          {mode === "login" && (
+            <button
+              type="button"
+              onClick={async () => {
+                if (!email) {
+                  toast.error("Enter your email first");
+                  return;
+                }
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                  redirectTo: `${window.location.origin}/reset-password`,
+                });
+                if (error) toast.error(error.message);
+                else toast.success("Password reset link sent to your email!");
+              }}
+              className="text-xs text-accent font-medium text-center w-full"
+            >
+              Forgot password?
+            </button>
+          )}
         </form>
       </div>
     </div>
