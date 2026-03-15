@@ -1,13 +1,6 @@
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  image: string;
-  description: string;
-  sizes: string[];
-  inStock: boolean;
-}
+import { Tables } from "@/integrations/supabase/types";
+
+export type Product = Tables<"products">;
 
 export interface CartItem {
   product: Product;
