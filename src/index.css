@@ -18,10 +18,10 @@
     --primary: 213 65% 25%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 96%;
+    --secondary: 210 15% 96%;
     --secondary-foreground: 215 25% 15%;
 
-    --muted: 210 15% 95%;
+    --muted: 210 12% 94%;
     --muted-foreground: 215 10% 50%;
 
     --accent: 152 55% 33%;
@@ -34,7 +34,7 @@
     --input: 220 13% 91%;
     --ring: 152 55% 33%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --success: 152 55% 33%;
     --success-foreground: 0 0% 100%;
@@ -61,7 +61,7 @@
     --popover-foreground: 0 0% 95%;
     --primary: 213 65% 45%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 15% 15%;
+    --secondary: 215 15% 13%;
     --secondary-foreground: 0 0% 95%;
     --muted: 215 15% 15%;
     --muted-foreground: 0 0% 60%;
@@ -103,5 +103,8 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }

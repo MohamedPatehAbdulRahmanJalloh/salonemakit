@@ -77,7 +77,7 @@ const BannerCarousel = () => {
 
   return (
     <div
-      className="mx-4 mt-2 rounded-2xl overflow-hidden relative h-48"
+      className="relative overflow-hidden aspect-[2/1]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -90,30 +90,30 @@ const BannerCarousel = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/85 via-primary/50 to-transparent" />
-      <div className="absolute inset-0 flex flex-col justify-center p-6">
-        <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-1">{slide.tag}</p>
-        <h2 className="text-2xl font-extrabold text-white leading-tight">
+      <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/30 to-transparent" />
+      <div className="absolute inset-0 flex flex-col justify-center p-5">
+        <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-0.5">{slide.tag}</p>
+        <h2 className="text-xl font-extrabold text-white leading-tight">
           {slide.title} <span className="text-accent">{slide.highlight}</span>
         </h2>
-        <p className="text-xs text-white/70 mt-1">{slide.subtitle}</p>
+        <p className="text-[11px] text-white/70 mt-0.5">{slide.subtitle}</p>
         <Link
           to={slide.link}
-          className="mt-4 bg-accent text-accent-foreground text-xs font-bold px-6 py-2.5 rounded-full w-fit hover:bg-accent/90 transition-colors"
+          className="mt-3 bg-accent text-accent-foreground text-[11px] font-bold px-5 py-2 rounded-sm w-fit hover:bg-accent/90 transition-colors"
         >
           Shop Now
         </Link>
       </div>
 
-      {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+      {/* Progress dots */}
+      <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
         {BANNERS.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
             className={cn(
               "rounded-full transition-all",
-              i === current ? "h-2 w-6 bg-accent" : "h-2 w-2 bg-white/50"
+              i === current ? "h-1.5 w-5 bg-accent" : "h-1.5 w-1.5 bg-white/50"
             )}
           />
         ))}
