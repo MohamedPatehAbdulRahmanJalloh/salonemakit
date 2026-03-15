@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useOrders } from "@/hooks/useOrders";
 import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, ChevronDown } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, Image, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -42,6 +42,8 @@ const AdminPage = () => {
   const [form, setForm] = useState(emptyProduct);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
   // Coupons
@@ -83,6 +85,21 @@ const AdminPage = () => {
       </div>
     );
   }
+
+  // Image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+    if (error) { toast.error("Upload failed: " + error.message); setUploading(false); return; }
+    const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+    setForm({ ...form, image: urlData.publicUrl });
+    setUploading(false);
+    toast.success("Image uploaded!");
+  };
 
   // Product CRUD
   const handleSave = async () => {
@@ -194,6 +211,9 @@ const AdminPage = () => {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <h1 className="text-lg font-bold flex-1">Admin Dashboard</h1>
+        <button onClick={() => navigate("/admin/analytics")} className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center">
+          <BarChart3 className="h-4 w-4 text-accent" />
+        </button>
         <button onClick={signOut} className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-full bg-secondary">Sign Out</button>
       </div>
 
@@ -390,7 +410,24 @@ const AdminPage = () => {
               </select>
               <Input placeholder="Badge (HOT, NEW, -20%)" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="rounded-xl" />
             </div>
-            <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl" />
+            {/* Image upload or URL */}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl flex-1" />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="h-10 px-3 rounded-xl bg-accent text-accent-foreground flex items-center gap-1.5 text-xs font-semibold shrink-0"
+                >
+                  {uploading ? "..." : <><Upload className="h-3.5 w-3.5" /> Upload</>}
+                </button>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </div>
+              {form.image && (
+                <img src={form.image} alt="Preview" className="h-20 w-20 rounded-xl object-cover border border-border" />
+              )}
+            </div>
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
             <Input placeholder="Sizes (S, M, L, XL)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
             <label className="flex items-center gap-2 text-sm">
