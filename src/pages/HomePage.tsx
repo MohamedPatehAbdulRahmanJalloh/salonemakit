@@ -87,6 +87,9 @@ const HomePage = () => {
         </div>
       </motion.div>
 
+      {/* Flash Sale Banner */}
+      <FlashSaleBanner />
+
       {/* Categories */}
       <section className="mt-5 px-4">
         <div className="flex items-center justify-between mb-3">
