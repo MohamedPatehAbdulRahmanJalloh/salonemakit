@@ -1,7 +1,8 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
-import { ArrowLeft, Heart, Share2, ShoppingCart, Truck, Minus, Plus } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
+import { useProductImages } from "@/hooks/useProductImages";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -23,16 +24,39 @@ const ProductDetailPage = () => {
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: product, isLoading } = useProduct(id || "");
+  const { data: extraImages = [] } = useProductImages(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const touchStartX = useRef(0);
 
   const wishlisted = product ? isInWishlist(product.id) : false;
+
+  // Build image array: main image + extra images
+  const allImages = product
+    ? [product.image, ...extraImages.map((img) => img.image_url)]
+    : [];
 
   const relatedProducts = product
     ? allProducts.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 6)
     : [];
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50 && allImages.length > 1) {
+      if (diff > 0 && currentImageIndex < allImages.length - 1) {
+        setCurrentImageIndex((prev) => prev + 1);
+      } else if (diff < 0 && currentImageIndex > 0) {
+        setCurrentImageIndex((prev) => prev - 1);
+      }
+    }
+  };
 
   if (isLoading) {
     return (
@@ -57,6 +81,10 @@ const ProductDetailPage = () => {
 
   const sizes = product.sizes || [];
   const currentSize = selectedSize || sizes[0];
+  const discountPercent =
+    product.original_price && product.original_price > product.price
+      ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
+      : null;
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -82,9 +110,23 @@ const ProductDetailPage = () => {
       transition={{ duration: 0.3 }}
       className="pb-28"
     >
-      {/* Image */}
-      <div className="relative aspect-[3/4] bg-secondary">
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+      {/* Swipeable Image Gallery */}
+      <div
+        className="relative aspect-[3/4] bg-secondary overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <motion.img
+          key={currentImageIndex}
+          src={allImages[currentImageIndex] || product.image}
+          alt={product.name}
+          className="w-full h-full object-cover"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+
+        {/* Top bar */}
         <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
           <button
             onClick={() => navigate(-1)}
@@ -105,11 +147,42 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* Image dots indicator */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-          <div className="h-2 w-6 rounded-full bg-accent" />
-          <div className="h-2 w-2 rounded-full bg-background/50" />
+        {/* Badge */}
+        {product.badge && (
+          <span className="absolute top-4 left-16 bg-destructive text-destructive-foreground text-[10px] font-bold px-2.5 py-1 rounded-full">
+            {product.badge}
+          </span>
+        )}
+
+        {/* Image counter */}
+        <div className="absolute top-4 right-28 bg-foreground/60 text-background text-[10px] font-bold px-2.5 py-1 rounded-full">
+          {currentImageIndex + 1}/{allImages.length}
         </div>
+
+        {/* Thumbnail strip */}
+        {allImages.length > 1 && (
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 px-4">
+            {allImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentImageIndex(i)}
+                className={cn(
+                  "h-12 w-12 rounded-lg overflow-hidden border-2 transition-all",
+                  i === currentImageIndex ? "border-accent scale-110" : "border-background/50 opacity-70"
+                )}
+              >
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Dots fallback for single image */}
+        {allImages.length <= 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            <div className="h-2 w-6 rounded-full bg-accent" />
+          </div>
+        )}
       </div>
 
       {/* Details */}
@@ -117,12 +190,23 @@ const ProductDetailPage = () => {
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
           <span className="capitalize">{product.category}</span>
           <span>·</span>
-          <span>Clothing</span>
+          <span>{product.in_stock ? "In Stock ✓" : "Out of Stock"}</span>
         </div>
 
         <h1 className="text-xl font-bold text-primary">{product.name}</h1>
 
-        <p className="text-xl font-extrabold text-primary mt-1">{formatPrice(product.price)}</p>
+        {/* Price with discount */}
+        <div className="flex items-center gap-2.5 mt-1">
+          <p className="text-xl font-extrabold text-primary">{formatPrice(product.price)}</p>
+          {product.original_price && product.original_price > product.price && (
+            <>
+              <p className="text-sm text-muted-foreground line-through">{formatPrice(product.original_price)}</p>
+              <span className="bg-destructive/10 text-destructive text-xs font-bold px-2 py-0.5 rounded-full">
+                -{discountPercent}%
+              </span>
+            </>
+          )}
+        </div>
 
         {/* Rating summary */}
         {reviewCount > 0 && (
