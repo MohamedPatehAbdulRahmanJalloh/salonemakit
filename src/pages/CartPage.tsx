@@ -1,4 +1,5 @@
 import { useCart } from "@/context/CartContext";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
 import { Minus, Plus, Trash2, ShoppingBag, LogIn, ArrowLeft } from "lucide-react";
@@ -7,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CartPage = () => {
+  useDocumentTitle("Shopping Bag");
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();

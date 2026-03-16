@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
 import { Info } from "lucide-react";
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
+  useDocumentTitle("My Profile");
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();

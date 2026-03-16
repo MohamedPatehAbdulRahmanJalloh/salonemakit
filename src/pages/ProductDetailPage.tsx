@@ -1,5 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
@@ -26,6 +27,7 @@ const ProductDetailPage = () => {
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: product, isLoading } = useProduct(id || "");
+  useDocumentTitle(product?.name);
   const { data: extraImages = [] } = useProductImages(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");

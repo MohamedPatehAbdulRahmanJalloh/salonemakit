@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
@@ -17,6 +18,7 @@ import CouponInput from "@/components/CouponInput";
 type PaymentMethod = "cod" | "orange_money";
 
 const CheckoutPage = () => {
+  useDocumentTitle("Checkout");
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();

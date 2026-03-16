@@ -1,4 +1,5 @@
 import { useWishlist } from "@/hooks/useWishlist";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/components/ProductCard";
@@ -10,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 const WishlistPage = () => {
+  useDocumentTitle("Wishlist");
   const { user } = useAuth();
   const { wishlistItems, isLoading, toggleWishlist } = useWishlist();
   const { addItem } = useCart();

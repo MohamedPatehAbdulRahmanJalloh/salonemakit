@@ -7,6 +7,8 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import BottomNav from "@/components/BottomNav";
+import ScrollToTop from "@/components/ScrollToTop";
+import BackToTop from "@/components/BackToTop";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -34,6 +36,8 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <BrowserRouter>
+              <ScrollToTop />
+              <BackToTop />
               <div className="max-w-lg mx-auto min-h-screen bg-background relative">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
