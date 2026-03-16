@@ -23,6 +23,7 @@ import ProfilePage from "./pages/ProfilePage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AboutPage from "./pages/AboutPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
