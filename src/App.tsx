@@ -58,7 +58,7 @@ const App = () => (
                 </Routes>
                 <BottomNav />
               </div>
-            </BrowserRouter>
+            </HashRouter>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>
