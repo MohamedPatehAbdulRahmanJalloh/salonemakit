@@ -91,7 +91,7 @@ const SearchPage = () => {
   return (
     <div className="pb-20 bg-background">
       {/* SHEIN-style sticky header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border">
+      <header className="sticky top-0 z-40 bg-background border-b border-border safe-area-top">
         <div className="px-4 py-2.5 flex items-center gap-2">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
