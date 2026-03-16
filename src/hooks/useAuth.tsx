@@ -43,28 +43,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let isMounted = true;
 
-    const applySession = (nextSession: Session | null) => {
+    const applySession = async (nextSession: Session | null) => {
       if (!isMounted) return;
 
       setSession(nextSession);
       setUser(nextSession?.user ?? null);
-      setLoading(false);
 
       if (nextSession?.user) {
-        void checkAdminRole(nextSession.user.id);
+        await checkAdminRole(nextSession.user.id);
       } else {
         setIsAdmin(false);
       }
+
+      if (isMounted) setLoading(false);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      applySession(nextSession);
+      void applySession(nextSession);
     });
 
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
-        applySession(session);
+        void applySession(session);
       })
       .catch((error) => {
         console.error("[Auth] Failed to get session:", error);
