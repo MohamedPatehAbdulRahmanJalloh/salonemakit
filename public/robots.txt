@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://salonemakit.lovable.app/sitemap.xml
+Sitemap: https://salonemakitsl.com/sitemap.xml
