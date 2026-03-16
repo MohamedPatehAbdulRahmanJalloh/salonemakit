@@ -27,6 +27,7 @@ const ProductDetailPage = () => {
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: product, isLoading } = useProduct(id || "");
+  useDocumentTitle(product?.name);
   const { data: extraImages = [] } = useProductImages(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");

@@ -18,6 +18,7 @@ const TRACKING_STEPS = [
 const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({
     queryKey: ["order-detail", id],
