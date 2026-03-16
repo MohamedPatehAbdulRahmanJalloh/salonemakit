@@ -64,7 +64,7 @@ const HomePage = () => {
   return (
     <div className="pb-20 bg-background">
       {/* SHEIN-style Header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border">
+      <header className="sticky top-0 z-40 bg-background border-b border-border safe-area-top">
         <div className="px-4 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src={logo} alt="SaloneMakitSL" className="h-8 w-8 object-contain rounded-md" />
