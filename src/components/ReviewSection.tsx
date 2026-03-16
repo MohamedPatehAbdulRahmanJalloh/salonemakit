@@ -144,11 +144,11 @@ const ReviewSection = ({ productId }: ReviewSectionProps) => {
                 <div className="flex items-center gap-2">
                   <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center">
                     <span className="text-xs font-bold text-accent">
-                      {(review.user_email || "U")[0].toUpperCase()}
+                      R
                     </span>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold">{maskEmail(review.user_email || "User")}</p>
+                    <p className="text-xs font-semibold">Verified Buyer</p>
                     <p className="text-[10px] text-muted-foreground">{formatDate(review.created_at)}</p>
                   </div>
                 </div>
