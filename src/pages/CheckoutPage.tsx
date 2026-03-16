@@ -44,7 +44,7 @@ const CheckoutPage = () => {
   const handleSubmit = async () => {
     if (!canSubmit) return;
     try {
-      await createOrder.mutateAsync({
+      const result = await createOrder.mutateAsync({
         customerName: name,
         phone,
         district,
@@ -56,13 +56,23 @@ const CheckoutPage = () => {
         total: grandTotal,
       });
       setOrderDistrict(district);
+      setOrderId(result.id);
       setStep("success");
       clearCart();
       toast.success("Order placed successfully!");
+      // 🎉 Confetti celebration
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      if (navigator.vibrate) navigator.vibrate(200);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to place order. Please try again.";
       toast.error(message);
     }
+  };
+
+  const buildWhatsAppMessage = () => {
+    const itemList = items.map(i => `• ${i.product.name} × ${i.quantity}${i.selectedSize ? ` (${i.selectedSize})` : ""}`).join("\n");
+    const msg = `🛍️ *New Order from SaloneMakitSL*\n\n📋 *Order ID:* ${orderId.slice(0, 8).toUpperCase()}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📍 *Location:* ${address}, ${orderDistrict}\n💳 *Payment:* ${paymentMethod === "orange_money" ? "Orange Money" : "Cash on Delivery"}\n\n*Items:*\n${itemList}\n\n💰 *Total:* ${formatPrice(grandTotal)}${paymentMethod === "orange_money" ? "\n\n📱 Please send payment to: +232 78 928 111" : ""}`;
+    return encodeURIComponent(msg);
   };
 
   if (step === "success") {
