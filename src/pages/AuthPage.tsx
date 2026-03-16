@@ -54,8 +54,8 @@ const AuthPage = () => {
       <div className="px-6 pt-8 max-w-sm mx-auto">
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
-          <img src={logo} alt="SaloneMakit" className="h-12 w-12 rounded-lg mb-2" />
-          <h2 className="text-base font-extrabold text-primary">SaloneMakit</h2>
+          <img src={logo} alt="SaloneMakitSL" className="h-12 w-12 rounded-lg mb-2" />
+          <h2 className="text-base font-extrabold text-primary">SaloneMakitSL</h2>
           <p className="text-[10px] text-accent font-bold uppercase tracking-[0.15em]">Di Place Fo Shop</p>
         </div>
 
