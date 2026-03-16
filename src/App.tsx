@@ -24,6 +24,7 @@ import OrderDetailPage from "./pages/OrderDetailPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import PushNotificationSetup from "./components/PushNotificationSetup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
