@@ -17,19 +17,19 @@ import BannerCarousel from "@/components/BannerCarousel";
 import { toast } from "sonner";
 
 const CATEGORY_ICONS = [
-  { id: "women", label: "Women", emoji: "👗" },
-  { id: "men", label: "Men", emoji: "👔" },
-  { id: "shoes", label: "Shoes", emoji: "👟" },
-  { id: "bags", label: "Bags", emoji: "👜" },
-  { id: "perfumes", label: "Beauty", emoji: "💄" },
-  { id: "accessories", label: "Accessories", emoji: "💍" },
+  { id: "women", label: "Women", symbol: "W" },
+  { id: "men", label: "Men", symbol: "M" },
+  { id: "shoes", label: "Shoes", symbol: "S" },
+  { id: "bags", label: "Bags", symbol: "B" },
+  { id: "perfumes", label: "Beauty", symbol: "P" },
+  { id: "accessories", label: "Accessories", symbol: "A" },
 ];
 
 const PROMO_MESSAGES = [
-  "🔥 Flash Sale! Up to 50% off on selected items!",
-  "🎉 Free delivery on orders above Le 200,000!",
-  "✨ New arrivals just dropped — check them out!",
-  "💰 Use code SALONE10 for 10% off your first order!",
+  "Flash Sale! Up to 50% off on selected items!",
+  "Free delivery on orders above Le 200,000!",
+  "New arrivals just dropped — check them out!",
+  "Use code SALONE10 for 10% off your first order!",
 ];
 
 const HomePage = () => {
@@ -112,8 +112,8 @@ const HomePage = () => {
               to={`/search?category=${cat.id}`}
               className="flex flex-col items-center gap-1 min-w-[50px]"
             >
-              <div className="h-11 w-11 rounded-full bg-accent/10 flex items-center justify-center text-xl">
-                {cat.emoji}
+              <div className="h-11 w-11 rounded-full bg-accent/10 flex items-center justify-center">
+                <span className="text-sm font-bold text-accent">{cat.symbol}</span>
               </div>
               <span className="text-[10px] font-medium text-foreground">{cat.label}</span>
             </Link>
@@ -139,7 +139,7 @@ const HomePage = () => {
 
       {/* Delivery Banner */}
       <div className="mx-4 mt-3 rounded-lg bg-accent/5 border border-accent/15 px-3 py-2.5 flex items-center gap-2.5">
-        <span className="text-base">🇸🇱</span>
+        <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground px-1.5">SL</span>
         <div>
           <p className="text-xs font-bold text-foreground">Delivery Across Sierra Leone</p>
           <p className="text-[10px] text-muted-foreground">All 16 districts • COD & Orange Money</p>
@@ -149,7 +149,7 @@ const HomePage = () => {
       {/* New Arrivals */}
       <section className="mt-4">
         <div className="flex items-center justify-between px-4 mb-2">
-          <h2 className="text-sm font-bold text-foreground">New Arrivals ✨</h2>
+          <h2 className="text-sm font-bold text-foreground">New Arrivals</h2>
           <Link to="/search" className="text-[11px] text-accent font-semibold">View All &gt;</Link>
         </div>
         {isLoading ? (
@@ -178,7 +178,7 @@ const HomePage = () => {
       {/* Trending */}
       <section className="mt-4">
         <div className="flex items-center justify-between px-4 mb-2">
-          <h2 className="text-sm font-bold text-foreground">Trending Now 🔥</h2>
+          <h2 className="text-sm font-bold text-foreground">Trending Now</h2>
           <Link to="/search" className="text-[11px] text-accent font-semibold">View All &gt;</Link>
         </div>
         {isLoading ? (
