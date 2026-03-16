@@ -35,7 +35,7 @@ const App = () => (
         <Sonner />
         <AuthProvider>
           <CartProvider>
-            <BrowserRouter>
+            <HashRouter>
               <ScrollToTop />
               <BackToTop />
               <div className="max-w-lg mx-auto min-h-screen bg-background relative">
