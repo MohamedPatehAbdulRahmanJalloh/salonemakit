@@ -39,7 +39,9 @@ const CheckoutPage = () => {
   const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
-  const canSubmit = name.trim() && phone.trim() && district && address.trim() && items.length > 0 && !createOrder.isPending;
+  const isValidPhone = (p: string) => /^(\+?232|0)?[2-9]\d{7}$/.test(p.replace(/\s/g, ""));
+  const phoneError = phone.trim() && !isValidPhone(phone) ? "Enter a valid Sierra Leone phone number" : "";
+  const canSubmit = name.trim() && phone.trim() && !phoneError && district && address.trim() && items.length > 0 && !createOrder.isPending;
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
