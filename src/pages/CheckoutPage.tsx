@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,12 +8,13 @@ import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn, ShieldCheck, MessageCircle } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import CouponInput from "@/components/CouponInput";
+import confetti from "canvas-confetti";
 
 type PaymentMethod = "cod" | "orange_money";
 
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
+  const [orderId, setOrderId] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [district, setDistrict] = useState("");
@@ -42,7 +44,7 @@ const CheckoutPage = () => {
   const handleSubmit = async () => {
     if (!canSubmit) return;
     try {
-      await createOrder.mutateAsync({
+      const result = await createOrder.mutateAsync({
         customerName: name,
         phone,
         district,
@@ -54,13 +56,23 @@ const CheckoutPage = () => {
         total: grandTotal,
       });
       setOrderDistrict(district);
+      setOrderId(result.id);
       setStep("success");
       clearCart();
       toast.success("Order placed successfully!");
+      // 🎉 Confetti celebration
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      if (navigator.vibrate) navigator.vibrate(200);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to place order. Please try again.";
       toast.error(message);
     }
+  };
+
+  const buildWhatsAppMessage = () => {
+    const itemList = items.map(i => `• ${i.product.name} × ${i.quantity}${i.selectedSize ? ` (${i.selectedSize})` : ""}`).join("\n");
+    const msg = `🛍️ *New Order from SaloneMakitSL*\n\n📋 *Order ID:* ${orderId.slice(0, 8).toUpperCase()}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📍 *Location:* ${address}, ${orderDistrict}\n💳 *Payment:* ${paymentMethod === "orange_money" ? "Orange Money" : "Cash on Delivery"}\n\n*Items:*\n${itemList}\n\n💰 *Total:* ${formatPrice(grandTotal)}${paymentMethod === "orange_money" ? "\n\n📱 Please send payment to: +232 78 928 111" : ""}`;
+    return encodeURIComponent(msg);
   };
 
   if (step === "success") {
@@ -70,17 +82,35 @@ const CheckoutPage = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center"
       >
-        <div className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-5">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+          className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-5"
+        >
           <CheckCircle className="h-10 w-10 text-accent" />
-        </div>
+        </motion.div>
         <h1 className="text-lg font-extrabold">Order Confirmed! 🎉</h1>
+        <p className="text-[10px] text-muted-foreground mt-1">Order #{orderId.slice(0, 8).toUpperCase()}</p>
         <p className="text-xs text-muted-foreground mt-3 max-w-xs leading-relaxed">
           Your order will be delivered to {orderDistrict}.
           {paymentMethod === "cod"
             ? ` Pay ${formatPrice(grandTotal)} on delivery.`
             : ` Please send ${formatPrice(grandTotal)} to Orange Money number +232 78 928 111, then your order will be processed.`}
         </p>
-        <div className="flex gap-3 mt-6">
+        
+        {/* WhatsApp Confirmation */}
+        <a
+          href={`https://wa.me/23278928111?text=${buildWhatsAppMessage()}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-2 bg-[hsl(142,70%,45%)] text-white px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Confirm via WhatsApp
+        </a>
+        
+        <div className="flex gap-3 mt-4">
           <Button onClick={() => navigate("/orders")} variant="outline" className="rounded-lg h-10 text-xs font-bold border-accent text-accent">
             View Orders
           </Button>
@@ -90,6 +120,7 @@ const CheckoutPage = () => {
         </div>
       </motion.div>
     );
+
   }
 
   if (!user) {

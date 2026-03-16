@@ -1,11 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const TRACKING_STEPS = [
   { key: "pending", label: "Order Placed", icon: Clock, description: "Your order has been received" },
@@ -18,6 +20,7 @@ const TRACKING_STEPS = [
 const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({
@@ -33,6 +36,26 @@ const OrderDetailPage = () => {
     },
     enabled: !!id,
   });
+
+  // Real-time order status updates
+  useEffect(() => {
+    if (!id) return;
+    const channel = supabase
+      .channel(`order-${id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "orders", filter: `id=eq.${id}` },
+        (payload) => {
+          queryClient.invalidateQueries({ queryKey: ["order-detail", id] });
+          queryClient.invalidateQueries({ queryKey: ["orders"] });
+          const newStatus = (payload.new as any).status;
+          toast.success(`Order status updated: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
+          if (navigator.vibrate) navigator.vibrate(100);
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [id, queryClient]);
 
   if (isLoading) {
     return (
@@ -175,9 +198,20 @@ const OrderDetailPage = () => {
           <div className="flex justify-between text-sm font-bold border-t border-border/30 pt-2">
             <span>Total</span>
             <span className="text-accent">{formatPrice(order.total)}</span>
-          </div>
         </div>
+
+        {/* WhatsApp Support */}
+        <a
+          href={`https://wa.me/23278928111?text=${encodeURIComponent(`Hi! I'd like to check on my order #${order.id.slice(0, 8).toUpperCase()}. Thank you!`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 bg-[hsl(142,70%,45%)] text-white rounded-2xl p-3 font-bold text-sm hover:opacity-90 transition-opacity"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Ask About This Order on WhatsApp
+        </a>
       </div>
+    </div>
     </div>
   );
 };

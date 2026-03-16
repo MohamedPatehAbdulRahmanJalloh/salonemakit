@@ -1,0 +1,20 @@
+{
+  "name": "SaloneMakitSL",
+  "short_name": "SaloneMakit",
+  "description": "Di Place Fo Shop - Sierra Leone's Premier Online Fashion Store",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a3a5c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["shopping", "fashion"],
+  "lang": "en",
+  "dir": "ltr"
+}

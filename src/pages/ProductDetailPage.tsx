@@ -99,6 +99,7 @@ const ProductDetailPage = () => {
       addItem(product, currentSize);
     }
     toast.success(`${quantity} item(s) added to cart`);
+    if (navigator.vibrate) navigator.vibrate(50);
   };
 
   const handleWishlist = () => {

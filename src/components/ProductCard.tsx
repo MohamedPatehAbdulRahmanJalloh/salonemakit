@@ -30,6 +30,7 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
   const discountPercent = hasDiscount
     ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
     : 0;
+  const isLowStock = product.stock_quantity !== null && product.stock_quantity !== undefined && product.stock_quantity > 0 && product.stock_quantity <= 5;
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -89,6 +90,13 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
             />
           </button>
 
+          {/* Low stock urgency */}
+          {isLowStock && !compact && (
+            <div className="absolute top-0 right-0 bg-orange text-orange-foreground text-[9px] font-bold px-1.5 py-0.5">
+              Only {product.stock_quantity} left
+            </div>
+          )}
+
           {/* Quick add - desktop hover */}
           {!compact && (
             <button
@@ -96,6 +104,7 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
                 e.preventDefault();
                 addItem(product, product.sizes?.[0]);
                 toast.success("Added to cart");
+                if (navigator.vibrate) navigator.vibrate(50);
               }}
               className="absolute bottom-2 left-2 h-7 w-7 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-md transition-all active:scale-90 opacity-0 group-hover:opacity-100"
               aria-label={`Add ${product.name} to cart`}
