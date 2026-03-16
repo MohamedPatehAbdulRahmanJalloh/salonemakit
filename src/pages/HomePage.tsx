@@ -139,7 +139,7 @@ const HomePage = () => {
 
       {/* Delivery Banner */}
       <div className="mx-4 mt-3 rounded-lg bg-accent/5 border border-accent/15 px-3 py-2.5 flex items-center gap-2.5">
-        <span className="text-base">🇸🇱</span>
+        <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground px-1.5">SL</span>
         <div>
           <p className="text-xs font-bold text-foreground">Delivery Across Sierra Leone</p>
           <p className="text-[10px] text-muted-foreground">All 16 districts • COD & Orange Money</p>
