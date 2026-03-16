@@ -30,6 +30,7 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
   const discountPercent = hasDiscount
     ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
     : 0;
+  const isLowStock = product.stock_quantity !== null && product.stock_quantity !== undefined && product.stock_quantity > 0 && product.stock_quantity <= 5;
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
