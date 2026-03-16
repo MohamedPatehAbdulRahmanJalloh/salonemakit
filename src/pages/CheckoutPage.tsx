@@ -25,6 +25,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
+  const [orderId, setOrderId] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [district, setDistrict] = useState("");
