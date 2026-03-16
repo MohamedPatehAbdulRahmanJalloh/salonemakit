@@ -120,7 +120,7 @@ const CheckoutPage = () => {
         </div>
       </motion.div>
     );
-    );
+
   }
 
   if (!user) {
