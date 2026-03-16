@@ -112,8 +112,8 @@ const HomePage = () => {
               to={`/search?category=${cat.id}`}
               className="flex flex-col items-center gap-1 min-w-[50px]"
             >
-              <div className="h-11 w-11 rounded-full bg-accent/10 flex items-center justify-center text-xl">
-                {cat.emoji}
+              <div className="h-11 w-11 rounded-full bg-accent/10 flex items-center justify-center">
+                <span className="text-sm font-bold text-accent">{cat.symbol}</span>
               </div>
               <span className="text-[10px] font-medium text-foreground">{cat.label}</span>
             </Link>
