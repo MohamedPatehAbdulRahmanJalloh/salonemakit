@@ -38,7 +38,7 @@ const App = () => (
             <HashRouter>
               <ScrollToTop />
               <BackToTop />
-              <div className="max-w-lg mx-auto min-h-screen bg-background relative">
+              <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/search" element={<SearchPage />} />
