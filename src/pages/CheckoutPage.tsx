@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";

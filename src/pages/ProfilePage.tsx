@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
 import { Info } from "lucide-react";

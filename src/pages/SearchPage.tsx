@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";

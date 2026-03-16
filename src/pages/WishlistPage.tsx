@@ -1,4 +1,5 @@
 import { useWishlist } from "@/hooks/useWishlist";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/components/ProductCard";

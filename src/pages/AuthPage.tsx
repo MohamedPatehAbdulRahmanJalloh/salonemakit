@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";

@@ -1,4 +1,5 @@
 import { useOrders } from "@/hooks/useOrders";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { formatPrice } from "@/components/ProductCard";
 import { ClipboardList, Package, Clock, CheckCircle, Truck, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";

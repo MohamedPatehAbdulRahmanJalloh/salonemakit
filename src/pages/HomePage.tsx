@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Search, ShoppingBag, Bell, Heart } from "lucide-react";
