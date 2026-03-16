@@ -18,9 +18,9 @@ export const SIERRA_LEONE_DISTRICTS = [
 ];
 
 export const CATEGORIES = [
-  { id: "women", label: "Women", icon: "👗" },
-  { id: "men", label: "Men", icon: "👔" },
-  { id: "shoes", label: "Shoes", icon: "👟" },
-  { id: "bags", label: "Bags", icon: "👜" },
-  { id: "perfumes", label: "Perfumes", icon: "🧴" },
+  { id: "women", label: "Women", icon: "Shirt" },
+  { id: "men", label: "Men", icon: "User" },
+  { id: "shoes", label: "Shoes", icon: "Footprints" },
+  { id: "bags", label: "Bags", icon: "ShoppingBag" },
+  { id: "perfumes", label: "Perfumes", icon: "Sparkles" },
 ];
