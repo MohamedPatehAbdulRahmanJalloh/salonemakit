@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 const WishlistPage = () => {
+  useDocumentTitle("Wishlist");
   const { user } = useAuth();
   const { wishlistItems, isLoading, toggleWishlist } = useWishlist();
   const { addItem } = useCart();

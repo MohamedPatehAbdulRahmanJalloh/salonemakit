@@ -33,6 +33,7 @@ const PROMO_MESSAGES = [
 ];
 
 const HomePage = () => {
+  useDocumentTitle();
   const { totalItems } = useCart();
   const { user } = useAuth();
   const { data: products = [], isLoading } = useProducts();

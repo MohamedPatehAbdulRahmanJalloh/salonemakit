@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
+  useDocumentTitle("My Profile");
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();

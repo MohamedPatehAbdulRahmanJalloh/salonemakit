@@ -18,6 +18,7 @@ import CouponInput from "@/components/CouponInput";
 type PaymentMethod = "cod" | "orange_money";
 
 const CheckoutPage = () => {
+  useDocumentTitle("Checkout");
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();

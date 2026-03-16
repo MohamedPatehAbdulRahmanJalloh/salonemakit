@@ -25,6 +25,7 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 const ALL_SIZES = ["S", "M", "L", "XL", "XXL", "38", "39", "40", "41", "42", "43", "44", "45"];
 
 const SearchPage = () => {
+  useDocumentTitle("Shop");
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const activeCategory = searchParams.get("category") || "all";

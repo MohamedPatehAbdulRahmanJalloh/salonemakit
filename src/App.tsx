@@ -36,6 +36,8 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <BrowserRouter>
+              <ScrollToTop />
+              <BackToTop />
               <div className="max-w-lg mx-auto min-h-screen bg-background relative">
                 <Routes>
                   <Route path="/" element={<HomePage />} />

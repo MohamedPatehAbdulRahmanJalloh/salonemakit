@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CartPage = () => {
+  useDocumentTitle("Shopping Bag");
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();

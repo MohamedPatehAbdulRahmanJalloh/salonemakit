@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
 const AuthPage = () => {
+  useDocumentTitle("Sign In");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
