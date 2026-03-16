@@ -104,13 +104,17 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  .safe-area-top {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 0.625rem);
+  .app-safe-area {
+    --app-safe-top: env(safe-area-inset-top, 0px);
+    padding-top: var(--app-safe-top);
   }
   @supports (-webkit-touch-callout: none) {
-    .safe-area-top {
-      padding-top: max(calc(env(safe-area-inset-top, 0px) + 0.625rem), 1.75rem);
+    .app-safe-area {
+      --app-safe-top: max(env(safe-area-inset-top, 0px), 1.75rem);
     }
+  }
+  .app-safe-area .sticky.top-0 {
+    top: var(--app-safe-top);
   }
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
