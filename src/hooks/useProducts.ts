@@ -6,7 +6,6 @@ export const useProducts = (category?: string, showAll = false) => {
   return useQuery({
     queryKey: ["products", category, showAll],
     queryFn: async (): Promise<Product[]> => {
-      console.log("[useProducts] Fetching products...", { category, showAll });
       let query = supabase.from("products").select("*").order("created_at", { ascending: false });
       if (!showAll) {
         query = query.eq("in_stock", true);
@@ -14,11 +13,16 @@ export const useProducts = (category?: string, showAll = false) => {
       if (category && category !== "all") {
         query = query.eq("category", category);
       }
-      const { data, error, status } = await query;
-      console.log("[useProducts] Result:", { count: data?.length, error, status });
-      if (error) throw error;
+      const { data, error } = await query;
+      if (error) {
+        console.error("[useProducts] Error fetching products:", error);
+        throw error;
+      }
+      console.log("[useProducts] Fetched", data?.length, "products");
       return data || [];
     },
+    retry: 3,
+    staleTime: 1000 * 60 * 2,
   });
 };
 
