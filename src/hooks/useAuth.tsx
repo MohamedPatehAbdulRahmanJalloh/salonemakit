@@ -81,6 +81,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    // Check rate limit before attempting sign in
+    try {
+      const { data: allowed, error: rlError } = await supabase.rpc("check_rate_limit" as any, {
+        p_identifier: email.toLowerCase().trim(),
+      });
+      if (rlError) {
+        console.error("[Auth] Rate limit check failed:", rlError);
+      } else if (!allowed) {
+        return { error: new Error("Too many login attempts. Please wait 15 minutes and try again.") };
+      }
+    } catch (e) {
+      console.error("[Auth] Rate limit error:", e);
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error as Error | null };
   };
