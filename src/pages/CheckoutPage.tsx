@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,12 +8,13 @@ import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle, Truck, MapPin, Phone, User, LogIn, ShieldCheck, MessageCircle } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import CouponInput from "@/components/CouponInput";
+import confetti from "canvas-confetti";
 
 type PaymentMethod = "cod" | "orange_money";
 
