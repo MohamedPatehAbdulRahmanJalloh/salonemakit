@@ -82,17 +82,35 @@ const CheckoutPage = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center"
       >
-        <div className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-5">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+          className="h-20 w-20 rounded-full bg-accent/10 flex items-center justify-center mb-5"
+        >
           <CheckCircle className="h-10 w-10 text-accent" />
-        </div>
+        </motion.div>
         <h1 className="text-lg font-extrabold">Order Confirmed! 🎉</h1>
+        <p className="text-[10px] text-muted-foreground mt-1">Order #{orderId.slice(0, 8).toUpperCase()}</p>
         <p className="text-xs text-muted-foreground mt-3 max-w-xs leading-relaxed">
           Your order will be delivered to {orderDistrict}.
           {paymentMethod === "cod"
             ? ` Pay ${formatPrice(grandTotal)} on delivery.`
             : ` Please send ${formatPrice(grandTotal)} to Orange Money number +232 78 928 111, then your order will be processed.`}
         </p>
-        <div className="flex gap-3 mt-6">
+        
+        {/* WhatsApp Confirmation */}
+        <a
+          href={`https://wa.me/23278928111?text=${buildWhatsAppMessage()}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-2 bg-[hsl(142,70%,45%)] text-white px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Confirm via WhatsApp
+        </a>
+        
+        <div className="flex gap-3 mt-4">
           <Button onClick={() => navigate("/orders")} variant="outline" className="rounded-lg h-10 text-xs font-bold border-accent text-accent">
             View Orders
           </Button>
@@ -101,6 +119,7 @@ const CheckoutPage = () => {
           </Button>
         </div>
       </motion.div>
+    );
     );
   }
 
