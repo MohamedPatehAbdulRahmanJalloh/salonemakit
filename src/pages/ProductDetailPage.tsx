@@ -144,7 +144,7 @@ const ProductDetailPage = () => {
             <button
               onClick={() => {
                 const url = window.location.href;
-                const text = `Check out ${product.name} for ${formatPrice(product.price)} on SaloneMakit! 🛍️\n${url}`;
+                const text = `Check out ${product.name} for ${formatPrice(product.price)} on SaloneMakitSL! 🛍️\n${url}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
               }}
               className="h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center"

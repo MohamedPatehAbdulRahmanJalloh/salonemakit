@@ -24,8 +24,8 @@ const ProfilePage = () => {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-6">
-        <img src={logo} alt="SaloneMakit" className="h-16 w-16 rounded-xl mb-4" />
-        <h2 className="text-base font-extrabold text-primary">Welcome to SaloneMakit</h2>
+        <img src={logo} alt="SaloneMakitSL" className="h-16 w-16 rounded-xl mb-4" />
+        <h2 className="text-base font-extrabold text-primary">Welcome to SaloneMakitSL</h2>
         <p className="text-xs text-muted-foreground mt-1 text-center">Sign in to track orders, save favorites, and more</p>
         <div className="flex gap-3 mt-5 w-full max-w-xs">
           <Link to="/auth" className="flex-1">
@@ -71,7 +71,7 @@ const ProfilePage = () => {
     {
       title: "Support",
       items: [
-        { icon: Info, label: "About SaloneMakit", value: "", to: "/about" },
+        { icon: Info, label: "About SaloneMakitSL", value: "", to: "/about" },
         { icon: MessageCircle, label: "WhatsApp Support", value: "", to: "https://wa.me/23278928111", external: true },
         { icon: HelpCircle, label: "Help Center", value: "", to: "/" },
         { icon: Gift, label: "Refer a Friend", value: "Soon", to: "/" },
@@ -171,7 +171,7 @@ const ProfilePage = () => {
           <span className="text-xs font-medium text-destructive">Sign Out</span>
         </button>
 
-        <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakit v1.0 • Made in Sierra Leone 🇸🇱</p>
+        <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakitSL v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
     </div>
   );
