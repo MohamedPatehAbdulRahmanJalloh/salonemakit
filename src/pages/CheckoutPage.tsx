@@ -39,7 +39,9 @@ const CheckoutPage = () => {
   const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
-  const canSubmit = name.trim() && phone.trim() && district && address.trim() && items.length > 0 && !createOrder.isPending;
+  const isValidPhone = (p: string) => /^(\+?232|0)?[2-9]\d{7}$/.test(p.replace(/\s/g, ""));
+  const phoneError = phone.trim() && !isValidPhone(phone) ? "Enter a valid Sierra Leone phone number" : "";
+  const canSubmit = name.trim() && phone.trim() && !phoneError && district && address.trim() && items.length > 0 && !createOrder.isPending;
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
@@ -167,7 +169,8 @@ const CheckoutPage = () => {
           </div>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Phone (+23276...)" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className="pl-9 bg-secondary border-none h-11 rounded-lg text-sm" />
+            <Input placeholder="Phone (+23276...)" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className={cn("pl-9 bg-secondary border-none h-11 rounded-lg text-sm", phoneError && "ring-2 ring-destructive")} />
+            {phoneError && <p className="text-[10px] text-destructive mt-0.5 pl-1">{phoneError}</p>}
           </div>
           <Select value={district} onValueChange={setDistrict}>
             <SelectTrigger className="bg-secondary border-none h-11 rounded-lg text-sm">
