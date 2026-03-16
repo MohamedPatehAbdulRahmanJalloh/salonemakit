@@ -24,8 +24,8 @@ const ProfilePage = () => {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-6">
-        <img src={logo} alt="SaloneMakit" className="h-16 w-16 rounded-xl mb-4" />
-        <h2 className="text-base font-extrabold text-primary">Welcome to SaloneMakit</h2>
+        <img src={logo} alt="SaloneMakitSL" className="h-16 w-16 rounded-xl mb-4" />
+        <h2 className="text-base font-extrabold text-primary">Welcome to SaloneMakitSL</h2>
         <p className="text-xs text-muted-foreground mt-1 text-center">Sign in to track orders, save favorites, and more</p>
         <div className="flex gap-3 mt-5 w-full max-w-xs">
           <Link to="/auth" className="flex-1">
