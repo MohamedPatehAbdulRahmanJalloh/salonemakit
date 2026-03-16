@@ -107,6 +107,11 @@
   .safe-area-top {
     padding-top: calc(env(safe-area-inset-top, 0px) + 0.625rem);
   }
+  @supports (-webkit-touch-callout: none) {
+    .safe-area-top {
+      padding-top: max(calc(env(safe-area-inset-top, 0px) + 0.625rem), 1.75rem);
+    }
+  }
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
