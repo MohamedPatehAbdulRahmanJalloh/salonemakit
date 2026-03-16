@@ -37,6 +37,7 @@ const App = () => (
         <Sonner />
         <AuthProvider>
           <CartProvider>
+            <PushNotificationSetup />
             <HashRouter>
               <ScrollToTop />
               <BackToTop />
