@@ -19,7 +19,6 @@ export const useProducts = (category?: string, showAll = false) => {
       if (error) throw error;
       return data || [];
     },
-    },
   });
 };
 
