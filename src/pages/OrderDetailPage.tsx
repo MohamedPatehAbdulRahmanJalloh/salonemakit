@@ -198,9 +198,20 @@ const OrderDetailPage = () => {
           <div className="flex justify-between text-sm font-bold border-t border-border/30 pt-2">
             <span>Total</span>
             <span className="text-accent">{formatPrice(order.total)}</span>
-          </div>
         </div>
+
+        {/* WhatsApp Support */}
+        <a
+          href={`https://wa.me/23278928111?text=${encodeURIComponent(`Hi! I'd like to check on my order #${order.id.slice(0, 8).toUpperCase()}. Thank you!`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 bg-[hsl(142,70%,45%)] text-white rounded-2xl p-3 font-bold text-sm hover:opacity-90 transition-opacity"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Ask About This Order on WhatsApp
+        </a>
       </div>
+    </div>
     </div>
   );
 };
