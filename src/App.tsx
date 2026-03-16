@@ -20,6 +20,7 @@ import WishlistPage from "./pages/WishlistPage";
 import ProfilePage from "./pages/ProfilePage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/admin/analytics" element={<AnalyticsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/about" element={<AboutPage />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="*" element={<NotFound />} />

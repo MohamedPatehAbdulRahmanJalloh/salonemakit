@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
+import { Info } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
 import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
@@ -70,6 +71,7 @@ const ProfilePage = () => {
     {
       title: "Support",
       items: [
+        { icon: Info, label: "About SaloneMakit", value: "", to: "/about" },
         { icon: MessageCircle, label: "WhatsApp Support", value: "", to: "https://wa.me/23278928111", external: true },
         { icon: HelpCircle, label: "Help Center", value: "", to: "/" },
         { icon: Gift, label: "Refer a Friend", value: "Soon", to: "/" },
