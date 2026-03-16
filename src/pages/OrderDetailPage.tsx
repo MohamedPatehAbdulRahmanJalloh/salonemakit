@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
