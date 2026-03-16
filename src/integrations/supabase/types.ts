@@ -86,6 +86,24 @@ export type Database = {
         }
         Relationships: []
       }
+      login_attempts: {
+        Row: {
+          attempted_at: string
+          id: string
+          ip_or_email: string
+        }
+        Insert: {
+          attempted_at?: string
+          id?: string
+          ip_or_email: string
+        }
+        Update: {
+          attempted_at?: string
+          id?: string
+          ip_or_email?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -373,6 +391,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: { Args: { p_identifier: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
