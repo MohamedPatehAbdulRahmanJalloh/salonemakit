@@ -149,7 +149,7 @@ const HomePage = () => {
       {/* New Arrivals */}
       <section className="mt-4">
         <div className="flex items-center justify-between px-4 mb-2">
-          <h2 className="text-sm font-bold text-foreground">New Arrivals ✨</h2>
+          <h2 className="text-sm font-bold text-foreground">New Arrivals</h2>
           <Link to="/search" className="text-[11px] text-accent font-semibold">View All &gt;</Link>
         </div>
         {isLoading ? (
