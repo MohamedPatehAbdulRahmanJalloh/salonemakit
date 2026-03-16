@@ -134,7 +134,7 @@ const AuthPage = () => {
         </form>
 
         <p className="text-[10px] text-muted-foreground text-center mt-6 leading-relaxed">
-          By continuing, you agree to SaloneMakit's Terms of Service and Privacy Policy
+          By continuing, you agree to SaloneMakitSL's Terms of Service and Privacy Policy
         </p>
       </div>
     </div>
