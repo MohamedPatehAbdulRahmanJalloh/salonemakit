@@ -17,19 +17,19 @@ import BannerCarousel from "@/components/BannerCarousel";
 import { toast } from "sonner";
 
 const CATEGORY_ICONS = [
-  { id: "women", label: "Women", emoji: "👗" },
-  { id: "men", label: "Men", emoji: "👔" },
-  { id: "shoes", label: "Shoes", emoji: "👟" },
-  { id: "bags", label: "Bags", emoji: "👜" },
-  { id: "perfumes", label: "Beauty", emoji: "💄" },
-  { id: "accessories", label: "Accessories", emoji: "💍" },
+  { id: "women", label: "Women", symbol: "W" },
+  { id: "men", label: "Men", symbol: "M" },
+  { id: "shoes", label: "Shoes", symbol: "S" },
+  { id: "bags", label: "Bags", symbol: "B" },
+  { id: "perfumes", label: "Beauty", symbol: "P" },
+  { id: "accessories", label: "Accessories", symbol: "A" },
 ];
 
 const PROMO_MESSAGES = [
-  "🔥 Flash Sale! Up to 50% off on selected items!",
-  "🎉 Free delivery on orders above Le 200,000!",
-  "✨ New arrivals just dropped — check them out!",
-  "💰 Use code SALONE10 for 10% off your first order!",
+  "Flash Sale! Up to 50% off on selected items!",
+  "Free delivery on orders above Le 200,000!",
+  "New arrivals just dropped — check them out!",
+  "Use code SALONE10 for 10% off your first order!",
 ];
 
 const HomePage = () => {
