@@ -14,11 +14,7 @@ export const useProducts = (category?: string, showAll = false) => {
         query = query.eq("category", category);
       }
       const { data, error } = await query;
-      if (error) {
-        console.error("[useProducts] Error fetching products:", error);
-        throw error;
-      }
-      console.log("[useProducts] Fetched", data?.length, "products");
+      if (error) throw error;
       return data || [];
     },
     retry: 3,
