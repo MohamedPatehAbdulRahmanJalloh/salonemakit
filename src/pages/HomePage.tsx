@@ -65,9 +65,9 @@ const HomePage = () => {
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="SaloneMakit" className="h-8 w-8 object-contain rounded-md" />
+            <img src={logo} alt="SaloneMakitSL" className="h-8 w-8 object-contain rounded-md" />
             <div className="leading-none">
-              <h1 className="text-sm font-extrabold text-primary tracking-tight">SaloneMakit</h1>
+              <h1 className="text-sm font-extrabold text-primary tracking-tight">SaloneMakitSL</h1>
               <p className="text-[8px] text-accent font-bold uppercase tracking-[0.15em]">Di Place Fo Shop</p>
             </div>
           </div>

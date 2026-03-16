@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'app.lovable.03bef03fed5040a9bfc05500cd196410',
-  appName: 'SaloneMakit',
+  appName: 'SaloneMakitSL',
   webDir: 'dist',
   server: {
     url: 'https://03bef03f-ed50-40a9-bfc0-5500cd196410.lovableproject.com?forceHideBadge=true',

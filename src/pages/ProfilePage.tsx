@@ -171,7 +171,7 @@ const ProfilePage = () => {
           <span className="text-xs font-medium text-destructive">Sign Out</span>
         </button>
 
-        <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakit v1.0 • Made in Sierra Leone 🇸🇱</p>
+        <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakitSL v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
     </div>
   );

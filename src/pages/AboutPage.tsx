@@ -14,14 +14,14 @@ const AboutPage = () => {
           <button onClick={() => navigate(-1)} className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
             <ArrowLeft className="h-4 w-4" />
           </button>
-          <h1 className="text-sm font-bold">About SaloneMakit</h1>
+          <h1 className="text-sm font-bold">About SaloneMakitSL</h1>
         </div>
       </header>
 
       {/* Hero */}
       <div className="bg-primary px-6 py-8 text-center">
-        <img src={logo} alt="SaloneMakit" className="h-16 w-16 rounded-xl mx-auto mb-3" />
-        <h2 className="text-lg font-extrabold text-primary-foreground">SaloneMakit</h2>
+        <img src={logo} alt="SaloneMakitSL" className="h-16 w-16 rounded-xl mx-auto mb-3" />
+        <h2 className="text-lg font-extrabold text-primary-foreground">SaloneMakitSL</h2>
         <p className="text-xs text-accent font-bold uppercase tracking-[0.15em] mt-0.5">Di Place Fo Shop 🇸🇱</p>
         <p className="text-xs text-primary-foreground/70 mt-3 max-w-sm mx-auto leading-relaxed">
           Sierra Leone's premier online fashion store — bringing quality clothing, shoes, bags, and beauty products to all 16 districts.
@@ -33,7 +33,7 @@ const AboutPage = () => {
         <section className="bg-card border border-border rounded-lg p-4">
           <h3 className="text-sm font-bold text-foreground mb-2">Our Story</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            SaloneMakit was born out of a simple idea: everyone in Sierra Leone deserves access to quality, affordable fashion — no matter where they live. 
+            SaloneMakitSL was born out of a simple idea: everyone in Sierra Leone deserves access to quality, affordable fashion — no matter where they live. 
             From Freetown to Kailahun, from Bo to Kambia, we deliver style to your doorstep.
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed mt-2">
@@ -64,7 +64,7 @@ const AboutPage = () => {
 
         {/* Why Choose Us */}
         <section className="bg-card border border-border rounded-lg p-4">
-          <h3 className="text-sm font-bold text-foreground mb-3">Why Choose SaloneMakit?</h3>
+          <h3 className="text-sm font-bold text-foreground mb-3">Why Choose SaloneMakitSL?</h3>
           <div className="space-y-3">
             {[
               { icon: Truck, title: "Nationwide Delivery", desc: "We deliver to all 16 districts in Sierra Leone" },
@@ -97,9 +97,9 @@ const AboutPage = () => {
               <Phone className="h-4 w-4 text-accent" />
               <span>Phone: +232 78 928 111</span>
             </a>
-            <a href="mailto:info@salonemakit.com" className="flex items-center gap-2.5 text-xs text-muted-foreground hover:text-accent transition-colors">
+            <a href="mailto:info@salonemakitsl.com" className="flex items-center gap-2.5 text-xs text-muted-foreground hover:text-accent transition-colors">
               <Mail className="h-4 w-4 text-accent" />
-              <span>info@salonemakit.com</span>
+              <span>info@salonemakitsl.com</span>
             </a>
             <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
               <MapPin className="h-4 w-4 text-accent" />
@@ -116,15 +116,15 @@ const AboutPage = () => {
         <section className="bg-card border border-border rounded-lg p-4">
           <h3 className="text-sm font-bold text-foreground mb-3">Follow Us</h3>
           <div className="flex gap-3">
-            <a href="https://instagram.com/salonemakit" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
+            <a href="https://instagram.com/salonemakitsl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
               <Instagram className="h-4 w-4 text-accent" />
               <span className="text-[11px] font-medium">Instagram</span>
             </a>
-            <a href="https://facebook.com/salonemakit" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
+            <a href="https://facebook.com/salonemakitsl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
               <Facebook className="h-4 w-4 text-accent" />
               <span className="text-[11px] font-medium">Facebook</span>
             </a>
-            <a href="https://tiktok.com/@salonemakit" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
+            <a href="https://tiktok.com/@salonemakitsl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
               <span className="text-sm">🎵</span>
               <span className="text-[11px] font-medium">TikTok</span>
             </a>
@@ -138,7 +138,7 @@ const AboutPage = () => {
               Start Shopping 🛍️
             </Button>
           </Link>
-          <p className="text-[9px] text-muted-foreground mt-3">SaloneMakit v1.0 • Made with ❤️ in Sierra Leone 🇸🇱</p>
+          <p className="text-[9px] text-muted-foreground mt-3">SaloneMakitSL v1.0 • Made with ❤️ in Sierra Leone 🇸🇱</p>
         </div>
       </div>
     </div>
