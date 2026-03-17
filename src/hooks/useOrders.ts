@@ -12,6 +12,7 @@ interface CreateOrderInput {
   subtotal: number;
   deliveryFee: number;
   total: number;
+  couponCode?: string | null;
 }
 
 export const useCreateOrder = () => {
