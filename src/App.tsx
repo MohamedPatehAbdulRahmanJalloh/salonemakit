@@ -58,7 +58,7 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <PushNotificationSetup />
-            <BrowserRouter>
+            <Router>
               <ScrollToTop />
               <BackToTop />
               <div className="app-safe-area min-h-screen bg-background relative" role="main">
@@ -89,7 +89,7 @@ const App = () => (
                 <PWAInstallPrompt />
                 <BottomNav />
               </div>
-            </BrowserRouter>
+            </Router>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>
