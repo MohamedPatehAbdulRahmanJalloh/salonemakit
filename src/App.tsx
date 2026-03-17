@@ -83,7 +83,7 @@ const App = () => (
                 <PWAInstallPrompt />
                 <BottomNav />
               </div>
-            </HashRouter>
+            </BrowserRouter>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>
