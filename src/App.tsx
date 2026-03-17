@@ -31,7 +31,19 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 import PushNotificationSetup from "./components/PushNotificationSetup";
+
 const queryClient = new QueryClient();
+
+const PageLoader = () => (
+  <div className="p-4 space-y-4">
+    <Skeleton className="h-10 w-full" />
+    <Skeleton className="h-40 w-full" />
+    <div className="grid grid-cols-2 gap-2">
+      <Skeleton className="aspect-[3/4]" />
+      <Skeleton className="aspect-[3/4]" />
+    </div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -45,25 +57,28 @@ const App = () => (
             <HashRouter>
               <ScrollToTop />
               <BackToTop />
-              <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/product/:id" element={<ProductDetailPage />} />
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/orders" element={<OrdersPage />} />
-                  <Route path="/order/:id" element={<OrderDetailPage />} />
-                  <Route path="/wishlist" element={<WishlistPage />} />
-                  <Route path="/admin" element={<AdminPage />} />
-                  <Route path="/admin/analytics" element={<AnalyticsPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/reset-password" element={<ResetPasswordPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+              <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative" role="main">
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/orders" element={<OrdersPage />} />
+                    <Route path="/order/:id" element={<OrderDetailPage />} />
+                    <Route path="/wishlist" element={<WishlistPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/admin/analytics" element={<AnalyticsPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+                <PWAInstallPrompt />
                 <BottomNav />
               </div>
             </HashRouter>
