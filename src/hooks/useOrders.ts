@@ -71,6 +71,33 @@ export const useCreateOrder = () => {
         throw new Error(`Order items failed: ${itemsError.message}`);
       }
 
+      // Send order confirmation email (fire-and-forget)
+      const userEmail = currentUser.email;
+      if (userEmail) {
+        supabase.functions.invoke("send-transactional-email", {
+          body: {
+            template: "order_confirmation",
+            to: userEmail,
+            props: {
+              customerName: input.customerName,
+              orderId,
+              items: input.items.map((item) => ({
+                name: item.product.name,
+                quantity: item.quantity,
+                price: item.product.price,
+                size: item.selectedSize || undefined,
+              })),
+              subtotal: input.subtotal,
+              deliveryFee: input.deliveryFee,
+              total: input.total,
+              district: input.district,
+              address: input.address,
+              paymentMethod: input.paymentMethod,
+            },
+          },
+        }).catch((err) => console.error("Order confirmation email failed:", err));
+      }
+
       return { id: orderId };
     },
     onSuccess: () => {
