@@ -42,7 +42,6 @@ export const useReviews = (productId: string) => {
         user_id: user.id,
         rating: input.rating,
         comment: input.comment.trim(),
-        user_email: user.email || "",
       });
       if (error) throw error;
     },
