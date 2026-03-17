@@ -22,23 +22,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isStaff, setIsStaff] = useState(false);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkRoles = async (userId: string) => {
     try {
-      const { data, error } = await supabase.rpc("has_role", {
-        _user_id: userId,
-        _role: "admin",
-      });
+      const [adminResult, staffResult] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+        supabase.rpc("has_role", { _user_id: userId, _role: "staff" as any }),
+      ]);
 
-      if (error) {
-        console.error("[Auth] Failed to check admin role:", error);
-        setIsAdmin(false);
-        return;
-      }
+      if (adminResult.error) console.error("[Auth] Admin check error:", adminResult.error);
+      if (staffResult.error) console.error("[Auth] Staff check error:", staffResult.error);
 
-      setIsAdmin(!!data);
+      setIsAdmin(!!adminResult.data);
+      setIsStaff(!!staffResult.data);
     } catch (error) {
-      console.error("[Auth] Unexpected admin role check error:", error);
+      console.error("[Auth] Role check error:", error);
       setIsAdmin(false);
+      setIsStaff(false);
     }
   };
 
