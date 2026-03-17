@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import EmptyState from "@/components/EmptyState";
 
 const statusConfig: Record<string, { label: string; icon: any; color: string }> = {
   pending: { label: "Pending", icon: Clock, color: "text-orange bg-orange/10" },
@@ -36,18 +37,14 @@ const OrdersPage = () => {
           ))}
         </div>
       ) : orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-          <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-3">
-            <ClipboardList className="h-8 w-8 text-muted-foreground/40" />
-          </div>
-          <h2 className="text-sm font-bold">No Orders Yet</h2>
-          <p className="text-xs text-muted-foreground mt-1">Your order history will appear here</p>
-          <Link to="/search">
-            <Button className="mt-5 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
-              Start Shopping
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={ClipboardList}
+          emoji="📦"
+          title="No Orders Yet"
+          description="Once you place an order, it will appear here"
+          actionLabel="Start Shopping"
+          actionLink="/search"
+        />
       ) : (
         <div className="px-4 pt-3 space-y-2">
           {orders.map((order) => {

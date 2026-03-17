@@ -117,11 +117,13 @@ const ProductDetailPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="pb-[72px]"
+      className="pb-[72px] lg:pb-6"
     >
-      {/* Image Gallery - SHEIN style square */}
+      {/* Desktop: side-by-side layout */}
+      <div className="lg:max-w-6xl lg:mx-auto lg:px-6 lg:pt-6 lg:grid lg:grid-cols-2 lg:gap-8">
+      {/* Image Gallery */}
       <div
-        className="relative aspect-square bg-secondary overflow-hidden"
+        className="relative aspect-square bg-secondary overflow-hidden lg:rounded-xl lg:sticky lg:top-6 lg:self-start"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -192,8 +194,9 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="px-4 pt-3">
+      {/* Product Info - right column on desktop */}
+      <div className="lg:py-0">
+      <div className="px-4 pt-3 lg:px-0">
         {/* Price section - SHEIN style */}
         <div className="flex items-baseline gap-2">
           <p className="text-xl font-extrabold text-destructive">{formatPrice(product.price)}</p>
@@ -312,13 +315,26 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
+      {/* Desktop Add to Cart */}
+      <div className="hidden lg:block px-4 py-4 lg:px-0">
+        <Button
+          onClick={handleAddToCart}
+          className="w-full h-12 bg-accent text-accent-foreground hover:bg-accent/90 font-bold text-sm rounded-lg"
+        >
+          Add to Cart — {formatPrice(product.price * quantity)}
+        </Button>
+      </div>
+
       {/* Reviews Section */}
       <div className="px-4">
         <ReviewSection productId={product.id} />
       </div>
 
+      </div>{/* end right column */}
+      </div>{/* end grid */}
+
       {/* Divider */}
-      <div className="h-2 bg-secondary mt-2" />
+      <div className="h-2 bg-secondary mt-2 lg:hidden" />
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
@@ -335,7 +351,7 @@ const ProductDetailPage = () => {
       )}
 
       {/* SHEIN-style Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border safe-area-bottom lg:hidden">
         <div className="max-w-lg mx-auto flex items-center gap-2 px-4 py-2">
           <button
             onClick={handleWishlist}
