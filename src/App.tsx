@@ -30,22 +30,7 @@ const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-import ProductDetailPage from "./pages/ProductDetailPage";
-import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import OrdersPage from "./pages/OrdersPage";
-import AdminPage from "./pages/AdminPage";
-import AuthPage from "./pages/AuthPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import WishlistPage from "./pages/WishlistPage";
-import ProfilePage from "./pages/ProfilePage";
-import OrderDetailPage from "./pages/OrderDetailPage";
-import AnalyticsPage from "./pages/AnalyticsPage";
-import AboutPage from "./pages/AboutPage";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import PushNotificationSetup from "./components/PushNotificationSetup";
-import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
