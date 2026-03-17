@@ -58,7 +58,7 @@ const App = () => (
             <BrowserRouter>
               <ScrollToTop />
               <BackToTop />
-              <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative" role="main">
+              <div className="app-safe-area min-h-screen bg-background relative" role="main">
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     <Route path="/" element={<HomePage />} />
