@@ -496,38 +496,7 @@ export type Database = {
       }
     }
     Views: {
-      public_reviews: {
-        Row: {
-          comment: string | null
-          created_at: string | null
-          id: string | null
-          product_id: string | null
-          rating: number | null
-        }
-        Insert: {
-          comment?: string | null
-          created_at?: string | null
-          id?: string | null
-          product_id?: string | null
-          rating?: number | null
-        }
-        Update: {
-          comment?: string | null
-          created_at?: string | null
-          id?: string | null
-          product_id?: string | null
-          rating?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reviews_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       check_rate_limit: { Args: { p_identifier: string }; Returns: boolean }
@@ -538,6 +507,16 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_public_reviews: {
+        Args: { p_product_id: string }
+        Returns: {
+          comment: string
+          created_at: string
+          id: string
+          product_id: string
+          rating: number
+        }[]
       }
       has_role: {
         Args: {

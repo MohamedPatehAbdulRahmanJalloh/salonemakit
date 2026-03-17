@@ -15,11 +15,9 @@ export const useReviews = (productId: string) => {
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["reviews", productId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("public_reviews")
-        .select("id, product_id, rating, comment, created_at")
-        .eq("product_id", productId)
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("get_public_reviews" as any, {
+        p_product_id: productId,
+      });
       if (error) throw error;
       return data || [];
     },

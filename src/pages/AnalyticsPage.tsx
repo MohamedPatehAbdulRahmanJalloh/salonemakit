@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useOrders } from "@/hooks/useOrders";
 import { useProducts } from "@/hooks/useProducts";
 import { formatPrice } from "@/components/ProductCard";
 import { ArrowLeft, TrendingUp, Package, ShoppingCart, DollarSign, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const AnalyticsPage = () => {
   const navigate = useNavigate();
+  const { user, loading, isAdmin, isStaff } = useAuth();
   const { data: orders = [] } = useOrders();
   const { data: products = [] } = useProducts(undefined, true);
 
@@ -65,6 +67,21 @@ const AnalyticsPage = () => {
   }, [orders, products]);
 
   const maxRevenue = Math.max(...stats.last7Days.map((d) => d.revenue), 1);
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (!isAdmin && !isStaff) {
+      navigate("/");
+    }
+  }, [loading, user, isAdmin, isStaff, navigate]);
+
+  if (loading || !user || (!isAdmin && !isStaff)) {
+    return null;
+  }
 
   return (
     <div className="pb-20">

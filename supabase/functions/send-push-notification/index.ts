@@ -25,17 +25,22 @@ Deno.serve(async (req) => {
 
     // Authenticate the caller
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Missing authorization" }), {
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const token = authHeader.replace("Bearer ", "");
     const callerClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: userError } = await callerClient.auth.getUser();
-    if (userError || !user) {
+
+    const { data: claimsData, error: claimsError } = await callerClient.auth.getClaims(token);
+    const userId = claimsData?.claims?.sub;
+
+    if (claimsError || !userId) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -43,8 +48,9 @@ Deno.serve(async (req) => {
     }
 
     // Check admin or staff role
-    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: user.id, _role: "admin" });
-    const { data: isStaff } = await supabaseAdmin.rpc("has_role", { _user_id: user.id, _role: "staff" });
+    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "admin" });
+    const { data: isStaff } = await supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "staff" });
+
     if (!isAdmin && !isStaff) {
       return new Response(JSON.stringify({ error: "Forbidden: admin or staff role required" }), {
         status: 403,
