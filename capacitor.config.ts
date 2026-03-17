@@ -11,7 +11,7 @@ const config: CapacitorConfig = {
     },
   },
   ios: {
-    scheme: 'SaloneMakitSL',
+    scheme: 'App',
   },
   plugins: {
     PushNotifications: {
