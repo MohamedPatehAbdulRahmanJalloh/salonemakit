@@ -255,7 +255,7 @@ const SearchPage = () => {
 
       {/* Product Grid — SHEIN edge-to-edge */}
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-[1px] bg-border">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="bg-background">
               <Skeleton className="aspect-[3/4]" />
