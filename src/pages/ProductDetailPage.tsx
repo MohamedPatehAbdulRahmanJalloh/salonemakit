@@ -194,8 +194,9 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="px-4 pt-3">
+      {/* Product Info - right column on desktop */}
+      <div className="lg:py-0">
+      <div className="px-4 pt-3 lg:px-0">
         {/* Price section - SHEIN style */}
         <div className="flex items-baseline gap-2">
           <p className="text-xl font-extrabold text-destructive">{formatPrice(product.price)}</p>
