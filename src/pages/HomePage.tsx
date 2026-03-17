@@ -205,8 +205,14 @@ const HomePage = () => {
           )}
         </section>
 
+        {/* Staff Picks */}
+        <StaffPicksSection products={products} isLoading={isLoading} />
+
+        {/* Promo Banner */}
+        <PromoBanner />
+
         {/* Trending */}
-        <section className="mt-5 pb-4">
+        <section className="mt-5">
           <div className="flex items-center justify-between px-4 lg:px-8 mb-3">
             <h2 className="text-sm lg:text-lg font-bold text-foreground">Trending Now</h2>
             <Link to="/search" className="text-[11px] lg:text-sm text-accent font-semibold hover:underline">View All &gt;</Link>
@@ -233,6 +239,9 @@ const HomePage = () => {
             </div>
           )}
         </section>
+
+        {/* Testimonials */}
+        <TestimonialsSection />
       </div>
     </div>
   );
