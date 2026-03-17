@@ -223,7 +223,7 @@ const SearchPage = () => {
                 : "bg-secondary text-muted-foreground"
             )}
           >
-            {cat.icon} {cat.label}
+            {cat.label}
           </button>
         ))}
       </div>
