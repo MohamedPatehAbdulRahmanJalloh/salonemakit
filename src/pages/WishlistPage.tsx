@@ -20,18 +20,14 @@ const WishlistPage = () => {
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-3">
-          <Heart className="h-8 w-8 text-muted-foreground/40" />
-        </div>
-        <h2 className="text-sm font-bold">Sign in to see your wishlist</h2>
-        <p className="text-xs text-muted-foreground mt-1">Save your favorite items for later</p>
-        <Link to="/auth">
-          <Button className="mt-5 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
-            Sign In
-          </Button>
-        </Link>
-      </div>
+      <EmptyState
+        icon={Heart}
+        emoji="💖"
+        title="Sign in to see your wishlist"
+        description="Save your favourite items for later"
+        actionLabel="Sign In"
+        actionLink="/auth"
+      />
     );
   }
 
