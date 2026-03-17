@@ -12,6 +12,7 @@ import BackToTop from "@/components/BackToTop";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 import { lazy, Suspense } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load pages for code splitting
