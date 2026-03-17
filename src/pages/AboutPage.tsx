@@ -1,50 +1,114 @@
-import { ArrowLeft, MapPin, Phone, Mail, Clock, Heart, Truck, Shield, MessageCircle, Instagram, Facebook } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, Mail, Clock, Heart, Truck, Shield, MessageCircle, Instagram, Facebook, Target, Users, Globe, Sparkles } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import logo from "@/assets/logo.png";
+
+const TIMELINE = [
+  { year: "2026", title: "Founded", desc: "Mohamed Pateh Abdul R Jalloh launches SaloneMakitSL from Freetown with a vision to democratize fashion across Sierra Leone." },
+  { year: "2026", title: "Nationwide Delivery", desc: "Expanded delivery to all 16 districts — from the Western Area to Kailahun, making fashion accessible everywhere." },
+  { year: "2026", title: "Going Digital", desc: "Launched web app and mobile app with Orange Money & Cash on Delivery payment options." },
+];
 
 const AboutPage = () => {
   const navigate = useNavigate();
+  useDocumentTitle("About Us", "Learn about SaloneMakitSL, Sierra Leone's premier online fashion store founded by Mohamed Pateh Abdul R Jalloh.");
 
   return (
     <div className="pb-20 bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 py-2.5 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
-            <ArrowLeft className="h-4 w-4" />
+          <button onClick={() => navigate(-1)} className="h-8 w-8 rounded-full bg-accent flex items-center justify-center" aria-label="Go back">
+            <ArrowLeft className="h-4 w-4 text-accent-foreground" />
           </button>
-          <h1 className="text-sm font-bold">About SaloneMakitSL</h1>
+          <h1 className="text-sm font-bold">About Us</h1>
         </div>
       </header>
 
       {/* Hero */}
-      <div className="bg-primary px-6 py-8 text-center">
-        <img src={logo} alt="SaloneMakitSL" className="h-16 w-16 rounded-xl mx-auto mb-3" />
-        <h2 className="text-lg font-extrabold text-primary-foreground">SaloneMakitSL</h2>
-        <p className="text-xs text-accent font-bold uppercase tracking-[0.15em] mt-0.5">Di Place Fo Shop 🇸🇱</p>
-        <p className="text-xs text-primary-foreground/70 mt-3 max-w-sm mx-auto leading-relaxed">
-          Sierra Leone's premier online fashion store — bringing quality clothing, shoes, bags, and beauty products to all 16 districts.
+      <div className="bg-primary px-6 py-10 text-center">
+        <img src={logo} alt="SaloneMakitSL logo" className="h-20 w-20 rounded-2xl mx-auto mb-4 shadow-lg" />
+        <h2 className="text-xl font-extrabold text-primary-foreground">SaloneMakitSL</h2>
+        <p className="text-xs text-accent font-bold uppercase tracking-[0.15em] mt-1">Di Place Fo Shop 🇸🇱</p>
+        <p className="text-xs text-primary-foreground/80 mt-4 max-w-xs mx-auto leading-relaxed">
+          Sierra Leone's premier online fashion destination — quality clothing, shoes, bags & beauty products delivered to all 16 districts.
         </p>
       </div>
 
-      <div className="px-4 pt-4 space-y-4">
-        {/* Our Story */}
-        <section className="bg-card border border-border rounded-lg p-4">
-          <h3 className="text-sm font-bold text-foreground mb-2">Our Story</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            SaloneMakitSL was born out of a simple idea: everyone in Sierra Leone deserves access to quality, affordable fashion — no matter where they live. 
-            From Freetown to Kailahun, from Bo to Kambia, we deliver style to your doorstep.
-          </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
-            We started in 2025 with a passion for African fashion and a commitment to making online shopping easy, safe, and accessible for all Sierra Leoneans. 
-            Whether you prefer Cash on Delivery or Orange Money, we've got you covered.
-          </p>
+      <div className="px-4 pt-5 space-y-5">
+        {/* Founder */}
+        <section className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="h-4 w-4 text-accent" />
+            <h3 className="text-sm font-bold text-foreground">Our Founder</h3>
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="h-14 w-14 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+              <span className="text-xl font-bold text-accent">MJ</span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">Mohamed Pateh Abdul R Jalloh</p>
+              <p className="text-[11px] text-accent font-semibold">Founder & CEO</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+                A young Sierra Leonean entrepreneur with a passion for African fashion and technology. 
+                Mohamed founded SaloneMakitSL with the belief that every Sierra Leonean — from Freetown to the most remote district — deserves access to quality, affordable fashion.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="h-4 w-4 text-accent" />
+            <h3 className="text-sm font-bold text-foreground">Our Mission</h3>
+          </div>
+          <div className="space-y-3">
+            <div className="bg-accent/5 border border-accent/15 rounded-lg p-3">
+              <p className="text-xs font-bold text-foreground mb-1">🎯 Mission</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                To make quality, affordable fashion accessible to every Sierra Leonean, regardless of where they live. We bridge the gap between urban fashion trends and nationwide delivery.
+              </p>
+            </div>
+            <div className="bg-accent/5 border border-accent/15 rounded-lg p-3">
+              <p className="text-xs font-bold text-foreground mb-1">🌍 Vision</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                To become West Africa's most trusted online fashion platform — empowering Sierra Leonean youth through e-commerce and creating economic opportunities across the nation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Story / Timeline */}
+        <section className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Globe className="h-4 w-4 text-accent" />
+            <h3 className="text-sm font-bold text-foreground">Our Journey</h3>
+          </div>
+          <div className="space-y-4 relative">
+            <div className="absolute left-[15px] top-2 bottom-2 w-[2px] bg-accent/20" />
+            {TIMELINE.map((item, i) => (
+              <div key={i} className="flex gap-4 relative">
+                <div className="h-8 w-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center shrink-0 z-10 text-[10px] font-bold">
+                  {i + 1}
+                </div>
+                <div className="pt-1">
+                  <p className="text-[10px] text-accent font-bold">{item.year}</p>
+                  <p className="text-xs font-bold text-foreground">{item.title}</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* What We Offer */}
-        <section className="bg-card border border-border rounded-lg p-4">
-          <h3 className="text-sm font-bold text-foreground mb-3">What We Offer</h3>
+        <section className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Users className="h-4 w-4 text-accent" />
+            <h3 className="text-sm font-bold text-foreground">What We Offer</h3>
+          </div>
           <div className="grid grid-cols-2 gap-2.5">
             {[
               { emoji: "👗", label: "Women's Fashion" },
@@ -63,7 +127,7 @@ const AboutPage = () => {
         </section>
 
         {/* Why Choose Us */}
-        <section className="bg-card border border-border rounded-lg p-4">
+        <section className="bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-bold text-foreground mb-3">Why Choose SaloneMakitSL?</h3>
           <div className="space-y-3">
             {[
@@ -86,7 +150,7 @@ const AboutPage = () => {
         </section>
 
         {/* Contact Info */}
-        <section className="bg-card border border-border rounded-lg p-4">
+        <section className="bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-bold text-foreground mb-3">Contact Us</h3>
           <div className="space-y-2.5">
             <a href="https://wa.me/23278928111" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-xs text-muted-foreground hover:text-accent transition-colors">
@@ -113,7 +177,7 @@ const AboutPage = () => {
         </section>
 
         {/* Social Media */}
-        <section className="bg-card border border-border rounded-lg p-4">
+        <section className="bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-bold text-foreground mb-3">Follow Us</h3>
           <div className="flex gap-3">
             <a href="https://instagram.com/salonemakitsl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 hover:bg-accent/10 transition-colors">
@@ -138,7 +202,9 @@ const AboutPage = () => {
               Start Shopping 🛍️
             </Button>
           </Link>
-          <p className="text-[9px] text-muted-foreground mt-3">SaloneMakitSL v1.0 • Made with ❤️ in Sierra Leone 🇸🇱</p>
+          <p className="text-[9px] text-muted-foreground mt-3">
+            SaloneMakitSL © 2026 • Founded by Mohamed Pateh Abdul R Jalloh • Made with ❤️ in Sierra Leone 🇸🇱
+          </p>
         </div>
       </div>
     </div>
