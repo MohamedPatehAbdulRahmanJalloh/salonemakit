@@ -50,7 +50,8 @@ export const useCreateOrder = () => {
         delivery_fee: input.deliveryFee,
         total: input.total,
         user_id: currentUser.id,
-      });
+        coupon_code: input.couponCode || null,
+      } as any);
 
       if (orderError) {
         console.error("Order insert error:", orderError);

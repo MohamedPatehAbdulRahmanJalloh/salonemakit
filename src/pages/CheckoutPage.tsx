@@ -56,6 +56,7 @@ const CheckoutPage = () => {
         subtotal: discountedSubtotal,
         deliveryFee,
         total: grandTotal,
+        couponCode: appliedCode,
       });
       setOrderDistrict(district);
       setOrderId(result.id);
