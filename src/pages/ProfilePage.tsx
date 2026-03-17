@@ -82,7 +82,7 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="pb-20 bg-background">
+    <div className="pb-20 lg:pb-6 bg-background max-w-3xl mx-auto">
       {/* Profile Header */}
       <div className="bg-primary px-4 pt-6 pb-5">
         <div className="flex items-center gap-3">
