@@ -503,7 +503,6 @@ export type Database = {
           id: string | null
           product_id: string | null
           rating: number | null
-          user_id: string | null
         }
         Insert: {
           comment?: string | null
@@ -511,7 +510,6 @@ export type Database = {
           id?: string | null
           product_id?: string | null
           rating?: number | null
-          user_id?: string | null
         }
         Update: {
           comment?: string | null
@@ -519,7 +517,6 @@ export type Database = {
           id?: string | null
           product_id?: string | null
           rating?: number | null
-          user_id?: string | null
         }
         Relationships: [
           {
@@ -564,6 +561,19 @@ export type Database = {
           message: Json
           msg_id: number
           read_ct: number
+        }[]
+      }
+      validate_coupon: {
+        Args: { p_code: string }
+        Returns: {
+          code: string
+          discount_amount: number
+          discount_percent: number
+          expires_at: string
+          id: string
+          max_uses: number
+          min_order_amount: number
+          used_count: number
         }[]
       }
     }
