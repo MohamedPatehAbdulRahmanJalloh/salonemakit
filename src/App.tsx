@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,6 +37,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 import PushNotificationSetup from "./components/PushNotificationSetup";
 
 const queryClient = new QueryClient();
+const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
@@ -57,7 +59,7 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <PushNotificationSetup />
-            <BrowserRouter>
+            <Router>
               <ScrollToTop />
               <BackToTop />
               <div className="app-safe-area min-h-screen bg-background relative" role="main">
@@ -88,7 +90,7 @@ const App = () => (
                 <PWAInstallPrompt />
                 <BottomNav />
               </div>
-            </BrowserRouter>
+            </Router>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>
