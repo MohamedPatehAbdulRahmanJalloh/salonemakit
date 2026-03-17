@@ -17,7 +17,7 @@ export const useReviews = (productId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("public_reviews")
-        .select("id, product_id, user_id, rating, comment, created_at")
+        .select("id, product_id, rating, comment, created_at")
         .eq("product_id", productId)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -26,13 +26,22 @@ export const useReviews = (productId: string) => {
     enabled: !!productId,
   });
 
-  const averageRating = reviews.length
-    ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
-    : 0;
-
-  const userReview = user
-    ? reviews.find((r: any) => r.user_id === user.id)
-    : null;
+  // Fetch user's own review from the reviews table (RLS scoped)
+  const { data: userReview = null } = useQuery({
+    queryKey: ["user-review", productId, user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("id, product_id, user_id, rating, comment, created_at")
+        .eq("product_id", productId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!productId && !!user,
+  });
 
   const addReview = useMutation({
     mutationFn: async (input: CreateReviewInput) => {
