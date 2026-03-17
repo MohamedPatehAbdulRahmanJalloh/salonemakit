@@ -257,7 +257,7 @@ const SearchPage = () => {
       {isLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-background">
+            <div key={i} className="bg-background lg:rounded-lg lg:overflow-hidden lg:border lg:border-border">
               <Skeleton className="aspect-[3/4]" />
               <div className="p-2">
                 <Skeleton className="h-3 w-3/4 mb-1" />
