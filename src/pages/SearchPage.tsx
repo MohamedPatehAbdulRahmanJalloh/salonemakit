@@ -278,7 +278,7 @@ const SearchPage = () => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-[1px] bg-border">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {filtered.map((p) => (
             <div key={p.id} className="bg-background">
               <ProductCard product={p} />
