@@ -43,6 +43,10 @@ export const useReviews = (productId: string) => {
     enabled: !!productId && !!user,
   });
 
+  const averageRating = reviews.length
+    ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
+    : 0;
+
   const addReview = useMutation({
     mutationFn: async (input: CreateReviewInput) => {
       if (!user) throw new Error("Must be logged in");
