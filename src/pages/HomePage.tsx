@@ -139,8 +139,8 @@ const HomePage = () => {
                 to={`/search?category=${cat.id}`}
                 className="flex flex-col items-center gap-1.5 min-w-[50px] group"
               >
-                <div className="h-11 w-11 lg:h-14 lg:w-14 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <cat.icon className="h-5 w-5 lg:h-6 lg:w-6 text-accent" />
+                <div className="h-11 w-11 lg:h-14 lg:w-14 rounded-full bg-secondary flex items-center justify-center group-hover:bg-accent/15 transition-colors overflow-hidden">
+                  <img src={cat.image} alt={cat.label} className="h-9 w-9 lg:h-11 lg:w-11 object-contain" />
                 </div>
                 <span className="text-[10px] lg:text-xs font-medium text-foreground">{cat.label}</span>
               </Link>
