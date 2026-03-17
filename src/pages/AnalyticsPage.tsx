@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const AnalyticsPage = () => {
   const navigate = useNavigate();
+  const { user, loading, isAdmin, isStaff } = useAuth();
   const { data: orders = [] } = useOrders();
   const { data: products = [] } = useProducts(undefined, true);
 
