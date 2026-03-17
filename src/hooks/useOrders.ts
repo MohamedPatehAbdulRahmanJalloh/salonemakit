@@ -79,7 +79,6 @@ export const useCreateOrder = () => {
         supabase.functions.invoke("send-transactional-email", {
           body: {
             template: "order_confirmation",
-            to: userEmail,
             props: {
               customerName: input.customerName,
               orderId,
