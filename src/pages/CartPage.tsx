@@ -3,6 +3,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/components/ProductCard";
 import { Minus, Plus, Trash2, ShoppingBag, LogIn, ArrowLeft } from "lucide-react";
+import EmptyState from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
