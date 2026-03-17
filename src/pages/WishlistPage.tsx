@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import EmptyState from "@/components/EmptyState";
 
 const WishlistPage = () => {
   useDocumentTitle("Wishlist");
