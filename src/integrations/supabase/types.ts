@@ -555,6 +555,16 @@ export type Database = {
           used_count: number
         }[]
       }
+      validate_order_insert_values: {
+        Args: {
+          p_delivery_fee: number
+          p_payment_method: string
+          p_status: string
+          p_subtotal: number
+          p_total: number
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "staff"
