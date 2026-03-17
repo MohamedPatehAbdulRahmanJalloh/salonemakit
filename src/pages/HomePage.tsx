@@ -77,7 +77,7 @@ const HomePage = () => {
             <Link to="/wishlist" className="h-9 w-9 flex items-center justify-center" aria-label="Wishlist">
               <Heart className="h-[18px] w-[18px] text-foreground" />
             </Link>
-            <Link to="/cart" className="h-9 w-9 flex items-center justify-center relative">
+            <Link to="/cart" className="h-9 w-9 flex items-center justify-center relative" aria-label={`Cart${totalItems > 0 ? `, ${totalItems} items` : ''}`}>
               <ShoppingBag className="h-[18px] w-[18px] text-foreground" />
               {totalItems > 0 && (
                 <span className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground text-[8px] font-bold rounded-full min-w-[14px] h-3.5 flex items-center justify-center px-0.5">

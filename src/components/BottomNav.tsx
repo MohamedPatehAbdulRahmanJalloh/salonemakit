@@ -25,6 +25,8 @@ const BottomNav = () => {
             <Link
               key={to}
               to={to}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex flex-col items-center justify-center gap-0.5 py-2 px-4 transition-colors min-w-[56px]",
                 active ? "text-accent" : "text-muted-foreground"
