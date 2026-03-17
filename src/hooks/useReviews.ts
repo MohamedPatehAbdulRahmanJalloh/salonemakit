@@ -16,7 +16,7 @@ export const useReviews = (productId: string) => {
     queryKey: ["reviews", productId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("reviews")
+        .from("public_reviews")
         .select("id, product_id, user_id, rating, comment, created_at")
         .eq("product_id", productId)
         .order("created_at", { ascending: false });
