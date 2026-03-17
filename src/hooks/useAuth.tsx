@@ -74,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!isMounted) return;
         setLoading(false);
         setIsAdmin(false);
+        setIsStaff(false);
       });
 
     return () => {
