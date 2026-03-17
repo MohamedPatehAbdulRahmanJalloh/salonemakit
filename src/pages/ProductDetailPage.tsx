@@ -117,11 +117,13 @@ const ProductDetailPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="pb-[72px]"
+      className="pb-[72px] lg:pb-6"
     >
-      {/* Image Gallery - SHEIN style square */}
+      {/* Desktop: side-by-side layout */}
+      <div className="lg:max-w-6xl lg:mx-auto lg:px-6 lg:pt-6 lg:grid lg:grid-cols-2 lg:gap-8">
+      {/* Image Gallery */}
       <div
-        className="relative aspect-square bg-secondary overflow-hidden"
+        className="relative aspect-square bg-secondary overflow-hidden lg:rounded-xl lg:sticky lg:top-6 lg:self-start"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
