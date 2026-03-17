@@ -280,7 +280,7 @@ const SearchPage = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {filtered.map((p) => (
-            <div key={p.id} className="bg-background">
+            <div key={p.id} className="bg-background lg:rounded-lg lg:overflow-hidden lg:border lg:border-border lg:hover:shadow-md lg:transition-shadow">
               <ProductCard product={p} />
             </div>
           ))}
