@@ -60,6 +60,7 @@ const App = () => (
               <ScrollToTop />
               <BackToTop />
               <div className="app-safe-area min-h-screen bg-background relative" role="main">
+                <ErrorBoundary>
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     <Route path="/" element={<HomePage />} />
