@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     await supabase.from('email_send_log').insert({
       message_id: messageId,
       template_name: template,
-      recipient_email: to,
+      recipient_email: recipientEmail,
       status: 'pending',
     })
 
