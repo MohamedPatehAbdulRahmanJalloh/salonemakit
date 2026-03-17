@@ -12,6 +12,7 @@ interface CreateOrderInput {
   subtotal: number;
   deliveryFee: number;
   total: number;
+  couponCode?: string | null;
 }
 
 export const useCreateOrder = () => {
@@ -49,7 +50,8 @@ export const useCreateOrder = () => {
         delivery_fee: input.deliveryFee,
         total: input.total,
         user_id: currentUser.id,
-      });
+        coupon_code: input.couponCode || null,
+      } as any);
 
       if (orderError) {
         console.error("Order insert error:", orderError);
@@ -77,7 +79,6 @@ export const useCreateOrder = () => {
         supabase.functions.invoke("send-transactional-email", {
           body: {
             template: "order_confirmation",
-            to: userEmail,
             props: {
               customerName: input.customerName,
               orderId,

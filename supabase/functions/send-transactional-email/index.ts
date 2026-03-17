@@ -61,10 +61,19 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json()
-    const { template, to, props } = body
+    const { template, props } = body
 
-    if (!template || !to || !props) {
-      return new Response(JSON.stringify({ error: 'Missing template, to, or props' }), {
+    // Always send to the authenticated user's own email — never trust client-supplied `to`
+    const recipientEmail = user.email
+    if (!recipientEmail) {
+      return new Response(JSON.stringify({ error: 'No email associated with your account' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (!template || !props) {
+      return new Response(JSON.stringify({ error: 'Missing template or props' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
@@ -90,7 +99,7 @@ Deno.serve(async (req) => {
     await supabase.from('email_send_log').insert({
       message_id: messageId,
       template_name: template,
-      recipient_email: to,
+      recipient_email: recipientEmail,
       status: 'pending',
     })
 
@@ -99,7 +108,7 @@ Deno.serve(async (req) => {
       payload: {
         run_id: messageId,
         message_id: messageId,
-        to,
+        to: recipientEmail,
         from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
         sender_domain: SENDER_DOMAIN,
         subject,
