@@ -89,7 +89,7 @@ const SearchPage = () => {
   }, [activeCategory, query, products, priceRange, selectedSizes, sortBy]);
 
   return (
-    <div className="pb-20 bg-background">
+    <div className="pb-20 lg:pb-6 bg-background">
       {/* SHEIN-style sticky header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 py-2.5 flex items-center gap-2">
