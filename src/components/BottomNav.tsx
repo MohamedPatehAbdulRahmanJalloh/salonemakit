@@ -16,8 +16,8 @@ const BottomNav = () => {
   const { totalItems, justAdded } = useCart();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border" aria-label="Main navigation" role="navigation">
-      <div className="flex items-stretch justify-around max-w-lg mx-auto safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border lg:hidden" aria-label="Main navigation" role="navigation">
+      <div className="flex items-stretch justify-around safe-area-bottom">
         {navItems.map(({ to, icon: Icon, label }) => {
           const active = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
           const isCart = label === "Cart";
