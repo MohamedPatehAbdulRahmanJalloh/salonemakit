@@ -44,11 +44,9 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="group relative bg-card overflow-hidden"
+    <div
+      ref={ref}
+      className="group relative bg-card overflow-hidden animate-fade-in"
     >
       <Link to={`/product/${product.id}`} className="block">
         {/* Image */}
