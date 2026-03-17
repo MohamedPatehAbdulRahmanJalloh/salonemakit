@@ -23,10 +23,7 @@ const CouponInput = ({ subtotal, onApply, onRemove, appliedCode, discount }: Cou
     setChecking(true);
 
     const { data, error } = await supabase
-      .from("coupons")
-      .select("*")
-      .eq("code", code.trim().toUpperCase())
-      .eq("is_active", true)
+      .rpc("validate_coupon", { p_code: code.trim().toUpperCase() })
       .single();
 
     setChecking(false);
