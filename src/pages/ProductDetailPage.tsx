@@ -315,6 +315,16 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
+      {/* Desktop Add to Cart */}
+      <div className="hidden lg:block px-4 py-4 lg:px-0">
+        <Button
+          onClick={handleAddToCart}
+          className="w-full h-12 bg-accent text-accent-foreground hover:bg-accent/90 font-bold text-sm rounded-lg"
+        >
+          Add to Cart — {formatPrice(product.price * quantity)}
+        </Button>
+      </div>
+
       {/* Reviews Section */}
       <div className="px-4">
         <ReviewSection productId={product.id} />
