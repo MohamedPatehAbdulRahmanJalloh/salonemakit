@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
-import { Search, ShoppingBag, Heart, Shirt, Footprints, ShoppingCart, Sparkles, Watch, Briefcase } from "lucide-react";
+import { Search, ShoppingBag, Heart, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,13 +13,20 @@ import FlashSaleBanner from "@/components/FlashSaleBanner";
 import BannerCarousel from "@/components/BannerCarousel";
 import { toast } from "sonner";
 
+import categoryWomen from "@/assets/category-women.png";
+import categoryMen from "@/assets/category-men.png";
+import categoryShoes from "@/assets/category-shoes.png";
+import categoryBags from "@/assets/category-bags.png";
+import categoryPerfumes from "@/assets/category-perfumes.png";
+import categoryAccessories from "@/assets/category-accessories.png";
+
 const CATEGORY_ICONS = [
-  { id: "women", label: "Women", icon: Shirt },
-  { id: "men", label: "Men", icon: Shirt },
-  { id: "shoes", label: "Shoes", icon: Footprints },
-  { id: "bags", label: "Bags", icon: Briefcase },
-  { id: "perfumes", label: "Beauty", icon: Sparkles },
-  { id: "accessories", label: "Accessories", icon: Watch },
+  { id: "women", label: "Women", image: categoryWomen },
+  { id: "men", label: "Men", image: categoryMen },
+  { id: "shoes", label: "Shoes", image: categoryShoes },
+  { id: "bags", label: "Bags", image: categoryBags },
+  { id: "perfumes", label: "Beauty", image: categoryPerfumes },
+  { id: "accessories", label: "Accessories", image: categoryAccessories },
 ];
 
 const PROMO_MESSAGES = [
@@ -132,8 +139,8 @@ const HomePage = () => {
                 to={`/search?category=${cat.id}`}
                 className="flex flex-col items-center gap-1.5 min-w-[50px] group"
               >
-                <div className="h-11 w-11 lg:h-14 lg:w-14 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <cat.icon className="h-5 w-5 lg:h-6 lg:w-6 text-accent" />
+                <div className="h-11 w-11 lg:h-14 lg:w-14 rounded-full bg-secondary flex items-center justify-center group-hover:bg-accent/15 transition-colors overflow-hidden">
+                  <img src={cat.image} alt={cat.label} className="h-9 w-9 lg:h-11 lg:w-11 object-contain" />
                 </div>
                 <span className="text-[10px] lg:text-xs font-medium text-foreground">{cat.label}</span>
               </Link>
