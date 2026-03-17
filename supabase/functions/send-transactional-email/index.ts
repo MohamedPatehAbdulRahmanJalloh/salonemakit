@@ -61,10 +61,19 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json()
-    const { template, to, props } = body
+    const { template, props } = body
 
-    if (!template || !to || !props) {
-      return new Response(JSON.stringify({ error: 'Missing template, to, or props' }), {
+    // Always send to the authenticated user's own email — never trust client-supplied `to`
+    const recipientEmail = user.email
+    if (!recipientEmail) {
+      return new Response(JSON.stringify({ error: 'No email associated with your account' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (!template || !props) {
+      return new Response(JSON.stringify({ error: 'Missing template or props' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
