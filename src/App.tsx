@@ -10,7 +10,7 @@ import BottomNav from "@/components/BottomNav";
 import ScrollToTop from "@/components/ScrollToTop";
 import BackToTop from "@/components/BackToTop";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
