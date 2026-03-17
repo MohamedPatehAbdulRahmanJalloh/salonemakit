@@ -77,7 +77,7 @@ const BannerCarousel = () => {
 
   return (
     <div
-      className="relative overflow-hidden aspect-[2/1]"
+      className="relative overflow-hidden aspect-[2/1] lg:aspect-[3/1] lg:rounded-xl lg:mx-8 lg:mt-4"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
