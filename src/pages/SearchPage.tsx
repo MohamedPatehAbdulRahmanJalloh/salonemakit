@@ -267,13 +267,18 @@ const SearchPage = () => {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20">
-          <p className="text-4xl mb-3">🔍</p>
-          <p className="text-sm font-medium text-foreground">No products found</p>
-          <p className="text-xs text-muted-foreground mt-1">Try a different search or filter</p>
+        <div className="flex flex-col items-center justify-center min-h-[40vh] px-6 text-center">
+          <div className="relative mb-5">
+            <div className="h-24 w-24 rounded-full bg-secondary/80 flex items-center justify-center">
+              <Search className="h-10 w-10 text-muted-foreground/30" />
+            </div>
+            <span className="absolute -top-1 -right-1 text-3xl">🔍</span>
+          </div>
+          <h2 className="text-base font-bold text-foreground">No products found</h2>
+          <p className="text-xs text-muted-foreground mt-1.5">Try a different search or filter</p>
           {hasActiveFilters && (
-            <button onClick={clearFilters} className="text-accent text-xs font-semibold mt-3">
-              Clear filters
+            <button onClick={clearFilters} className="text-accent text-xs font-bold mt-4 underline underline-offset-2">
+              Clear all filters
             </button>
           )}
         </div>

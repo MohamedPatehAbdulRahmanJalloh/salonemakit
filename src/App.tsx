@@ -84,6 +84,7 @@ const App = () => (
                 </Suspense>
                 </ErrorBoundary>
                 
+                <Footer />
                 <PWAInstallPrompt />
                 <BottomNav />
               </div>

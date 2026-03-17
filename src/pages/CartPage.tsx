@@ -16,18 +16,14 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-          <ShoppingBag className="h-10 w-10 text-muted-foreground/40" />
-        </div>
-        <h2 className="text-base font-bold">Your cart is empty</h2>
-        <p className="text-xs text-muted-foreground mt-1">Start shopping to add items</p>
-        <Link to="/search">
-          <Button className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
-            Browse Products
-          </Button>
-        </Link>
-      </div>
+      <EmptyState
+        icon={ShoppingBag}
+        emoji="🛒"
+        title="Your cart is empty"
+        description="Browse our collection and add items you love"
+        actionLabel="Browse Products"
+        actionLink="/search"
+      />
     );
   }
 

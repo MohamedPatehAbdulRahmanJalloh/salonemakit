@@ -58,18 +58,14 @@ const WishlistPage = () => {
           ))}
         </div>
       ) : wishlistItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] px-4">
-          <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-3">
-            <Heart className="h-8 w-8 text-muted-foreground/40" />
-          </div>
-          <h2 className="text-sm font-bold">Your wishlist is empty</h2>
-          <p className="text-xs text-muted-foreground mt-1">Tap the heart on items you love</p>
-          <Link to="/search">
-            <Button className="mt-5 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-8 h-10 text-xs font-bold">
-              Browse Products
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={Heart}
+          emoji="💫"
+          title="Your wishlist is empty"
+          description="Tap the heart on items you love to save them here"
+          actionLabel="Browse Products"
+          actionLink="/search"
+        />
       ) : (
         <div className="grid grid-cols-2 gap-[1px] bg-border">
           <AnimatePresence>
