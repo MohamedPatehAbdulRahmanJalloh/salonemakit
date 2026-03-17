@@ -68,6 +68,21 @@ const AnalyticsPage = () => {
 
   const maxRevenue = Math.max(...stats.last7Days.map((d) => d.revenue), 1);
 
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (!isAdmin && !isStaff) {
+      navigate("/");
+    }
+  }, [loading, user, isAdmin, isStaff, navigate]);
+
+  if (loading || !user || (!isAdmin && !isStaff)) {
+    return null;
+  }
+
   return (
     <div className="pb-20">
       {/* Header */}
