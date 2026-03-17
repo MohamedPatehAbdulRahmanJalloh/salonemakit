@@ -138,8 +138,10 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
           )}
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
-};
+});
+
+ProductCard.displayName = "ProductCard";
 
 export default ProductCard;
