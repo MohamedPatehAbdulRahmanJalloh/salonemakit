@@ -55,7 +55,7 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <PushNotificationSetup />
-            <HashRouter>
+            <BrowserRouter>
               <ScrollToTop />
               <BackToTop />
               <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative" role="main">
