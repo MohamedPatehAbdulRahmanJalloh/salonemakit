@@ -74,7 +74,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <Link to="/wishlist" className="h-9 w-9 flex items-center justify-center">
+            <Link to="/wishlist" className="h-9 w-9 flex items-center justify-center" aria-label="Wishlist">
               <Heart className="h-[18px] w-[18px] text-foreground" />
             </Link>
             <Link to="/cart" className="h-9 w-9 flex items-center justify-center relative">
