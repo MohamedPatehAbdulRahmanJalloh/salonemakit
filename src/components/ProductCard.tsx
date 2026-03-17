@@ -4,7 +4,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
