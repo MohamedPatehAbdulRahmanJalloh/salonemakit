@@ -4,7 +4,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ export const formatPrice = (price: number) => {
   return `Le ${price.toLocaleString()}`;
 };
 
-const ProductCard = ({ product, compact }: ProductCardProps) => {
+const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, compact }, ref) => {
   const { addItem } = useCart();
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -44,11 +44,9 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="group relative bg-card overflow-hidden"
+    <div
+      ref={ref}
+      className="group relative bg-card overflow-hidden animate-fade-in"
     >
       <Link to={`/product/${product.id}`} className="block">
         {/* Image */}
@@ -140,8 +138,10 @@ const ProductCard = ({ product, compact }: ProductCardProps) => {
           )}
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
-};
+});
+
+ProductCard.displayName = "ProductCard";
 
 export default ProductCard;
