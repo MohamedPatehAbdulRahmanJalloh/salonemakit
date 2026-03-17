@@ -320,8 +320,11 @@ const ProductDetailPage = () => {
         <ReviewSection productId={product.id} />
       </div>
 
+      </div>{/* end right column */}
+      </div>{/* end grid */}
+
       {/* Divider */}
-      <div className="h-2 bg-secondary mt-2" />
+      <div className="h-2 bg-secondary mt-2 lg:hidden" />
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
