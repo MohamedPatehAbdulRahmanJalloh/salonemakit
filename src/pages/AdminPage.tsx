@@ -5,7 +5,7 @@ import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, Image, BarChart3 } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const emptyProduct = {
   name: "", price: "", original_price: "", category: "men", image: "",
@@ -32,12 +31,14 @@ const emptyFlashSale = {
 
 const ORDER_STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
 
+type AdminTab = "products" | "orders" | "coupons" | "flash" | "staff";
+
 const AdminPage = () => {
   const navigate = useNavigate();
-  const { user, isAdmin, signOut, loading: authLoading } = useAuth();
+  const { user, isAdmin, isStaff, signOut, loading: authLoading } = useAuth();
   const { data: products = [], isLoading: productsLoading } = useProducts(undefined, true);
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
-  const [activeTab, setActiveTab] = useState<"products" | "orders" | "coupons" | "flash">("products");
+  const [activeTab, setActiveTab] = useState<AdminTab>("products");
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyProduct);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -46,12 +47,17 @@ const AdminPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
+  // Staff management state
+  const [staffEmail, setStaffEmail] = useState("");
+  const [addingStaff, setAddingStaff] = useState(false);
+
   // Coupons
   const [showCouponForm, setShowCouponForm] = useState(false);
   const [couponForm, setCouponForm] = useState(emptyCoupon);
   const [editingCouponId, setEditingCouponId] = useState<string | null>(null);
   const { data: coupons = [] } = useQuery({
     queryKey: ["admin-coupons"],
+    enabled: isAdmin,
     queryFn: async () => {
       const { data, error } = await supabase.from("coupons").select("*").order("created_at", { ascending: false });
       if (error) throw error;
@@ -65,6 +71,7 @@ const AdminPage = () => {
   const [editingFlashId, setEditingFlashId] = useState<string | null>(null);
   const { data: flashSales = [] } = useQuery({
     queryKey: ["admin-flash-sales"],
+    enabled: isAdmin,
     queryFn: async () => {
       const { data, error } = await supabase.from("flash_sales").select("*").order("created_at", { ascending: false });
       if (error) throw error;
@@ -72,19 +79,39 @@ const AdminPage = () => {
     },
   });
 
+  // Staff list (admin only)
+  const { data: staffMembers = [], isLoading: staffLoading } = useQuery({
+    queryKey: ["admin-staff"],
+    enabled: isAdmin,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("*")
+        .eq("role", "staff" as any);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+  const hasAccess = isAdmin || isStaff;
 
   if (!authLoading && !user) { navigate("/auth"); return null; }
-  if (!authLoading && !isAdmin) {
+  if (!authLoading && !hasAccess) {
     return (
       <div className="pb-20 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <Package className="h-12 w-12 text-muted-foreground mb-4" />
         <h2 className="text-lg font-bold mb-2">Access Denied</h2>
-        <p className="text-sm text-muted-foreground mb-4">You don't have admin privileges.</p>
+        <p className="text-sm text-muted-foreground mb-4">You don't have admin or staff privileges.</p>
         <Button onClick={() => navigate("/")} variant="outline" className="rounded-full">Go Home</Button>
       </div>
     );
   }
+
+  // Tabs available based on role
+  const availableTabs: AdminTab[] = isAdmin
+    ? ["products", "orders", "coupons", "flash", "staff"]
+    : ["products", "orders"]; // Staff only sees products & orders
 
   // Image upload
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +161,7 @@ const AdminPage = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (!isAdmin) { toast.error("Only the owner can delete products"); return; }
     const { error } = await supabase.from("products").delete().eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Deleted"); queryClient.invalidateQueries({ queryKey: ["products"] }); }
@@ -146,7 +174,7 @@ const AdminPage = () => {
     else { toast.success(`Order ${status}`); queryClient.invalidateQueries({ queryKey: ["orders"] }); }
   };
 
-  // Coupon CRUD
+  // Coupon CRUD (admin only)
   const handleSaveCoupon = async () => {
     if (!couponForm.code) { toast.error("Coupon code required"); return; }
     setSaving(true);
@@ -176,7 +204,7 @@ const AdminPage = () => {
     else { toast.success("Coupon deleted"); queryClient.invalidateQueries({ queryKey: ["admin-coupons"] }); }
   };
 
-  // Flash Sale CRUD
+  // Flash Sale CRUD (admin only)
   const handleSaveFlash = async () => {
     if (!flashForm.title || !flashForm.starts_at || !flashForm.ends_at) { toast.error("Title, start and end dates required"); return; }
     setSaving(true);
@@ -203,6 +231,49 @@ const AdminPage = () => {
     else { toast.success("Flash sale deleted"); queryClient.invalidateQueries({ queryKey: ["admin-flash-sales"] }); }
   };
 
+  // Staff management (admin only)
+  const handleAddStaff = async () => {
+    if (!staffEmail.trim()) { toast.error("Enter staff email"); return; }
+    setAddingStaff(true);
+
+    // Find user by email using edge function
+    const { data, error } = await supabase.functions.invoke("manage-staff", {
+      body: { action: "add", email: staffEmail.trim().toLowerCase() },
+    });
+
+    setAddingStaff(false);
+    if (error || data?.error) {
+      toast.error(data?.error || error?.message || "Failed to add staff");
+    } else {
+      toast.success(`${staffEmail} added as staff!`);
+      setStaffEmail("");
+      queryClient.invalidateQueries({ queryKey: ["admin-staff"] });
+    }
+  };
+
+  const handleRemoveStaff = async (userId: string) => {
+    const { data, error } = await supabase.functions.invoke("manage-staff", {
+      body: { action: "remove", userId },
+    });
+
+    if (error || data?.error) {
+      toast.error(data?.error || error?.message || "Failed to remove staff");
+    } else {
+      toast.success("Staff member removed");
+      queryClient.invalidateQueries({ queryKey: ["admin-staff"] });
+    }
+  };
+
+  const tabLabel = (tab: AdminTab) => {
+    switch (tab) {
+      case "products": return `Products (${products.length})`;
+      case "orders": return `Orders (${orders.length})`;
+      case "coupons": return `Coupons (${coupons.length})`;
+      case "flash": return `Flash Sales (${flashSales.length})`;
+      case "staff": return `Staff (${staffMembers.length})`;
+    }
+  };
+
   return (
     <div className="pb-20">
       {/* Header */}
@@ -210,10 +281,19 @@ const AdminPage = () => {
         <button onClick={() => navigate("/")} className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-bold flex-1">Admin Dashboard</h1>
-        <button onClick={() => navigate("/admin/analytics")} className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center">
-          <BarChart3 className="h-4 w-4 text-accent" />
-        </button>
+        <div className="flex-1">
+          <h1 className="text-lg font-bold">
+            {isAdmin ? "Admin Dashboard" : "Staff Dashboard"}
+          </h1>
+          {isStaff && !isAdmin && (
+            <p className="text-[10px] text-muted-foreground">Staff access • Limited permissions</p>
+          )}
+        </div>
+        {isAdmin && (
+          <button onClick={() => navigate("/admin/analytics")} className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center">
+            <BarChart3 className="h-4 w-4 text-accent" />
+          </button>
+        )}
         <button onClick={signOut} className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-full bg-secondary">Sign Out</button>
       </div>
 
@@ -238,7 +318,7 @@ const AdminPage = () => {
 
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto px-4 mb-4 scrollbar-hide">
-        {(["products", "orders", "coupons", "flash"] as const).map((tab) => (
+        {availableTabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -247,10 +327,7 @@ const AdminPage = () => {
               activeTab === tab ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
             )}
           >
-            {tab === "products" ? `Products (${products.length})` :
-             tab === "orders" ? `Orders (${orders.length})` :
-             tab === "coupons" ? `Coupons (${coupons.length})` :
-             `Flash Sales (${flashSales.length})`}
+            {tabLabel(tab)}
           </button>
         ))}
         {activeTab === "products" && (
@@ -259,13 +336,13 @@ const AdminPage = () => {
             <Plus className="h-5 w-5" />
           </button>
         )}
-        {activeTab === "coupons" && (
+        {activeTab === "coupons" && isAdmin && (
           <button onClick={() => { setCouponForm(emptyCoupon); setEditingCouponId(null); setShowCouponForm(true); }}
             className="ml-auto h-9 w-9 shrink-0 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
             <Plus className="h-5 w-5" />
           </button>
         )}
-        {activeTab === "flash" && (
+        {activeTab === "flash" && isAdmin && (
           <button onClick={() => { setFlashForm(emptyFlashSale); setEditingFlashId(null); setShowFlashForm(true); }}
             className="ml-auto h-9 w-9 shrink-0 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
             <Plus className="h-5 w-5" />
@@ -293,9 +370,12 @@ const AdminPage = () => {
                 <button onClick={() => handleEdit(product)} className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <Edit2 className="h-3.5 w-3.5 text-primary" />
                 </button>
-                <button onClick={() => handleDelete(product.id)} className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center">
-                  <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                </button>
+                {/* Only admin can delete */}
+                {isAdmin && (
+                  <button onClick={() => handleDelete(product.id)} className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                  </button>
+                )}
               </div>
             </div>
           ))
@@ -318,7 +398,6 @@ const AdminPage = () => {
                 <p>📍 {order.district} • 📱 {order.phone}</p>
                 <p>💳 {order.payment_method === "orange_money" ? "Orange Money" : "COD"} • 📦 {(order as any).order_items?.length || 0} items</p>
               </div>
-              {/* Status dropdown */}
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-semibold text-muted-foreground">Status:</span>
                 <select
@@ -343,8 +422,8 @@ const AdminPage = () => {
           ))
         )}
 
-        {/* COUPONS TAB */}
-        {activeTab === "coupons" && (
+        {/* COUPONS TAB (Admin only) */}
+        {activeTab === "coupons" && isAdmin && (
           coupons.length === 0 ? <p className="text-center text-muted-foreground text-sm py-8">No coupons yet</p> :
           coupons.map((coupon: any) => (
             <div key={coupon.id} className="bg-secondary rounded-2xl p-3 flex items-center gap-3">
@@ -368,8 +447,8 @@ const AdminPage = () => {
           ))
         )}
 
-        {/* FLASH SALES TAB */}
-        {activeTab === "flash" && (
+        {/* FLASH SALES TAB (Admin only) */}
+        {activeTab === "flash" && isAdmin && (
           flashSales.length === 0 ? <p className="text-center text-muted-foreground text-sm py-8">No flash sales</p> :
           flashSales.map((sale: any) => (
             <div key={sale.id} className="bg-secondary rounded-2xl p-3 flex items-center gap-3">
@@ -388,6 +467,76 @@ const AdminPage = () => {
               </button>
             </div>
           ))
+        )}
+
+        {/* STAFF TAB (Admin only) */}
+        {activeTab === "staff" && isAdmin && (
+          <div className="space-y-4">
+            {/* Security notice */}
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-start gap-3">
+              <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-primary">Owner Only</p>
+                <p className="text-xs text-muted-foreground">Only you (the owner) can add or remove staff. Staff can manage products & orders but cannot delete products, manage coupons, flash sales, or other staff.</p>
+              </div>
+            </div>
+
+            {/* Add staff form */}
+            <div className="bg-secondary rounded-2xl p-4 space-y-3">
+              <div className="flex items-center gap-2 mb-2">
+                <UserPlus className="h-4 w-4 text-accent" />
+                <p className="text-sm font-bold">Add Staff Member</p>
+              </div>
+              <p className="text-xs text-muted-foreground">The person must have an account on SaloneMakitSL first. Enter their email below.</p>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="staff@email.com"
+                  type="email"
+                  value={staffEmail}
+                  onChange={(e) => setStaffEmail(e.target.value)}
+                  className="rounded-xl flex-1"
+                  onKeyDown={(e) => e.key === "Enter" && handleAddStaff()}
+                />
+                <Button
+                  onClick={handleAddStaff}
+                  disabled={addingStaff || !staffEmail.trim()}
+                  className="rounded-xl bg-accent hover:bg-accent/90 shrink-0"
+                >
+                  {addingStaff ? "Adding..." : "Add"}
+                </Button>
+              </div>
+            </div>
+
+            {/* Staff list */}
+            {staffLoading ? (
+              [...Array(3)].map((_, i) => <Skeleton key={i} className="h-16 rounded-2xl" />)
+            ) : staffMembers.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-10 w-10 mx-auto text-muted-foreground/50 mb-3" />
+                <p className="text-sm text-muted-foreground">No staff members yet</p>
+                <p className="text-xs text-muted-foreground/70">Add team members to help run your business</p>
+              </div>
+            ) : (
+              staffMembers.map((member: any) => (
+                <div key={member.id} className="bg-secondary rounded-2xl p-3 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                    <Users className="h-5 w-5 text-accent" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{member.user_id}</p>
+                    <p className="text-xs text-muted-foreground">Staff Member</p>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveStaff(member.user_id)}
+                    className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center"
+                    title="Remove staff"
+                  >
+                    <UserMinus className="h-3.5 w-3.5 text-destructive" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
         )}
       </div>
 
@@ -410,7 +559,6 @@ const AdminPage = () => {
               </select>
               <Input placeholder="Badge (HOT, NEW, -20%)" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="rounded-xl" />
             </div>
-            {/* Image upload or URL */}
             <div className="space-y-2">
               <div className="flex gap-2">
                 <Input placeholder="Image URL *" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="rounded-xl flex-1" />

@@ -7,6 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
+  isStaff: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -19,24 +20,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isStaff, setIsStaff] = useState(false);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkRoles = async (userId: string) => {
     try {
-      const { data, error } = await supabase.rpc("has_role", {
-        _user_id: userId,
-        _role: "admin",
-      });
+      const [adminResult, staffResult] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+        supabase.rpc("has_role", { _user_id: userId, _role: "staff" as any }),
+      ]);
 
-      if (error) {
-        console.error("[Auth] Failed to check admin role:", error);
-        setIsAdmin(false);
-        return;
-      }
+      if (adminResult.error) console.error("[Auth] Admin check error:", adminResult.error);
+      if (staffResult.error) console.error("[Auth] Staff check error:", staffResult.error);
 
-      setIsAdmin(!!data);
+      setIsAdmin(!!adminResult.data);
+      setIsStaff(!!staffResult.data);
     } catch (error) {
-      console.error("[Auth] Unexpected admin role check error:", error);
+      console.error("[Auth] Role check error:", error);
       setIsAdmin(false);
+      setIsStaff(false);
     }
   };
 
@@ -50,9 +51,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(nextSession?.user ?? null);
 
       if (nextSession?.user) {
-        await checkAdminRole(nextSession.user.id);
+        await checkRoles(nextSession.user.id);
       } else {
         setIsAdmin(false);
+        setIsStaff(false);
       }
 
       if (isMounted) setLoading(false);
@@ -72,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!isMounted) return;
         setLoading(false);
         setIsAdmin(false);
+        setIsStaff(false);
       });
 
     return () => {
@@ -111,10 +114,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     await supabase.auth.signOut();
     setIsAdmin(false);
+    setIsStaff(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isStaff, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
