@@ -36,6 +36,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 import PushNotificationSetup from "./components/PushNotificationSetup";
 
 const queryClient = new QueryClient();
+const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
