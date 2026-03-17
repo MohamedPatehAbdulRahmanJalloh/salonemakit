@@ -89,7 +89,7 @@ const SearchPage = () => {
   }, [activeCategory, query, products, priceRange, selectedSizes, sortBy]);
 
   return (
-    <div className="pb-20 bg-background">
+    <div className="pb-20 lg:pb-6 bg-background">
       {/* SHEIN-style sticky header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 py-2.5 flex items-center gap-2">
@@ -255,9 +255,9 @@ const SearchPage = () => {
 
       {/* Product Grid — SHEIN edge-to-edge */}
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-[1px] bg-border">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-background">
+            <div key={i} className="bg-background lg:rounded-lg lg:overflow-hidden lg:border lg:border-border">
               <Skeleton className="aspect-[3/4]" />
               <div className="p-2">
                 <Skeleton className="h-3 w-3/4 mb-1" />
@@ -278,9 +278,9 @@ const SearchPage = () => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-[1px] bg-border">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[1px] lg:gap-4 bg-border lg:bg-transparent lg:px-4">
           {filtered.map((p) => (
-            <div key={p.id} className="bg-background">
+            <div key={p.id} className="bg-background lg:rounded-lg lg:overflow-hidden lg:border lg:border-border lg:hover:shadow-md lg:transition-shadow">
               <ProductCard product={p} />
             </div>
           ))}

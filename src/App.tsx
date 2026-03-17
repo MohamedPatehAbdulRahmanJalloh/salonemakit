@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +12,7 @@ import BackToTop from "@/components/BackToTop";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 import { lazy, Suspense } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load pages for code splitting
@@ -55,10 +56,11 @@ const App = () => (
         <AuthProvider>
           <CartProvider>
             <PushNotificationSetup />
-            <HashRouter>
+            <BrowserRouter>
               <ScrollToTop />
               <BackToTop />
-              <div className="app-safe-area max-w-lg mx-auto min-h-screen bg-background relative" role="main">
+              <div className="app-safe-area min-h-screen bg-background relative" role="main">
+                <ErrorBoundary>
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -79,11 +81,12 @@ const App = () => (
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
+                </ErrorBoundary>
                 
                 <PWAInstallPrompt />
                 <BottomNav />
               </div>
-            </HashRouter>
+            </BrowserRouter>
           </CartProvider>
         </AuthProvider>
       </TooltipProvider>

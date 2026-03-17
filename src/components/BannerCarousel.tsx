@@ -77,7 +77,7 @@ const BannerCarousel = () => {
 
   return (
     <div
-      className="relative overflow-hidden aspect-[2/1]"
+      className="relative overflow-hidden aspect-[2/1] lg:aspect-[3/1] lg:rounded-xl lg:mx-8 lg:mt-4"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -91,15 +91,15 @@ const BannerCarousel = () => {
         transition={{ duration: 0.5 }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/30 to-transparent" />
-      <div className="absolute inset-0 flex flex-col justify-center p-5">
-        <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-0.5">{slide.tag}</p>
-        <h2 className="text-xl font-extrabold text-white leading-tight">
+      <div className="absolute inset-0 flex flex-col justify-center p-5 lg:p-12">
+        <p className="text-[10px] lg:text-xs text-accent font-bold uppercase tracking-widest mb-0.5">{slide.tag}</p>
+        <h2 className="text-xl lg:text-4xl font-extrabold text-white leading-tight">
           {slide.title} <span className="text-accent">{slide.highlight}</span>
         </h2>
-        <p className="text-[11px] text-white/70 mt-0.5">{slide.subtitle}</p>
+        <p className="text-[11px] lg:text-sm text-white/70 mt-0.5 lg:mt-2">{slide.subtitle}</p>
         <Link
           to={slide.link}
-          className="mt-3 bg-accent text-accent-foreground text-[11px] font-bold px-5 py-2 rounded-sm w-fit hover:bg-accent/90 transition-colors"
+          className="mt-3 lg:mt-5 bg-accent text-accent-foreground text-[11px] lg:text-sm font-bold px-5 lg:px-8 py-2 lg:py-3 rounded-sm w-fit hover:bg-accent/90 transition-colors"
         >
           Shop Now
         </Link>
