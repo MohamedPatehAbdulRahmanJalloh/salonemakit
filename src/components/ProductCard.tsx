@@ -17,7 +17,7 @@ export const formatPrice = (price: number) => {
   return `Le ${price.toLocaleString()}`;
 };
 
-const ProductCard = ({ product, compact }: ProductCardProps) => {
+const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, compact }, ref) => {
   const { addItem } = useCart();
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
