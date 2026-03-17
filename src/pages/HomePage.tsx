@@ -11,6 +11,9 @@ import logo from "@/assets/logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import FlashSaleBanner from "@/components/FlashSaleBanner";
 import BannerCarousel from "@/components/BannerCarousel";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import StaffPicksSection from "@/components/StaffPicksSection";
+import PromoBanner from "@/components/PromoBanner";
 import { toast } from "sonner";
 
 import categoryWomen from "@/assets/category-women.png";
