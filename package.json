@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "node scripts/fix-swc.js"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
@@ -47,6 +48,8 @@
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@supabase/supabase-js": "^2.99.1",
+    "@swc/core": "^1.11.29",
+    "@swc/core-linux-x64-gnu": "^1.11.29",
     "@tanstack/react-query": "^5.83.0",
     "canvas-confetti": "1.9.3",
     "class-variance-authority": "^0.7.1",
@@ -70,7 +73,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
-    "vite-plugin-pwa": "1.2.0",
+    "vite-plugin-pwa": "0.19.8",
     "workbox-build": "7.4.0",
     "zod": "^3.25.76"
   },
@@ -83,7 +86,7 @@
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react-swc": "^3.11.0",
+    "@vitejs/plugin-react-swc": "^3.9.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
