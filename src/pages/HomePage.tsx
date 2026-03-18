@@ -241,6 +241,11 @@ const HomePage = () => {
           )}
         </section>
 
+        {/* Trust Badges */}
+        <div className="mt-5">
+          <TrustBadges />
+        </div>
+
         {/* Testimonials */}
         <TestimonialsSection />
       </div>
