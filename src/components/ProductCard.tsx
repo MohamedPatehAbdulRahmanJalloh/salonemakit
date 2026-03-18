@@ -14,7 +14,7 @@ interface ProductCardProps {
 }
 
 export const formatPrice = (price: number) => {
-  return `Le ${price.toLocaleString()}`;
+  return `NLe ${price.toLocaleString()}`;
 };
 
 const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, compact }, ref) => {

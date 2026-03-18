@@ -35,7 +35,7 @@ interface OrderConfirmationEmailProps {
 }
 
 function formatPrice(amount: number): string {
-  return `Le ${amount.toLocaleString('en-US')}`
+  return `NLe ${amount.toLocaleString('en-US')}`
 }
 
 export const OrderConfirmationEmail = ({
