@@ -196,6 +196,7 @@ const ProfilePage = () => {
 
         <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakitSL v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
+      <RateAppModal open={showRateApp} onOpenChange={setShowRateApp} />
     </div>
   );
 };
