@@ -66,7 +66,7 @@ const CartPage = () => {
                   <p className="text-sm font-extrabold text-foreground">{formatPrice(item.product.price)}</p>
                   <div className="flex items-center gap-0">
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedSize)}
                       className="h-7 w-7 rounded-l-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Minus className="h-3 w-3" />
@@ -75,7 +75,7 @@ const CartPage = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedSize)}
                       className="h-7 w-7 rounded-r-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Plus className="h-3 w-3" />
@@ -84,7 +84,7 @@ const CartPage = () => {
                 </div>
               </div>
               <button
-                onClick={() => removeItem(item.product.id)}
+                onClick={() => removeItem(item.product.id, item.selectedSize)}
                 className="self-start h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
               >
                 <Trash2 className="h-4 w-4" />
