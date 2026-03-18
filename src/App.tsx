@@ -33,6 +33,7 @@ const OrderDetailPage = lazy(() => import("./pages/OrderDetailPage"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const ReturnPolicyPage = lazy(() => import("./pages/ReturnPolicyPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 import PushNotificationSetup from "./components/PushNotificationSetup";
 
