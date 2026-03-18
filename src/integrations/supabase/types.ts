@@ -576,6 +576,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      validate_order_item_price_rls: {
+        Args: { p_product_id: string; p_product_price: number }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "staff"
