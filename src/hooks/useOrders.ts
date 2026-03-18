@@ -46,9 +46,9 @@ export const useCreateOrder = () => {
         district: input.district,
         address: input.address,
         payment_method: input.paymentMethod,
-        subtotal: 0,
+        subtotal: input.subtotal,
         delivery_fee: input.deliveryFee,
-        total: input.deliveryFee,
+        total: input.total,
         user_id: currentUser.id,
         coupon_code: input.couponCode || null,
       } as any);
