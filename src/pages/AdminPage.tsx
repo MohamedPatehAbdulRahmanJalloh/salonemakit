@@ -133,11 +133,11 @@ const AdminPage = () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
     setSaving(true);
     const payload: any = {
-      name: form.name.trim(), price: parseInt(form.price), category: form.category,
+      name: form.name.trim(), price: Math.round(parseFloat(form.price) * 1000), category: form.category,
       image: form.image.trim(), description: form.description.trim(),
       sizes: form.sizes ? form.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
       in_stock: form.in_stock, badge: form.badge || null,
-      original_price: form.original_price ? parseInt(form.original_price) : null,
+      original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
     };
     let error;
     if (editingId) { ({ error } = await supabase.from("products").update(payload).eq("id", editingId)); }
@@ -153,7 +153,7 @@ const AdminPage = () => {
 
   const handleEdit = (p: any) => {
     setForm({
-      name: p.name, price: String(p.price), original_price: p.original_price ? String(p.original_price) : "",
+      name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
