@@ -133,11 +133,11 @@ const AdminPage = () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
     setSaving(true);
     const payload: any = {
-      name: form.name.trim(), price: parseInt(form.price), category: form.category,
+      name: form.name.trim(), price: Math.round(parseFloat(form.price) * 1000), category: form.category,
       image: form.image.trim(), description: form.description.trim(),
       sizes: form.sizes ? form.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
       in_stock: form.in_stock, badge: form.badge || null,
-      original_price: form.original_price ? parseInt(form.original_price) : null,
+      original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
     };
     let error;
     if (editingId) { ({ error } = await supabase.from("products").update(payload).eq("id", editingId)); }
