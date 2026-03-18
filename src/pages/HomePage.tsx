@@ -35,7 +35,7 @@ const CATEGORY_ICONS = [
 
 const PROMO_MESSAGES = [
   "Flash Sale! Up to 50% off on selected items!",
-  "Free delivery on orders above NLe 200!",
+  "Free delivery on orders above NLe 5,000!",
   "New arrivals just dropped — check them out!",
   "Use code SALONE10 for 10% off your first order!",
 ];
