@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
