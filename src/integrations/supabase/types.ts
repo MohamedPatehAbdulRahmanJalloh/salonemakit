@@ -566,6 +566,10 @@ export type Database = {
           used_count: number
         }[]
       }
+      validate_coupon_for_order: {
+        Args: { p_coupon_code: string; p_subtotal: number }
+        Returns: boolean
+      }
       validate_order_insert_values: {
         Args: {
           p_delivery_fee: number
@@ -574,6 +578,10 @@ export type Database = {
           p_subtotal: number
           p_total: number
         }
+        Returns: boolean
+      }
+      validate_order_item_price_rls: {
+        Args: { p_product_id: string; p_product_price: number }
         Returns: boolean
       }
     }
