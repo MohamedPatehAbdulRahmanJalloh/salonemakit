@@ -1,7 +1,7 @@
 import { Shield, Truck, RotateCcw, BadgeCheck } from "lucide-react";
 
 const badges = [
-  { icon: Truck, label: "Free Delivery", sub: "Orders over NLe 200" },
+  { icon: Truck, label: "Free Delivery", sub: "Orders over NLe 5,000" },
   { icon: Shield, label: "Secure Payment", sub: "COD & Orange Money" },
   { icon: RotateCcw, label: "Easy Returns", sub: "7-day return policy" },
   { icon: BadgeCheck, label: "100% Authentic", sub: "Verified products" },
