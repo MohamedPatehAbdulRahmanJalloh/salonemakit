@@ -153,7 +153,7 @@ const AdminPage = () => {
 
   const handleEdit = (p: any) => {
     setForm({
-      name: p.name, price: String(p.price), original_price: p.original_price ? String(p.original_price) : "",
+      name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
