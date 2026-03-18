@@ -84,7 +84,7 @@ const CartPage = () => {
                 </div>
               </div>
               <button
-                onClick={() => removeItem(item.product.id)}
+                onClick={() => removeItem(item.product.id, item.selectedSize)}
                 className="self-start h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
               >
                 <Trash2 className="h-4 w-4" />

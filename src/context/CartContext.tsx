@@ -47,17 +47,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTimeout(() => setJustAdded(false), 500);
   }, []);
 
-  const removeItem = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((i) => i.product.id !== productId));
+  const removeItem = useCallback((productId: string, size?: string) => {
+    setItems((prev) => prev.filter((i) => !(i.product.id === productId && i.selectedSize === size)));
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
+  const updateQuantity = useCallback((productId: string, quantity: number, size?: string) => {
     if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.product.id !== productId));
+      setItems((prev) => prev.filter((i) => !(i.product.id === productId && i.selectedSize === size)));
     } else {
       setItems((prev) =>
         prev.map((i) =>
-          i.product.id === productId ? { ...i, quantity } : i
+          i.product.id === productId && i.selectedSize === size ? { ...i, quantity } : i
         )
       );
     }
