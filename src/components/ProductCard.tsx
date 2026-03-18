@@ -137,6 +137,14 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
               <span className="text-[10px] text-destructive font-semibold">-{discountPercent}%</span>
             </div>
           )}
+          {/* Rating */}
+          {stats && stats.count > 0 && (
+            <div className="flex items-center gap-1 mt-0.5">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-[10px] font-semibold text-foreground">{stats.avg.toFixed(1)}</span>
+              <span className="text-[9px] text-muted-foreground">({stats.count})</span>
+            </div>
+          )}
           {!compact && product.category && (
             <p className="text-[10px] text-muted-foreground capitalize mt-0.5">{product.category}</p>
           )}
