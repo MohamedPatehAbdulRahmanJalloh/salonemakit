@@ -342,16 +342,33 @@ const ProductDetailPage = () => {
       {/* Divider */}
       <div className="h-2 bg-secondary mt-2 lg:hidden" />
 
-      {/* Related Products */}
+      {/* Customers Also Bought */}
       {relatedProducts.length > 0 && (
         <div className="py-3">
-          <h3 className="text-sm font-bold text-foreground mb-2 px-4">You May Also Like</h3>
+          <h3 className="text-sm font-bold text-foreground mb-2 px-4">🛍️ Customers Also Bought</h3>
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 px-4">
-            {relatedProducts.map((p) => (
+            {relatedProducts.slice(0, 4).map((p) => (
               <div key={p.id} className="min-w-[130px] w-[130px]">
                 <ProductCard product={p} compact />
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* You May Also Like */}
+      {allProducts.filter((p) => p.id !== product?.id && p.category !== product?.category).length > 0 && (
+        <div className="py-3">
+          <h3 className="text-sm font-bold text-foreground mb-2 px-4">💡 You May Also Like</h3>
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 px-4">
+            {allProducts
+              .filter((p) => p.id !== product?.id && p.category !== product?.category)
+              .slice(0, 6)
+              .map((p) => (
+                <div key={p.id} className="min-w-[130px] w-[130px]">
+                  <ProductCard product={p} compact />
+                </div>
+              ))}
           </div>
         </div>
       )}
