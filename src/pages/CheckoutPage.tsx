@@ -107,7 +107,7 @@ const CheckoutPage = () => {
           href={`https://wa.me/23278928111?text=${buildWhatsAppMessage()}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 bg-[hsl(142,70%,45%)] text-white px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
         >
           <MessageCircle className="h-4 w-4" />
           Confirm via WhatsApp
