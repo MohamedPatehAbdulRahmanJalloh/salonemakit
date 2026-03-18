@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   User, Heart, ClipboardList, LogOut, ChevronRight,
   Shield, Tag, HelpCircle, MessageCircle, Gift, Star, Truck,
-  Moon, Sun, BarChart3
+  Moon, Sun, BarChart3, ThumbsUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
