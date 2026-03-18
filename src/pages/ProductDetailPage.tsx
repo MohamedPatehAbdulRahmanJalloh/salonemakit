@@ -374,7 +374,7 @@ const ProductDetailPage = () => {
       )}
 
       {/* SHEIN-style Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border safe-area-bottom lg:hidden">
+      <div className="fixed bottom-[56px] left-0 right-0 z-50 bg-background border-t border-border lg:hidden">
         <div className="max-w-lg mx-auto flex items-center gap-2 px-4 py-2">
           <button
             onClick={handleWishlist}
