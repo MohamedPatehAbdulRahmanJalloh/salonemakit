@@ -79,6 +79,7 @@ const ProfilePage = () => {
       items: [
         { icon: Info, label: "About SaloneMakitSL", value: "", to: "/about" },
         { icon: MessageCircle, label: "WhatsApp Support", value: "", to: "https://wa.me/23278928111", external: true },
+        { icon: ThumbsUp, label: "Rate App", value: "", action: () => setShowRateApp(true) },
         { icon: HelpCircle, label: "Help Center", value: "", to: "/" },
         { icon: Gift, label: "Refer a Friend", value: "Soon", to: "/" },
       ],
