@@ -144,6 +144,23 @@ const ProfilePage = () => {
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">{section.title}</p>
             <div className="bg-card rounded-lg border border-border overflow-hidden">
               {section.items.map((item: any, i: number) => {
+                if (item.action) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={item.action}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3 py-3 hover:bg-secondary/50 transition-colors",
+                        i < section.items.length - 1 && "border-b border-border"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 text-accent" />
+                      <span className="flex-1 text-xs font-medium text-left">{item.label}</span>
+                      {item.value && <span className="text-[10px] text-muted-foreground">{item.value}</span>}
+                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+                    </button>
+                  );
+                }
                 const Wrapper = item.external ? "a" : Link;
                 const linkProps = item.external
                   ? { href: item.to, target: "_blank", rel: "noopener noreferrer" }
