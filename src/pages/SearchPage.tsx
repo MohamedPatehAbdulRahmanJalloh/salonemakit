@@ -113,11 +113,29 @@ const SearchPage = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
+              ref={inputRef}
               placeholder="Search products..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               className="pl-9 bg-secondary border-none h-9 rounded-full text-xs"
             />
+            {/* Autocomplete dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-50 overflow-hidden">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    className="w-full text-left px-4 py-2.5 text-xs hover:bg-secondary flex items-center gap-2 transition-colors"
+                    onMouseDown={() => { setQuery(s); setShowSuggestions(false); }}
+                  >
+                    <Search className="h-3 w-3 text-muted-foreground shrink-0" />
+                    <span className="text-foreground">{s}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Sort */}
