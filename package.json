@@ -10,8 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "postinstall": "node scripts/fix-swc.js"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
