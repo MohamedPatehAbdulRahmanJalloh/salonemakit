@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
@@ -7,10 +8,11 @@ import { useOrders } from "@/hooks/useOrders";
 import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import RateAppModal from "@/components/RateAppModal";
 import {
   User, Heart, ClipboardList, LogOut, ChevronRight,
   Shield, Tag, HelpCircle, MessageCircle, Gift, Star, Truck,
-  Moon, Sun, BarChart3
+  Moon, Sun, BarChart3, ThumbsUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
@@ -22,6 +24,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { wishlistCount } = useWishlist();
   const { data: orders = [] } = useOrders();
+  const [showRateApp, setShowRateApp] = useState(false);
 
   if (!user) {
     return (
@@ -75,6 +78,7 @@ const ProfilePage = () => {
       items: [
         { icon: Info, label: "About SaloneMakitSL", value: "", to: "/about" },
         { icon: MessageCircle, label: "WhatsApp Support", value: "", to: "https://wa.me/23278928111", external: true },
+        { icon: ThumbsUp, label: "Rate App", value: "", action: () => setShowRateApp(true) },
         { icon: HelpCircle, label: "Help Center", value: "", to: "/" },
         { icon: Gift, label: "Refer a Friend", value: "Soon", to: "/" },
       ],
@@ -140,6 +144,23 @@ const ProfilePage = () => {
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">{section.title}</p>
             <div className="bg-card rounded-lg border border-border overflow-hidden">
               {section.items.map((item: any, i: number) => {
+                if (item.action) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={item.action}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3 py-3 hover:bg-secondary/50 transition-colors",
+                        i < section.items.length - 1 && "border-b border-border"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 text-accent" />
+                      <span className="flex-1 text-xs font-medium text-left">{item.label}</span>
+                      {item.value && <span className="text-[10px] text-muted-foreground">{item.value}</span>}
+                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+                    </button>
+                  );
+                }
                 const Wrapper = item.external ? "a" : Link;
                 const linkProps = item.external
                   ? { href: item.to, target: "_blank", rel: "noopener noreferrer" }
@@ -175,6 +196,7 @@ const ProfilePage = () => {
 
         <p className="text-center text-[9px] text-muted-foreground pt-1 pb-4">SaloneMakitSL v1.0 • Made in Sierra Leone 🇸🇱</p>
       </div>
+      <RateAppModal open={showRateApp} onOpenChange={setShowRateApp} />
     </div>
   );
 };
