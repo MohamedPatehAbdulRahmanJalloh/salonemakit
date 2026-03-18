@@ -99,8 +99,16 @@ const CheckoutPage = () => {
           Your order will be delivered to {orderDistrict}.
           {paymentMethod === "cod"
             ? ` Pay ${formatPrice(grandTotal)} on delivery.`
-            : ` Please send ${formatPrice(grandTotal)} to Orange Money number +232 78 928 111, then your order will be processed.`}
+            : ""}
         </p>
+        {paymentMethod === "orange_money" && (
+          <div className="rounded-lg bg-orange/5 border border-orange/20 p-3 mt-3 max-w-xs text-left space-y-1.5">
+            <p className="text-[11px] font-bold text-orange">📱 Send payment now:</p>
+            <p className="text-xs font-bold text-foreground">{formatPrice(grandTotal)}</p>
+            <p className="text-[10px] text-muted-foreground">To Orange Money: <span className="font-bold text-orange">+232 78 928 111</span></p>
+            <p className="text-[10px] text-muted-foreground">Your order will be processed once payment is confirmed.</p>
+          </div>
+        )}
         
         {/* WhatsApp Confirmation */}
         <a
