@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
@@ -6,6 +7,8 @@ import { Info } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
 import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import RateAppModal from "@/components/RateAppModal";
 import { Button } from "@/components/ui/button";
 import {
   User, Heart, ClipboardList, LogOut, ChevronRight,
