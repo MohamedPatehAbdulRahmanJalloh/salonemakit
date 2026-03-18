@@ -4,8 +4,8 @@ import { CartItem, Product } from "@/data/types";
 interface CartContextType {
   items: CartItem[];
   addItem: (product: Product, size?: string) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeItem: (productId: string, size?: string) => void;
+  updateQuantity: (productId: string, quantity: number, size?: string) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
