@@ -10,8 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "postinstall": "node scripts/fix-swc.js"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
@@ -51,6 +50,7 @@
     "@swc/core": "^1.11.29",
     "@swc/core-linux-x64-gnu": "^1.11.29",
     "@tanstack/react-query": "^5.83.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "canvas-confetti": "1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
