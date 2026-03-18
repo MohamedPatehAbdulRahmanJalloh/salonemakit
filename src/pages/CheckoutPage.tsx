@@ -35,7 +35,7 @@ const CheckoutPage = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
-  const deliveryFee = 25000;
+  const deliveryFee = 25;
   const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
