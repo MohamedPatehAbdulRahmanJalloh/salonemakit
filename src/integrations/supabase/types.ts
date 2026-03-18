@@ -511,6 +511,14 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_product_review_stats: {
+        Args: never
+        Returns: {
+          avg_rating: number
+          product_id: string
+          review_count: number
+        }[]
+      }
       get_public_reviews: {
         Args: { p_product_id: string }
         Returns: {
