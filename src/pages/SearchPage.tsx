@@ -28,13 +28,30 @@ const SearchPage = () => {
   useDocumentTitle("Shop");
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const activeCategory = searchParams.get("category") || "all";
   const { data: products = [], isLoading } = useProducts();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // Autocomplete suggestions
+  const suggestions = useMemo(() => {
+    if (!query.trim() || query.length < 2) return [];
+    const q = query.toLowerCase();
+    const names = products
+      .filter((p) => p.name.toLowerCase().includes(q))
+      .map((p) => p.name)
+      .slice(0, 5);
+    // Add matching categories
+    const cats = CATEGORIES
+      .filter((c) => c.label.toLowerCase().includes(q))
+      .map((c) => c.label);
+    return [...new Set([...cats, ...names])].slice(0, 6);
+  }, [query, products]);
 
   const maxPrice = useMemo(() => {
     if (products.length === 0) return 1000000;
