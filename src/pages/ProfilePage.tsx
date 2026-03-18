@@ -25,6 +25,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { wishlistCount } = useWishlist();
   const { data: orders = [] } = useOrders();
+  const [showRateApp, setShowRateApp] = useState(false);
 
   if (!user) {
     return (
