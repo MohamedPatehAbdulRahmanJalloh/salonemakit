@@ -107,7 +107,7 @@ const CheckoutPage = () => {
           href={`https://wa.me/23278928111?text=${buildWhatsAppMessage()}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 bg-[hsl(142,70%,45%)] text-white px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity"
         >
           <MessageCircle className="h-4 w-4" />
           Confirm via WhatsApp
@@ -251,7 +251,7 @@ const CheckoutPage = () => {
         <section className="bg-card border border-border rounded-lg p-3 space-y-2">
           <h3 className="text-xs font-bold">Order Summary</h3>
           {items.map((item) => (
-            <div key={item.product.id} className="flex justify-between text-xs">
+            <div key={item.product.id + (item.selectedSize || "")} className="flex justify-between text-xs">
               <span className="text-muted-foreground line-clamp-1 flex-1">{item.product.name} × {item.quantity}</span>
               <span className="font-medium ml-2">{formatPrice(item.product.price * item.quantity)}</span>
             </div>
