@@ -22,7 +22,10 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   const { addItem } = useCart();
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { data: reviewStats = {} } = useProductReviewStats();
   const navigate = useNavigate();
+
+  const stats = reviewStats[product.id];
 
   const wishlisted = isInWishlist(product.id);
   const originalPrice = product.original_price;
