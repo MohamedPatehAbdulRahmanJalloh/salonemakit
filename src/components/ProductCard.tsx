@@ -2,7 +2,8 @@ import { Product } from "@/data/types";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
-import { Heart, ShoppingCart } from "lucide-react";
+import { useProductReviewStats } from "@/hooks/useProductReviewStats";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
 import { toast } from "sonner";
@@ -21,7 +22,10 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   const { addItem } = useCart();
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { data: reviewStats = {} } = useProductReviewStats();
   const navigate = useNavigate();
+
+  const stats = reviewStats[product.id];
 
   const wishlisted = isInWishlist(product.id);
   const originalPrice = product.original_price;
@@ -131,6 +135,14 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
                 {formatPrice(originalPrice)}
               </p>
               <span className="text-[10px] text-destructive font-semibold">-{discountPercent}%</span>
+            </div>
+          )}
+          {/* Rating */}
+          {stats && stats.count > 0 && (
+            <div className="flex items-center gap-1 mt-0.5">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-[10px] font-semibold text-foreground">{stats.avg.toFixed(1)}</span>
+              <span className="text-[9px] text-muted-foreground">({stats.count})</span>
             </div>
           )}
           {!compact && product.category && (

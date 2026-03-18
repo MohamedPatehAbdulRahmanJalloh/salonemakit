@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw } from "lucide-react";
+import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw, BadgeCheck } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
@@ -279,20 +279,26 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      {/* Service promises - SHEIN style */}
-      <div className="px-4 py-3 border-b border-border flex gap-4">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Truck className="h-3.5 w-3.5" />
-          <span className="text-[10px]">Nationwide Delivery</span>
+      {/* Service promises */}
+      <div className="px-4 py-3 border-b border-border space-y-2">
+        <div className="flex gap-4">
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Truck className="h-3.5 w-3.5 text-accent" />
+            <span className="text-[10px]">Nationwide Delivery</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Shield className="h-3.5 w-3.5 text-accent" />
+            <span className="text-[10px]">Secure Payment</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <BadgeCheck className="h-3.5 w-3.5 text-accent" />
+            <span className="text-[10px]">100% Authentic</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Shield className="h-3.5 w-3.5" />
-          <span className="text-[10px]">Secure Payment</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
+        <Link to="/return-policy" className="flex items-center gap-1.5 text-accent hover:underline">
           <RotateCcw className="h-3.5 w-3.5" />
-          <span className="text-[10px]">Easy Returns</span>
-        </div>
+          <span className="text-[10px] font-semibold">7-Day Easy Returns →</span>
+        </Link>
       </div>
 
       {/* Description */}

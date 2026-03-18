@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
@@ -28,13 +28,30 @@ const SearchPage = () => {
   useDocumentTitle("Shop");
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const activeCategory = searchParams.get("category") || "all";
   const { data: products = [], isLoading } = useProducts();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // Autocomplete suggestions
+  const suggestions = useMemo(() => {
+    if (!query.trim() || query.length < 2) return [];
+    const q = query.toLowerCase();
+    const names = products
+      .filter((p) => p.name.toLowerCase().includes(q))
+      .map((p) => p.name)
+      .slice(0, 5);
+    // Add matching categories
+    const cats = CATEGORIES
+      .filter((c) => c.label.toLowerCase().includes(q))
+      .map((c) => c.label);
+    return [...new Set([...cats, ...names])].slice(0, 6);
+  }, [query, products]);
 
   const maxPrice = useMemo(() => {
     if (products.length === 0) return 1000000;
@@ -96,11 +113,29 @@ const SearchPage = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
+              ref={inputRef}
               placeholder="Search products..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               className="pl-9 bg-secondary border-none h-9 rounded-full text-xs"
             />
+            {/* Autocomplete dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-50 overflow-hidden">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    className="w-full text-left px-4 py-2.5 text-xs hover:bg-secondary flex items-center gap-2 transition-colors"
+                    onMouseDown={() => { setQuery(s); setShowSuggestions(false); }}
+                  >
+                    <Search className="h-3 w-3 text-muted-foreground shrink-0" />
+                    <span className="text-foreground">{s}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Sort */}

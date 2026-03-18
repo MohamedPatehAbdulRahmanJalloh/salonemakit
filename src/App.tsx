@@ -33,6 +33,7 @@ const OrderDetailPage = lazy(() => import("./pages/OrderDetailPage"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const ReturnPolicyPage = lazy(() => import("./pages/ReturnPolicyPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 import PushNotificationSetup from "./components/PushNotificationSetup";
 
@@ -79,6 +80,7 @@ const App = () => (
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                    <Route path="/return-policy" element={<ReturnPolicyPage />} />
                     <Route path="/auth" element={<AuthPage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
                     <Route path="*" element={<NotFound />} />

@@ -14,6 +14,7 @@ import BannerCarousel from "@/components/BannerCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import StaffPicksSection from "@/components/StaffPicksSection";
 import PromoBanner from "@/components/PromoBanner";
+import TrustBadges from "@/components/TrustBadges";
 import { toast } from "sonner";
 
 import categoryWomen from "@/assets/category-women.png";
@@ -239,6 +240,11 @@ const HomePage = () => {
             </div>
           )}
         </section>
+
+        {/* Trust Badges */}
+        <div className="mt-5">
+          <TrustBadges />
+        </div>
 
         {/* Testimonials */}
         <TestimonialsSection />
