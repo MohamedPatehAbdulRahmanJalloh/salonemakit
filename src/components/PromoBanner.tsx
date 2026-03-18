@@ -12,7 +12,7 @@ const PromoBanner = () => {
           Free Delivery Across <span className="text-accent">All 16 Districts</span>
         </h3>
         <p className="text-xs lg:text-sm text-white/70 mt-1">
-          On orders above Le 200,000 • Pay with Orange Money or COD
+          On orders above NLe 200 • Pay with Orange Money or COD
         </p>
       </div>
       <Link
