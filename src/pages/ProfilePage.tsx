@@ -9,7 +9,6 @@ import { formatPrice } from "@/components/ProductCard";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RateAppModal from "@/components/RateAppModal";
-import { Button } from "@/components/ui/button";
 import {
   User, Heart, ClipboardList, LogOut, ChevronRight,
   Shield, Tag, HelpCircle, MessageCircle, Gift, Star, Truck,
