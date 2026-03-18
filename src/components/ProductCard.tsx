@@ -15,7 +15,8 @@ interface ProductCardProps {
 }
 
 export const formatPrice = (price: number) => {
-  return `NLe ${price.toLocaleString()}`;
+  const amount = price / 1000;
+  return `NLe ${amount.toLocaleString("en-SL", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 };
 
 const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, compact }, ref) => {
