@@ -143,8 +143,9 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion }}>
       {children}
     </RegionContext.Provider>
+  );
   );
 };
