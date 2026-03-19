@@ -275,7 +275,7 @@ const CheckoutPage = () => {
           {items.map((item) => (
             <div key={item.product.id + (item.selectedSize || "")} className="flex justify-between text-xs">
               <span className="text-muted-foreground line-clamp-1 flex-1">{item.product.name} × {item.quantity}</span>
-              <span className="font-medium ml-2">{formatPrice(item.product.price * item.quantity)}</span>
+              <span className="font-medium ml-2">{getProductDisplayPrice(item.product)}{item.quantity > 1 ? ` × ${item.quantity}` : ""}</span>
             </div>
           ))}
           <div className="border-t border-border pt-2 space-y-1">
