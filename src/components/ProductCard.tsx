@@ -3,6 +3,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { useProductReviewStats } from "@/hooks/useProductReviewStats";
+import { useAllProductColors } from "@/hooks/useProductColors";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
