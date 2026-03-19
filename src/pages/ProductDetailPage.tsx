@@ -11,7 +11,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useReviews } from "@/hooks/useReviews";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import ProductCard from "@/components/ProductCard";
 import StarRating from "@/components/StarRating";
 import ReviewSection from "@/components/ReviewSection";
