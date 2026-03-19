@@ -35,7 +35,7 @@ const UAE_CONFIG: RegionConfig = {
   region: "dubai",
   currencyCode: "AED",
   currencySymbol: "AED",
-  deliveryFee: 25 * 100, // 25 AED stored as 2500 (in fils-like unit for consistency)
+  deliveryFee: 10 * 6500, // 10 AED stored in SLL equivalent for conversion
   districts: [
     "Abu Dhabi", "Dubai", "Sharjah", "Ajman",
     "Umm Al Quwain", "Ras Al Khaimah", "Fujairah",
