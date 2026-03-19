@@ -62,7 +62,7 @@ const SearchPage = () => {
     return Math.max(...products.map((p) => p.price));
   }, [products]);
 
-  const hasActiveFilters = selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice;
+  const hasActiveFilters = selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice || minRating > 0;
 
   const toggleSize = (size: string) => {
     setSelectedSizes((prev) =>
