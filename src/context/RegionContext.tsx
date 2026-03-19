@@ -74,7 +74,7 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("region", r);
   };
 
-  const config = region === "dubai" ? DUBAI_CONFIG : SL_CONFIG;
+  const config = region === "dubai" ? UAE_CONFIG : SL_CONFIG;
 
   const convertPrice = (priceSLL: number): number => {
     if (region === "sl") return priceSLL;
