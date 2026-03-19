@@ -35,12 +35,12 @@ const CheckoutPage = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
-  const deliveryFee = 30;
+  const deliveryFee = config.deliveryFee;
   const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
-  const isValidPhone = (p: string) => /^(\+?232|0)?[2-9]\d{7}$/.test(p.replace(/\s/g, ""));
-  const phoneError = phone.trim() && !isValidPhone(phone) ? "Enter a valid Sierra Leone phone number" : "";
+  const isValidPhone = (p: string) => config.phonePattern.test(p.replace(/\s/g, ""));
+  const phoneError = phone.trim() && !isValidPhone(phone) ? `Enter a valid ${region === "dubai" ? "UAE" : "Sierra Leone"} phone number` : "";
   const canSubmit = name.trim() && phone.trim() && !phoneError && district && address.trim() && items.length > 0 && !createOrder.isPending;
 
   const handleSubmit = async () => {
