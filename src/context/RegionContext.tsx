@@ -54,6 +54,10 @@ interface RegionContextValue {
   config: RegionConfig;
   formatPrice: (priceSLL: number) => string;
   convertPrice: (priceSLL: number) => number;
+  /** Get display price for a product, preferring price_aed in Dubai */
+  getProductDisplayPrice: (product: { price: number; price_aed?: number | null }) => string;
+  /** Get raw numeric price for a product (in SLL for SL, AED*100-equivalent for Dubai) */
+  getProductRawPrice: (product: { price: number; price_aed?: number | null }) => number;
 }
 
 const RegionContext = createContext<RegionContextValue | null>(null);
@@ -93,8 +97,27 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     return `AED ${aed.toLocaleString("en-AE", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
+  const formatAed = (priceAed: number): string => {
+    return `AED ${priceAed.toLocaleString("en-AE", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  };
+
+  const getProductDisplayPrice = (product: { price: number; price_aed?: number | null }): string => {
+    if (region === "dubai" && product.price_aed != null) {
+      return formatAed(product.price_aed);
+    }
+    return formatPrice(product.price);
+  };
+
+  const getProductRawPrice = (product: { price: number; price_aed?: number | null }): number => {
+    if (region === "dubai" && product.price_aed != null) {
+      // Convert AED back to SLL equivalent for order processing
+      return product.price_aed * SLL_TO_AED_RATE;
+    }
+    return product.price;
+  };
+
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice }}>
       {children}
     </RegionContext.Provider>
   );

@@ -33,7 +33,7 @@ const ProductDetailPage = () => {
   const { data: productColors = [] } = useProductColors(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");
-  const { formatPrice } = useRegion();
+  const { formatPrice, getProductDisplayPrice } = useRegion();
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
@@ -155,7 +155,7 @@ const ProductDetailPage = () => {
             <button
               onClick={() => {
                 const url = window.location.href;
-                const text = `Check out ${product.name} for ${formatPrice(product.price)} on SaloneMakitSL! 🛍️\n${url}`;
+                const text = `Check out ${product.name} for ${getProductDisplayPrice(product)} on SaloneMakitSL! 🛍️\n${url}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
               }}
               className="h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center"
@@ -205,7 +205,7 @@ const ProductDetailPage = () => {
       <div className="px-4 pt-3 lg:px-0">
         {/* Price section - SHEIN style */}
         <div className="flex items-baseline gap-2">
-          <p className="text-xl font-extrabold text-destructive">{formatPrice(product.price)}</p>
+          <p className="text-xl font-extrabold text-destructive">{getProductDisplayPrice(product)}</p>
           {product.original_price && product.original_price > product.price && (
             <p className="text-sm text-muted-foreground line-through">{formatPrice(product.original_price)}</p>
           )}

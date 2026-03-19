@@ -13,7 +13,7 @@ import EmptyState from "@/components/EmptyState";
 
 const WishlistPage = () => {
   useDocumentTitle("Wishlist");
-  const { formatPrice } = useRegion();
+  const { formatPrice, getProductDisplayPrice } = useRegion();
   const { user } = useAuth();
   const { wishlistItems, isLoading, toggleWishlist } = useWishlist();
   const { addItem } = useCart();
@@ -113,7 +113,7 @@ const WishlistPage = () => {
                     </div>
                     <div className="py-2 px-1">
                       <h3 className="text-xs font-medium leading-tight line-clamp-2 min-h-[32px]">{product.name}</h3>
-                      <p className="text-sm font-extrabold mt-0.5">{formatPrice(product.price)}</p>
+                      <p className="text-sm font-extrabold mt-0.5">{getProductDisplayPrice(product)}</p>
                       {product.category && (
                         <p className="text-[10px] text-muted-foreground capitalize mt-0.5">{product.category}</p>
                       )}
