@@ -68,7 +68,7 @@ const ProfilePage = () => {
         { icon: Star, label: "Reviews", value: "", to: "/orders" },
       ],
     },
-    {
+    ...(!isRegionLocked ? [{
       title: "Settings",
       items: [
         {
@@ -82,7 +82,7 @@ const ProfilePage = () => {
           },
         },
       ],
-    },
+    }] : []),
     ...(isAdmin ? [{
       title: "Admin",
       items: [
