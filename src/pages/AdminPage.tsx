@@ -16,7 +16,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const emptyProduct = {
-  name: "", price: "", original_price: "", category: "men", image: "",
+  name: "", price: "", original_price: "", price_aed: "", category: "men", image: "",
   description: "", sizes: "", badge: "", in_stock: true,
 };
 
