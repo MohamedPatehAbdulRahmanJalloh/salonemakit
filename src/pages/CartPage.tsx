@@ -72,7 +72,7 @@ const CartPage = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <p className="text-sm font-extrabold text-foreground">{formatPrice(item.product.price)}</p>
+                  <p className="text-sm font-extrabold text-foreground">{getProductDisplayPrice(item.product)}</p>
                   <div className="flex items-center gap-0">
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
