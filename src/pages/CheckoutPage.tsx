@@ -281,7 +281,7 @@ const CheckoutPage = () => {
           <div className="border-t border-border pt-2 space-y-1">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">Subtotal</span>
-              <span>{formatPrice(totalPrice)}</span>
+              <span>{formatPrice(regionTotalPrice)}</span>
             </div>
             {couponDiscount > 0 && (
               <div className="flex justify-between text-xs">
