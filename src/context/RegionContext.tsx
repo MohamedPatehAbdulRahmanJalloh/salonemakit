@@ -155,12 +155,13 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   }, [isRegionLocked]);
 
   const updateProfileRegion = async (r: Region) => {
-    if (isRegionLocked) return; // Can't change if locked
+    if (isRegionLocked && !isAdmin) return; // Can't change if locked (unless admin)
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("profiles").update({ region: r }).eq("id", user.id);
     }
-    setRegion(r);
+    setRegionState(r);
+    localStorage.setItem("region", r);
   };
 
   const config = region === "dubai" ? UAE_CONFIG : SL_CONFIG;
