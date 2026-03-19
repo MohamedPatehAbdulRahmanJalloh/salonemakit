@@ -157,6 +157,21 @@ const AdminPage = () => {
     setExtraImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Color image upload
+  const handleColorImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || colorImageIndex === null) return;
+    setColorImageUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `color-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+    if (error) { toast.error("Upload failed"); setColorImageUploading(false); return; }
+    const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+    setProductColors((prev) => prev.map((c, i) => i === colorImageIndex ? { ...c, color_image: urlData.publicUrl } : c));
+    setColorImageUploading(false);
+    if (e.target) e.target.value = "";
+  };
+
   // Product CRUD
   const handleSave = async () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
