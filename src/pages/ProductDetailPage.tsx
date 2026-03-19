@@ -264,6 +264,39 @@ const ProductDetailPage = () => {
         </div>
       )}
 
+      {/* Color Selection */}
+      {productColors.length > 0 && (
+        <div className="px-4 py-3 border-b border-border">
+          <p className="text-xs font-bold text-foreground mb-2.5">Color</p>
+          <div className="flex gap-2 flex-wrap">
+            {productColors.map((color) => (
+              <button
+                key={color.id}
+                onClick={() => {
+                  setSelectedColor(color.color_name);
+                  if (color.color_image) {
+                    const imgIdx = allImages.indexOf(color.color_image);
+                    if (imgIdx >= 0) setCurrentImageIndex(imgIdx);
+                  }
+                }}
+                className={cn(
+                  "flex items-center gap-1.5 h-9 px-3 rounded-sm text-xs font-medium border transition-all",
+                  selectedColor === color.color_name
+                    ? "border-accent bg-accent/10"
+                    : "border-border hover:border-accent/50"
+                )}
+              >
+                <span
+                  className="h-4 w-4 rounded-full border border-border shrink-0"
+                  style={{ backgroundColor: color.color_hex }}
+                />
+                {color.color_name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Quantity */}
       <div className="px-4 py-3 border-b border-border flex items-center justify-between">
         <span className="text-xs font-bold text-foreground">Quantity</span>
