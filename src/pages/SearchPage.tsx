@@ -8,7 +8,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { CATEGORIES } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";

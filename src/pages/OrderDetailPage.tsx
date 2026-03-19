@@ -4,7 +4,7 @@ import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCar
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
