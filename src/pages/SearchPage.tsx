@@ -5,6 +5,7 @@ import { Search, SlidersHorizontal, X, ArrowUpDown, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
+import { useProductReviewStats } from "@/hooks/useProductReviewStats";
 import { CATEGORIES } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
