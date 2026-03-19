@@ -79,6 +79,31 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("region", r);
   };
 
+  // Sync region from user profile on auth state change
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("region")
+          .eq("id", session.user.id)
+          .single();
+        if (data?.region && (data.region === "sl" || data.region === "dubai")) {
+          setRegion(data.region as Region);
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const updateProfileRegion = async (r: Region) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from("profiles").update({ region: r }).eq("id", user.id);
+    }
+    setRegion(r);
+  };
+
   const config = region === "dubai" ? UAE_CONFIG : SL_CONFIG;
 
   const convertPrice = (priceSLL: number): number => {
