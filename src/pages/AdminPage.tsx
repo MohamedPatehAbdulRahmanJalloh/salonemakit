@@ -16,7 +16,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const emptyProduct = {
-  name: "", price: "", original_price: "", category: "men", image: "",
+  name: "", price: "", original_price: "", price_aed: "", category: "men", image: "",
   description: "", sizes: "", badge: "", in_stock: true,
 };
 
@@ -183,6 +183,7 @@ const AdminPage = () => {
       sizes: form.sizes ? form.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
       in_stock: form.in_stock, badge: form.badge || null,
       original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
+      price_aed: form.price_aed ? Math.round(parseFloat(form.price_aed)) : null,
     };
     let error;
     let productId = editingId;
@@ -238,6 +239,7 @@ const AdminPage = () => {
   const handleEdit = async (p: any) => {
     setForm({
       name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
+      price_aed: p.price_aed ? String(p.price_aed) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
@@ -642,6 +644,7 @@ const AdminPage = () => {
               <Input placeholder="Price (Leones) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="rounded-xl" />
               <Input placeholder="Original price" type="number" value={form.original_price} onChange={(e) => setForm({ ...form, original_price: e.target.value })} className="rounded-xl" />
             </div>
+            <Input placeholder="AED Price (UAE, optional)" type="number" value={form.price_aed} onChange={(e) => setForm({ ...form, price_aed: e.target.value })} className="rounded-xl" />
             <div className="grid grid-cols-2 gap-2">
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full h-10 rounded-xl border border-input bg-background px-3 text-sm">
