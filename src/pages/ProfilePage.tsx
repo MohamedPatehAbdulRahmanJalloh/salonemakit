@@ -19,7 +19,7 @@ import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
   useDocumentTitle("My Profile");
-  const { formatPrice } = useRegion();
+  const { formatPrice, region, updateProfileRegion } = useRegion();
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
