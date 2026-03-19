@@ -73,6 +73,7 @@ const SearchPage = () => {
   const clearFilters = () => {
     setSelectedSizes([]);
     setPriceRange([0, maxPrice]);
+    setMinRating(0);
     setSortBy("newest");
   };
 
