@@ -125,21 +125,30 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     detectRegion();
   }, []);
 
-  // Sync region from user profile on auth state change
+  // Sync region from user profile and check admin status on auth state change
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
+        // Check if user is admin
+        const { data: roleData } = await supabase.rpc("has_role", {
+          _user_id: session.user.id,
+          _role: "admin",
+        });
+        setIsAdmin(!!roleData);
+
         const { data } = await supabase
           .from("profiles")
           .select("region")
           .eq("id", session.user.id)
           .single();
         if (data?.region && (data.region === "sl" || data.region === "dubai")) {
-          // Respect lock: if locked to UAE, ignore profile region
-          if (!isRegionLocked) {
-            setRegion(data.region as Region);
+          if (!isRegionLocked || !!roleData) {
+            setRegionState(data.region as Region);
+            localStorage.setItem("region", data.region);
           }
         }
+      } else {
+        setIsAdmin(false);
       }
     });
     return () => subscription.unsubscribe();
