@@ -79,10 +79,11 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   const [isRegionLocked, setIsRegionLocked] = useState(() => {
     return localStorage.getItem("region_locked") === "true";
   });
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const setRegion = (r: Region) => {
-    // If locked to UAE, don't allow switching
-    if (isRegionLocked && r !== "dubai") return;
+    // Admins can always switch; locked non-admins cannot
+    if (isRegionLocked && !isAdmin && r !== "dubai") return;
     setRegionState(r);
     localStorage.setItem("region", r);
   };
