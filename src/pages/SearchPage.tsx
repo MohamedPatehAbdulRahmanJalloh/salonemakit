@@ -26,6 +26,7 @@ const ALL_SIZES = ["S", "M", "L", "XL", "XXL", "38", "39", "40", "41", "42", "43
 
 const SearchPage = () => {
   useDocumentTitle("Shop");
+  const { formatPrice } = useRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);

@@ -13,6 +13,7 @@ import EmptyState from "@/components/EmptyState";
 
 const WishlistPage = () => {
   useDocumentTitle("Wishlist");
+  const { formatPrice } = useRegion();
   const { user } = useAuth();
   const { wishlistItems, isLoading, toggleWishlist } = useWishlist();
   const { addItem } = useCart();

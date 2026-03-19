@@ -19,6 +19,7 @@ const statusConfig: Record<string, { label: string; icon: any; color: string }> 
 
 const OrdersPage = () => {
   useDocumentTitle("My Orders");
+  const { formatPrice } = useRegion();
   const { data: orders = [], isLoading } = useOrders();
 
   return (

@@ -21,6 +21,7 @@ const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { formatPrice } = useRegion();
   useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({
