@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tag, X, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 
 interface CouponInputProps {
   subtotal: number;
