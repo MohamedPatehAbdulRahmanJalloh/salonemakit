@@ -35,8 +35,9 @@ const CheckoutPage = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
+  const regionTotalPrice = items.reduce((sum, i) => sum + getProductRawPrice(i.product) * i.quantity, 0);
   const deliveryFee = config.deliveryFee;
-  const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
+  const discountedSubtotal = Math.max(0, regionTotalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
   const isValidPhone = (p: string) => config.phonePattern.test(p.replace(/\s/g, ""));
