@@ -79,10 +79,11 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   const [isRegionLocked, setIsRegionLocked] = useState(() => {
     return localStorage.getItem("region_locked") === "true";
   });
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const setRegion = (r: Region) => {
-    // If locked to UAE, don't allow switching
-    if (isRegionLocked && r !== "dubai") return;
+    // Admins can always switch; locked non-admins cannot
+    if (isRegionLocked && !isAdmin && r !== "dubai") return;
     setRegionState(r);
     localStorage.setItem("region", r);
   };
@@ -124,33 +125,43 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     detectRegion();
   }, []);
 
-  // Sync region from user profile on auth state change
+  // Sync region from user profile and check admin status on auth state change
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
+        // Check if user is admin
+        const { data: roleData } = await supabase.rpc("has_role", {
+          _user_id: session.user.id,
+          _role: "admin",
+        });
+        setIsAdmin(!!roleData);
+
         const { data } = await supabase
           .from("profiles")
           .select("region")
           .eq("id", session.user.id)
           .single();
         if (data?.region && (data.region === "sl" || data.region === "dubai")) {
-          // Respect lock: if locked to UAE, ignore profile region
-          if (!isRegionLocked) {
-            setRegion(data.region as Region);
+          if (!isRegionLocked || !!roleData) {
+            setRegionState(data.region as Region);
+            localStorage.setItem("region", data.region);
           }
         }
+      } else {
+        setIsAdmin(false);
       }
     });
     return () => subscription.unsubscribe();
   }, [isRegionLocked]);
 
   const updateProfileRegion = async (r: Region) => {
-    if (isRegionLocked) return; // Can't change if locked
+    if (isRegionLocked && !isAdmin) return; // Can't change if locked (unless admin)
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("profiles").update({ region: r }).eq("id", user.id);
     }
-    setRegion(r);
+    setRegionState(r);
+    localStorage.setItem("region", r);
   };
 
   const config = region === "dubai" ? UAE_CONFIG : SL_CONFIG;
@@ -187,8 +198,11 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     return product.price;
   };
 
+  // For UI purposes, admins are never "locked" — they always see the toggle
+  const effectivelyLocked = isRegionLocked && !isAdmin;
+
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked: effectivelyLocked }}>
       {children}
     </RegionContext.Provider>
   );
