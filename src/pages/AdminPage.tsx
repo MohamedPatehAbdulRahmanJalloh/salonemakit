@@ -644,6 +644,7 @@ const AdminPage = () => {
               <Input placeholder="Price (Leones) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="rounded-xl" />
               <Input placeholder="Original price" type="number" value={form.original_price} onChange={(e) => setForm({ ...form, original_price: e.target.value })} className="rounded-xl" />
             </div>
+            <Input placeholder="AED Price (UAE, optional)" type="number" value={form.price_aed} onChange={(e) => setForm({ ...form, price_aed: e.target.value })} className="rounded-xl" />
             <div className="grid grid-cols-2 gap-2">
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full h-10 rounded-xl border border-input bg-background px-3 text-sm">
