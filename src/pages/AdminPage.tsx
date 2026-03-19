@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useOrders } from "@/hooks/useOrders";
 import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -45,6 +45,9 @@ const AdminPage = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const extraFileInputRef = useRef<HTMLInputElement>(null);
+  const [extraImages, setExtraImages] = useState<{ id?: string; image_url: string }[]>([]);
+  const [uploadingExtra, setUploadingExtra] = useState(false);
   const queryClient = useQueryClient();
 
   // Staff management state
@@ -113,7 +116,7 @@ const AdminPage = () => {
     ? ["products", "orders", "coupons", "flash", "staff"]
     : ["products", "orders"]; // Staff only sees products & orders
 
-  // Image upload
+  // Image upload (main)
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -128,6 +131,28 @@ const AdminPage = () => {
     toast.success("Image uploaded!");
   };
 
+  // Extra images upload
+  const handleExtraImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingExtra(true);
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+      if (error) { toast.error("Upload failed: " + error.message); continue; }
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+      setExtraImages((prev) => [...prev, { image_url: urlData.publicUrl }]);
+    }
+    setUploadingExtra(false);
+    toast.success("Extra images uploaded!");
+    if (e.target) e.target.value = "";
+  };
+
+  const removeExtraImage = (index: number) => {
+    setExtraImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   // Product CRUD
   const handleSave = async () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
@@ -140,24 +165,56 @@ const AdminPage = () => {
       original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
     };
     let error;
-    if (editingId) { ({ error } = await supabase.from("products").update(payload).eq("id", editingId)); }
-    else { ({ error } = await supabase.from("products").insert(payload)); }
+    let productId = editingId;
+    if (editingId) {
+      ({ error } = await supabase.from("products").update(payload).eq("id", editingId));
+    } else {
+      const { data, error: insertErr } = await supabase.from("products").insert(payload).select("id").single();
+      error = insertErr;
+      if (data) productId = data.id;
+    }
+
+    // Save extra images
+    if (!error && productId) {
+      // Delete old extra images for this product
+      await supabase.from("product_images").delete().eq("product_id", productId);
+      // Insert new ones
+      if (extraImages.length > 0) {
+        const rows = extraImages.map((img, i) => ({
+          product_id: productId!,
+          image_url: img.image_url,
+          sort_order: i + 1,
+        }));
+        const { error: imgErr } = await supabase.from("product_images").insert(rows);
+        if (imgErr) toast.error("Failed to save extra images: " + imgErr.message);
+      }
+    }
+
     setSaving(false);
     if (error) { toast.error(error.message); }
     else {
       toast.success(editingId ? "Product updated!" : "Product added!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      setShowForm(false); setForm(emptyProduct); setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ["product-images"] });
+      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]);
     }
   };
 
-  const handleEdit = (p: any) => {
+  const handleEdit = async (p: any) => {
     setForm({
       name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
-    setEditingId(p.id); setShowForm(true);
+    setEditingId(p.id);
+    // Load existing extra images
+    const { data: imgs } = await supabase
+      .from("product_images")
+      .select("id, image_url")
+      .eq("product_id", p.id)
+      .order("sort_order", { ascending: true });
+    setExtraImages(imgs || []);
+    setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -331,7 +388,7 @@ const AdminPage = () => {
           </button>
         ))}
         {activeTab === "products" && (
-          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setShowForm(true); }}
+          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setExtraImages([]); setShowForm(true); }}
             className="ml-auto h-9 w-9 shrink-0 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
             <Plus className="h-5 w-5" />
           </button>
@@ -574,6 +631,38 @@ const AdminPage = () => {
               </div>
               {form.image && (
                 <img src={form.image} alt="Preview" className="h-20 w-20 rounded-xl object-cover border border-border" />
+              )}
+            </div>
+
+            {/* Extra Images */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-muted-foreground">Additional Images (customers can swipe)</p>
+                <button
+                  type="button"
+                  onClick={() => extraFileInputRef.current?.click()}
+                  disabled={uploadingExtra}
+                  className="h-8 px-2.5 rounded-lg bg-secondary text-foreground flex items-center gap-1 text-[10px] font-semibold"
+                >
+                  {uploadingExtra ? "..." : <><ImagePlus className="h-3 w-3" /> Add</>}
+                </button>
+                <input ref={extraFileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleExtraImageUpload} />
+              </div>
+              {extraImages.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {extraImages.map((img, i) => (
+                    <div key={i} className="relative group">
+                      <img src={img.image_url} alt={`Extra ${i + 1}`} className="h-16 w-16 rounded-lg object-cover border border-border" />
+                      <button
+                        type="button"
+                        onClick={() => removeExtraImage(i)}
+                        className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
