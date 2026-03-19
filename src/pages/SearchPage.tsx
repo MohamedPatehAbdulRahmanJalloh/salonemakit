@@ -39,6 +39,7 @@ const SearchPage = () => {
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState<number>(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Autocomplete suggestions
