@@ -264,8 +264,16 @@ const AdminPage = () => {
   // Order status update
   const updateOrderStatus = async (orderId: string, status: string) => {
     const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
-    if (error) toast.error(error.message);
-    else { toast.success(`Order ${status}`); queryClient.invalidateQueries({ queryKey: ["orders"] }); }
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(`Order ${status}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      // Fire-and-forget: send status email notification
+      supabase.functions.invoke("send-order-status-email", {
+        body: { orderId, newStatus: status },
+      }).catch(() => {});
+    }
   };
 
   // Coupon CRUD (admin only)
