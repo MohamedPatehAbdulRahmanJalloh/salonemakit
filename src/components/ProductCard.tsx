@@ -25,7 +25,10 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: reviewStats = {} } = useProductReviewStats();
+  const { data: allColors = [] } = useAllProductColors();
   const navigate = useNavigate();
+
+  const productColors = allColors.filter((c) => c.product_id === product.id);
 
   const stats = reviewStats[product.id];
 
