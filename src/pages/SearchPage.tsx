@@ -33,6 +33,7 @@ const SearchPage = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const activeCategory = searchParams.get("category") || "all";
   const { data: products = [], isLoading } = useProducts();
+  const { data: reviewStats = {} } = useProductReviewStats();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
