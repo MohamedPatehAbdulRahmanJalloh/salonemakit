@@ -54,6 +54,10 @@ interface RegionContextValue {
   config: RegionConfig;
   formatPrice: (priceSLL: number) => string;
   convertPrice: (priceSLL: number) => number;
+  /** Get display price for a product, preferring price_aed in Dubai */
+  getProductDisplayPrice: (product: { price: number; price_aed?: number | null }) => string;
+  /** Get raw numeric price for a product (in SLL for SL, AED*100-equivalent for Dubai) */
+  getProductRawPrice: (product: { price: number; price_aed?: number | null }) => number;
 }
 
 const RegionContext = createContext<RegionContextValue | null>(null);
