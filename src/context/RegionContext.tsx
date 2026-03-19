@@ -31,16 +31,17 @@ const SL_CONFIG: RegionConfig = {
 // 1 AED ≈ 6,500 SLL (NLe 6.5) — stored as 6500 in smallest unit
 const SLL_TO_AED_RATE = 6500;
 
-const DUBAI_CONFIG: RegionConfig = {
+const UAE_CONFIG: RegionConfig = {
   region: "dubai",
   currencyCode: "AED",
   currencySymbol: "AED",
   deliveryFee: 25 * 100, // 25 AED stored as 2500 (in fils-like unit for consistency)
   districts: [
-    "Dubai Marina", "Downtown Dubai", "Deira", "Bur Dubai",
+    "Abu Dhabi", "Dubai", "Sharjah", "Ajman",
+    "Umm Al Quwain", "Ras Al Khaimah", "Fujairah",
+    "Al Ain", "Dubai Marina", "Downtown Dubai", "Deira", "Bur Dubai",
     "Jumeirah", "Al Barsha", "Business Bay", "JBR",
     "Dubai Silicon Oasis", "International City", "Al Nahda",
-    "Sharjah (nearby)", "Abu Dhabi", "Ajman",
   ],
   phonePattern: /^(\+?971|0)?[0-9]{8,9}$/,
   phoneHint: "+971 5X...",
