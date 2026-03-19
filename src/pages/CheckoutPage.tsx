@@ -1,9 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
-import { formatPrice } from "@/components/ProductCard";
-import { SIERRA_LEONE_DISTRICTS } from "@/data/products";
+import { useRegion } from "@/context/RegionContext";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
