@@ -59,6 +59,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <AuthProvider>
+          <RegionProvider>
           <CartProvider>
             <PushNotificationSetup />
             <Router>
