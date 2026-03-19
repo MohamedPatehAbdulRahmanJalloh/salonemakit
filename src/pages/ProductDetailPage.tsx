@@ -97,9 +97,11 @@ const ProductDetailPage = () => {
       ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
       : null;
 
+  const currentColorObj = productColors.find((c) => c.color_name === selectedColor);
+
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(product, currentSize);
+      addItem(product, currentSize, selectedColor, currentColorObj?.color_image || undefined);
     }
     toast.success(`${quantity} item(s) added to cart`);
     if (navigator.vibrate) navigator.vibrate(50);
