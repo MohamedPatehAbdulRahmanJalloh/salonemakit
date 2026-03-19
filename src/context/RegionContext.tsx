@@ -7,7 +7,7 @@ interface RegionConfig {
   region: Region;
   currencyCode: string;
   currencySymbol: string;
-  deliveryFee: number; // in smallest unit
+  deliveryFee: number;
   districts: string[];
   phonePattern: RegExp;
   phoneHint: string;
@@ -29,14 +29,13 @@ const SL_CONFIG: RegionConfig = {
   paymentMethods: ["cod", "orange_money"],
 };
 
-// 1 AED ≈ 6,500 SLL (NLe 6.5) — stored as 6500 in smallest unit
 const SLL_TO_AED_RATE = 6500;
 
 const UAE_CONFIG: RegionConfig = {
   region: "dubai",
   currencyCode: "AED",
   currencySymbol: "AED",
-  deliveryFee: 10 * 6500, // 10 AED stored in SLL equivalent for conversion
+  deliveryFee: 10 * 6500,
   districts: [
     "Abu Dhabi", "Dubai", "Sharjah", "Ajman",
     "Umm Al Quwain", "Ras Al Khaimah", "Fujairah",
@@ -46,7 +45,7 @@ const UAE_CONFIG: RegionConfig = {
   ],
   phonePattern: /^(\+?971|0)?[0-9]{8,9}$/,
   phoneHint: "+971 5X...",
-  paymentMethods: ["cod"], // will add Stripe later
+  paymentMethods: ["cod"],
 };
 
 interface RegionContextValue {
@@ -57,8 +56,9 @@ interface RegionContextValue {
   convertPrice: (priceSLL: number) => number;
   getProductDisplayPrice: (product: { price: number; price_aed?: number | null }) => string;
   getProductRawPrice: (product: { price: number; price_aed?: number | null }) => number;
-  /** Update region in profile (persists to DB) */
   updateProfileRegion: (r: Region) => Promise<void>;
+  /** Whether the region was auto-detected as UAE (locked, no toggle) */
+  isRegionLocked: boolean;
 }
 
 const RegionContext = createContext<RegionContextValue | null>(null);
@@ -69,15 +69,60 @@ export const useRegion = () => {
   return ctx;
 };
 
+// UAE country codes from IP geolocation
+const UAE_COUNTRY_CODES = ["AE"];
+
 export const RegionProvider = ({ children }: { children: ReactNode }) => {
   const [region, setRegionState] = useState<Region>(() => {
     return (localStorage.getItem("region") as Region) || "sl";
   });
+  const [isRegionLocked, setIsRegionLocked] = useState(() => {
+    return localStorage.getItem("region_locked") === "true";
+  });
 
   const setRegion = (r: Region) => {
+    // If locked to UAE, don't allow switching
+    if (isRegionLocked && r !== "dubai") return;
     setRegionState(r);
     localStorage.setItem("region", r);
   };
+
+  // Auto-detect region via IP on first visit
+  useEffect(() => {
+    const detected = localStorage.getItem("region_detected");
+    if (detected) return; // Already detected once
+
+    const detectRegion = async () => {
+      try {
+        const response = await fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(5000) });
+        if (!response.ok) return;
+        const data = await response.json();
+        const countryCode = data?.country_code?.toUpperCase();
+
+        localStorage.setItem("region_detected", "true");
+
+        if (countryCode && UAE_COUNTRY_CODES.includes(countryCode)) {
+          setRegionState("dubai");
+          localStorage.setItem("region", "dubai");
+          setIsRegionLocked(true);
+          localStorage.setItem("region_locked", "true");
+        } else {
+          // Default to SL, user can toggle
+          if (!localStorage.getItem("region")) {
+            setRegionState("sl");
+            localStorage.setItem("region", "sl");
+          }
+          setIsRegionLocked(false);
+          localStorage.setItem("region_locked", "false");
+        }
+      } catch {
+        // On error, default to SL with toggle available
+        localStorage.setItem("region_detected", "true");
+      }
+    };
+
+    detectRegion();
+  }, []);
 
   // Sync region from user profile on auth state change
   useEffect(() => {
@@ -89,14 +134,18 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
           .eq("id", session.user.id)
           .single();
         if (data?.region && (data.region === "sl" || data.region === "dubai")) {
-          setRegion(data.region as Region);
+          // Respect lock: if locked to UAE, ignore profile region
+          if (!isRegionLocked) {
+            setRegion(data.region as Region);
+          }
         }
       }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [isRegionLocked]);
 
   const updateProfileRegion = async (r: Region) => {
+    if (isRegionLocked) return; // Can't change if locked
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("profiles").update({ region: r }).eq("id", user.id);
@@ -108,9 +157,6 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
 
   const convertPrice = (priceSLL: number): number => {
     if (region === "sl") return priceSLL;
-    // Convert from SLL smallest unit to AED
-    // priceSLL is in SLL (e.g. 65000 = NLe 65)
-    // AED = priceSLL / SLL_TO_AED_RATE → 65000/6500 = 10 AED
     return Math.round(priceSLL / SLL_TO_AED_RATE * 100) / 100;
   };
 
@@ -136,14 +182,13 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
 
   const getProductRawPrice = (product: { price: number; price_aed?: number | null }): number => {
     if (region === "dubai" && product.price_aed != null) {
-      // Convert AED back to SLL equivalent for order processing
       return product.price_aed * SLL_TO_AED_RATE;
     }
     return product.price;
   };
 
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked }}>
       {children}
     </RegionContext.Provider>
   );

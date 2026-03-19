@@ -20,7 +20,7 @@ import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
   useDocumentTitle("My Profile");
-  const { formatPrice, region, updateProfileRegion } = useRegion();
+  const { formatPrice, region, updateProfileRegion, isRegionLocked } = useRegion();
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const ProfilePage = () => {
         { icon: Star, label: "Reviews", value: "", to: "/orders" },
       ],
     },
-    {
+    ...(!isRegionLocked ? [{
       title: "Settings",
       items: [
         {
@@ -82,7 +82,7 @@ const ProfilePage = () => {
           },
         },
       ],
-    },
+    }] : []),
     ...(isAdmin ? [{
       title: "Admin",
       items: [

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useRegion } from "@/context/RegionContext";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,10 +18,11 @@ const AuthPage = () => {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const { signIn, signUp } = useAuth();
+  const { region: detectedRegion, isRegionLocked } = useRegion();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [country, setCountry] = useState<string>("sl");
+  const [country, setCountry] = useState<string>(isRegionLocked ? "dubai" : "sl");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -108,7 +110,7 @@ const AuthPage = () => {
             />
           </div>
 
-          {mode === "signup" && (
+          {mode === "signup" && !isRegionLocked && (
             <div className="relative">
               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
               <Select value={country} onValueChange={setCountry}>

@@ -1,9 +1,17 @@
 import { useRegion, Region } from "@/context/RegionContext";
-import { Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const RegionSelector = () => {
-  const { region, setRegion } = useRegion();
+  const { region, setRegion, isRegionLocked } = useRegion();
+
+  // If locked (UAE user), show a static badge instead of a toggle
+  if (isRegionLocked) {
+    return (
+      <div className="flex items-center bg-secondary rounded-full px-2.5 py-1">
+        <span className="text-[10px] font-bold text-foreground">🇦🇪 AED</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center bg-secondary rounded-full p-0.5 gap-0">
