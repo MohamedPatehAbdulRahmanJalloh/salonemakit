@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export type Region = "sl" | "dubai";
 
@@ -57,7 +58,7 @@ interface RegionContextValue {
   getProductDisplayPrice: (product: { price: number; price_aed?: number | null }) => string;
   getProductRawPrice: (product: { price: number; price_aed?: number | null }) => number;
   updateProfileRegion: (r: Region) => Promise<void>;
-  /** Whether the region was auto-detected as UAE (locked, no toggle) */
+  /** Whether the region is locked for this user (UAE non-admin) */
   isRegionLocked: boolean;
 }
 
@@ -69,21 +70,23 @@ export const useRegion = () => {
   return ctx;
 };
 
-// UAE country codes from IP geolocation
 const UAE_COUNTRY_CODES = ["AE"];
 
 export const RegionProvider = ({ children }: { children: ReactNode }) => {
+  const { user, isAdmin } = useAuth();
+
   const [region, setRegionState] = useState<Region>(() => {
     return (localStorage.getItem("region") as Region) || "sl";
   });
-  const [isRegionLocked, setIsRegionLocked] = useState(() => {
+  const [isIpLocked, setIsIpLocked] = useState(() => {
     return localStorage.getItem("region_locked") === "true";
   });
-  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Admins are never locked, even from UAE
+  const effectivelyLocked = isIpLocked && !isAdmin;
 
   const setRegion = (r: Region) => {
-    // Admins can always switch; locked non-admins cannot
-    if (isRegionLocked && !isAdmin && r !== "dubai") return;
+    if (effectivelyLocked && r !== "dubai") return;
     setRegionState(r);
     localStorage.setItem("region", r);
   };
@@ -91,7 +94,7 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   // Auto-detect region via IP on first visit
   useEffect(() => {
     const detected = localStorage.getItem("region_detected");
-    if (detected) return; // Already detected once
+    if (detected) return;
 
     const detectRegion = async () => {
       try {
@@ -105,19 +108,17 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
         if (countryCode && UAE_COUNTRY_CODES.includes(countryCode)) {
           setRegionState("dubai");
           localStorage.setItem("region", "dubai");
-          setIsRegionLocked(true);
+          setIsIpLocked(true);
           localStorage.setItem("region_locked", "true");
         } else {
-          // Default to SL, user can toggle
           if (!localStorage.getItem("region")) {
             setRegionState("sl");
             localStorage.setItem("region", "sl");
           }
-          setIsRegionLocked(false);
+          setIsIpLocked(false);
           localStorage.setItem("region_locked", "false");
         }
       } catch {
-        // On error, default to SL with toggle available
         localStorage.setItem("region_detected", "true");
       }
     };
@@ -125,40 +126,33 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     detectRegion();
   }, []);
 
-  // Sync region from user profile and check admin status on auth state change
+  // Sync region from user profile on login
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        // Check if user is admin
-        const { data: roleData } = await supabase.rpc("has_role", {
-          _user_id: session.user.id,
-          _role: "admin",
-        });
-        setIsAdmin(!!roleData);
+    if (!user) return;
 
-        const { data } = await supabase
-          .from("profiles")
-          .select("region")
-          .eq("id", session.user.id)
-          .single();
-        if (data?.region && (data.region === "sl" || data.region === "dubai")) {
-          if (!isRegionLocked || !!roleData) {
-            setRegionState(data.region as Region);
-            localStorage.setItem("region", data.region);
-          }
+    const syncProfile = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("region")
+        .eq("id", user.id)
+        .single();
+      if (data?.region && (data.region === "sl" || data.region === "dubai")) {
+        // Only apply profile region if not locked (or if admin)
+        if (!isIpLocked || isAdmin) {
+          setRegionState(data.region as Region);
+          localStorage.setItem("region", data.region);
         }
-      } else {
-        setIsAdmin(false);
       }
-    });
-    return () => subscription.unsubscribe();
-  }, [isRegionLocked]);
+    };
+
+    syncProfile();
+  }, [user?.id, isAdmin, isIpLocked]);
 
   const updateProfileRegion = async (r: Region) => {
-    if (isRegionLocked && !isAdmin) return; // Can't change if locked (unless admin)
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await supabase.from("profiles").update({ region: r }).eq("id", user.id);
+    if (effectivelyLocked) return;
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (currentUser) {
+      await supabase.from("profiles").update({ region: r }).eq("id", currentUser.id);
     }
     setRegionState(r);
     localStorage.setItem("region", r);
@@ -197,9 +191,6 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     }
     return product.price;
   };
-
-  // For UI purposes, admins are never "locked" — they always see the toggle
-  const effectivelyLocked = isRegionLocked && !isAdmin;
 
   return (
     <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked: effectivelyLocked }}>
