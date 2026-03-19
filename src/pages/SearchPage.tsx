@@ -94,6 +94,12 @@ const SearchPage = () => {
         p.sizes?.some((s) => selectedSizes.includes(s))
       );
     }
+    if (minRating > 0) {
+      results = results.filter((p) => {
+        const stats = reviewStats[p.id];
+        return stats && stats.avg >= minRating;
+      });
+    }
     switch (sortBy) {
       case "price_low":
         results = [...results].sort((a, b) => a.price - b.price);
