@@ -186,7 +186,7 @@ const CheckoutPage = () => {
               <SelectValue placeholder="📍 Select District" />
             </SelectTrigger>
             <SelectContent>
-              {SIERRA_LEONE_DISTRICTS.map((d) => (
+              {config.districts.map((d) => (
                 <SelectItem key={d} value={d}>{d}</SelectItem>
               ))}
             </SelectContent>
