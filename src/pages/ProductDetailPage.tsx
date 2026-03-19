@@ -4,6 +4,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw, BadgeCheck } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
+import { useProductColors } from "@/hooks/useProductColors";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import SizeGuide from "@/components/SizeGuide";
 import { useCart } from "@/context/CartContext";
