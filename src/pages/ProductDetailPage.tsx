@@ -205,7 +205,7 @@ const ProductDetailPage = () => {
       <div className="px-4 pt-3 lg:px-0">
         {/* Price section - SHEIN style */}
         <div className="flex items-baseline gap-2">
-          <p className="text-xl font-extrabold text-destructive">{formatPrice(product.price)}</p>
+          <p className="text-xl font-extrabold text-destructive">{getProductDisplayPrice(product)}</p>
           {product.original_price && product.original_price > product.price && (
             <p className="text-sm text-muted-foreground line-through">{formatPrice(product.original_price)}</p>
           )}
