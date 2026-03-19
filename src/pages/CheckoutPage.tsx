@@ -21,6 +21,7 @@ const CheckoutPage = () => {
   useDocumentTitle("Checkout");
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
+  const { region, config, formatPrice } = useRegion();
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
