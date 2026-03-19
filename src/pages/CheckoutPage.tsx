@@ -183,7 +183,7 @@ const CheckoutPage = () => {
           </div>
           <Select value={district} onValueChange={setDistrict}>
             <SelectTrigger className="bg-secondary border-none h-11 rounded-lg text-sm">
-              <SelectValue placeholder={region === "dubai" ? "📍 Select Area" : "📍 Select District"} />
+              <SelectValue placeholder={region === "dubai" ? "📍 Select Emirate/Area" : "📍 Select District"} />
             </SelectTrigger>
             <SelectContent>
               {config.districts.map((d) => (
