@@ -16,6 +16,7 @@ interface ProductCardProps {
   compact?: boolean;
 }
 
+// Legacy formatPrice for non-region-aware usage (fallback)
 export const formatPrice = (price: number) => {
   const amount = price / 1000;
   return `NLe ${amount.toLocaleString("en-SL", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
