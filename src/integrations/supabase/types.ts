@@ -565,6 +565,19 @@ export type Database = {
     }
     Functions: {
       check_rate_limit: { Args: { p_identifier: string }; Returns: boolean }
+      create_order_secure: {
+        Args: {
+          p_address: string
+          p_coupon_code?: string
+          p_customer_name: string
+          p_delivery_fee: number
+          p_district: string
+          p_items?: Json
+          p_payment_method: string
+          p_phone: string
+        }
+        Returns: string
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
