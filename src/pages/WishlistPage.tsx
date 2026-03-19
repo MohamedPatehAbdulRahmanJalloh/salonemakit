@@ -2,7 +2,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/context/CartContext";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Heart, ShoppingCart, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import EmptyState from "@/components/EmptyState";
 
 const WishlistPage = () => {
   useDocumentTitle("Wishlist");
+  const { formatPrice } = useRegion();
   const { user } = useAuth();
   const { wishlistItems, isLoading, toggleWishlist } = useWishlist();
   const { addItem } = useCart();

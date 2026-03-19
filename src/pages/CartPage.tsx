@@ -1,7 +1,7 @@
 import { useCart } from "@/context/CartContext";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useAuth } from "@/hooks/useAuth";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Minus, Plus, Trash2, ShoppingBag, LogIn, ArrowLeft } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ const CartPage = () => {
   useDocumentTitle("Shopping Bag");
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
+  const { formatPrice } = useRegion();
   const navigate = useNavigate();
 
   if (items.length === 0) {

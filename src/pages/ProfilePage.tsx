@@ -5,7 +5,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
 import { Info } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RateAppModal from "@/components/RateAppModal";
@@ -19,6 +19,7 @@ import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
   useDocumentTitle("My Profile");
+  const { formatPrice } = useRegion();
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();

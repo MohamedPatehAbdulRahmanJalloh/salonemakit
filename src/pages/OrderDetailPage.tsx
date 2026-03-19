@@ -4,7 +4,7 @@ import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCar
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ const OrderDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { formatPrice } = useRegion();
   useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({

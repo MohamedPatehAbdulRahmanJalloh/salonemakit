@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useOrders } from "@/hooks/useOrders";
 import { CATEGORIES } from "@/data/products";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus, Palette } from "lucide-react";
@@ -35,6 +35,7 @@ type AdminTab = "products" | "orders" | "coupons" | "flash" | "staff";
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  const { formatPrice } = useRegion();
   const { user, isAdmin, isStaff, signOut, loading: authLoading } = useAuth();
   const { data: products = [], isLoading: productsLoading } = useProducts(undefined, true);
   const { data: orders = [], isLoading: ordersLoading } = useOrders();

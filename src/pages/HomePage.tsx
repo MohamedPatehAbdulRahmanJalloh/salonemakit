@@ -15,6 +15,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import StaffPicksSection from "@/components/StaffPicksSection";
 import PromoBanner from "@/components/PromoBanner";
 import TrustBadges from "@/components/TrustBadges";
+import RegionSelector from "@/components/RegionSelector";
 import { toast } from "sonner";
 
 import categoryWomen from "@/assets/category-women.png";
@@ -98,6 +99,7 @@ const HomePage = () => {
           </nav>
 
           <div className="flex items-center gap-1">
+            <RegionSelector />
             <Link to="/wishlist" className="h-9 w-9 flex items-center justify-center hover:bg-secondary rounded-full transition-colors" aria-label="Wishlist">
               <Heart className="h-[18px] w-[18px] text-foreground" />
             </Link>

@@ -8,7 +8,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { CATEGORIES } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -26,6 +26,7 @@ const ALL_SIZES = ["S", "M", "L", "XL", "XXL", "38", "39", "40", "41", "42", "43
 
 const SearchPage = () => {
   useDocumentTitle("Shop");
+  const { formatPrice } = useRegion();
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);

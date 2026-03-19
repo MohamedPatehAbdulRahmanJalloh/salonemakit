@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
+import { RegionProvider } from "@/context/RegionContext";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import BottomNav from "@/components/BottomNav";
@@ -58,6 +59,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <AuthProvider>
+          <RegionProvider>
           <CartProvider>
             <PushNotificationSetup />
             <Router>
@@ -94,6 +96,7 @@ const App = () => (
               </div>
             </Router>
           </CartProvider>
+          </RegionProvider>
         </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>

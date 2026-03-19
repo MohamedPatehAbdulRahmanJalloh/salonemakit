@@ -1,9 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/hooks/useAuth";
-import { formatPrice } from "@/components/ProductCard";
-import { SIERRA_LEONE_DISTRICTS } from "@/data/products";
+import { useRegion } from "@/context/RegionContext";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,7 @@ const CheckoutPage = () => {
   useDocumentTitle("Checkout");
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
+  const { region, config, formatPrice } = useRegion();
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
@@ -35,12 +35,12 @@ const CheckoutPage = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
-  const deliveryFee = 30;
+  const deliveryFee = config.deliveryFee;
   const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
-  const isValidPhone = (p: string) => /^(\+?232|0)?[2-9]\d{7}$/.test(p.replace(/\s/g, ""));
-  const phoneError = phone.trim() && !isValidPhone(phone) ? "Enter a valid Sierra Leone phone number" : "";
+  const isValidPhone = (p: string) => config.phonePattern.test(p.replace(/\s/g, ""));
+  const phoneError = phone.trim() && !isValidPhone(phone) ? `Enter a valid ${region === "dubai" ? "UAE" : "Sierra Leone"} phone number` : "";
   const canSubmit = name.trim() && phone.trim() && !phoneError && district && address.trim() && items.length > 0 && !createOrder.isPending;
 
   const handleSubmit = async () => {
@@ -178,15 +178,15 @@ const CheckoutPage = () => {
           </div>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Phone (+23276...)" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className={cn("pl-9 bg-secondary border-none h-11 rounded-lg text-sm", phoneError && "ring-2 ring-destructive")} />
+            <Input placeholder={`Phone (${config.phoneHint})`} value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className={cn("pl-9 bg-secondary border-none h-11 rounded-lg text-sm", phoneError && "ring-2 ring-destructive")} />
             {phoneError && <p className="text-[10px] text-destructive mt-0.5 pl-1">{phoneError}</p>}
           </div>
           <Select value={district} onValueChange={setDistrict}>
             <SelectTrigger className="bg-secondary border-none h-11 rounded-lg text-sm">
-              <SelectValue placeholder="📍 Select District" />
+              <SelectValue placeholder={region === "dubai" ? "📍 Select Area" : "📍 Select District"} />
             </SelectTrigger>
             <SelectContent>
-              {SIERRA_LEONE_DISTRICTS.map((d) => (
+              {config.districts.map((d) => (
                 <SelectItem key={d} value={d}>{d}</SelectItem>
               ))}
             </SelectContent>
@@ -221,27 +221,29 @@ const CheckoutPage = () => {
               </div>
             </button>
 
-            <button
-              onClick={() => setPaymentMethod("orange_money")}
-              className={cn(
-                "w-full rounded-lg p-3 flex items-center gap-3 border transition-all text-left",
-                paymentMethod === "orange_money" ? "border-orange bg-orange/5" : "border-border bg-card"
-              )}
-            >
-              <span className="text-xl font-black text-orange">OM</span>
-              <div className="flex-1">
-                <p className="text-xs font-bold">Orange Money</p>
-                <p className="text-[10px] text-muted-foreground">Pay via mobile money</p>
-              </div>
-              <div className={cn(
-                "h-5 w-5 rounded-full border-2 flex items-center justify-center",
-                paymentMethod === "orange_money" ? "border-orange" : "border-muted-foreground/30"
-              )}>
-                {paymentMethod === "orange_money" && <div className="h-2.5 w-2.5 rounded-full bg-orange" />}
-              </div>
-            </button>
+            {region === "sl" && (
+              <button
+                onClick={() => setPaymentMethod("orange_money")}
+                className={cn(
+                  "w-full rounded-lg p-3 flex items-center gap-3 border transition-all text-left",
+                  paymentMethod === "orange_money" ? "border-orange bg-orange/5" : "border-border bg-card"
+                )}
+              >
+                <span className="text-xl font-black text-orange">OM</span>
+                <div className="flex-1">
+                  <p className="text-xs font-bold">Orange Money</p>
+                  <p className="text-[10px] text-muted-foreground">Pay via mobile money</p>
+                </div>
+                <div className={cn(
+                  "h-5 w-5 rounded-full border-2 flex items-center justify-center",
+                  paymentMethod === "orange_money" ? "border-orange" : "border-muted-foreground/30"
+                )}>
+                  {paymentMethod === "orange_money" && <div className="h-2.5 w-2.5 rounded-full bg-orange" />}
+                </div>
+              </button>
+            )}
 
-            {paymentMethod === "orange_money" && (
+            {paymentMethod === "orange_money" && region === "sl" && (
               <div className="rounded-lg bg-orange/5 border border-orange/20 p-3 mt-2 space-y-1.5">
                 <p className="text-[11px] font-bold text-orange">How to pay:</p>
                 <ol className="text-[10px] text-muted-foreground space-y-1 list-decimal list-inside leading-relaxed">

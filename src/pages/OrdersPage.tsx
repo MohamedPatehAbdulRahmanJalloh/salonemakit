@@ -1,6 +1,6 @@
 import { useOrders } from "@/hooks/useOrders";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { formatPrice } from "@/components/ProductCard";
+import { useRegion } from "@/context/RegionContext";
 import { ClipboardList, Package, Clock, CheckCircle, Truck, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -19,6 +19,7 @@ const statusConfig: Record<string, { label: string; icon: any; color: string }> 
 
 const OrdersPage = () => {
   useDocumentTitle("My Orders");
+  const { formatPrice } = useRegion();
   const { data: orders = [], isLoading } = useOrders();
 
   return (

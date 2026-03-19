@@ -4,6 +4,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { useProductReviewStats } from "@/hooks/useProductReviewStats";
 import { useAllProductColors } from "@/hooks/useProductColors";
+import { useRegion } from "@/context/RegionContext";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
@@ -15,6 +16,7 @@ interface ProductCardProps {
   compact?: boolean;
 }
 
+// Legacy formatPrice for non-region-aware usage (fallback)
 export const formatPrice = (price: number) => {
   const amount = price / 1000;
   return `NLe ${amount.toLocaleString("en-SL", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
@@ -26,6 +28,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: reviewStats = {} } = useProductReviewStats();
   const { data: allColors = [] } = useAllProductColors();
+  const { formatPrice: regionFormatPrice } = useRegion();
   const navigate = useNavigate();
 
   const productColors = allColors.filter((c) => c.product_id === product.id);
@@ -131,13 +134,13 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
               "text-sm font-extrabold",
               hasDiscount ? "text-destructive" : "text-foreground"
             )}>
-              {formatPrice(product.price)}
+              {regionFormatPrice(product.price)}
             </p>
           </div>
           {hasDiscount && (
             <div className="flex items-center gap-1.5">
               <p className="text-[11px] text-muted-foreground line-through">
-                {formatPrice(originalPrice)}
+                {regionFormatPrice(originalPrice)}
               </p>
               <span className="text-[10px] text-destructive font-semibold">-{discountPercent}%</span>
             </div>
