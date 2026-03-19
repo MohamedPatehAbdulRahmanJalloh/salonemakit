@@ -198,8 +198,11 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     return product.price;
   };
 
+  // For UI purposes, admins are never "locked" — they always see the toggle
+  const effectivelyLocked = isRegionLocked && !isAdmin;
+
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion, isRegionLocked: effectivelyLocked }}>
       {children}
     </RegionContext.Provider>
   );
