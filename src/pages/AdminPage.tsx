@@ -633,6 +633,38 @@ const AdminPage = () => {
                 <img src={form.image} alt="Preview" className="h-20 w-20 rounded-xl object-cover border border-border" />
               )}
             </div>
+
+            {/* Extra Images */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-muted-foreground">Additional Images (customers can swipe)</p>
+                <button
+                  type="button"
+                  onClick={() => extraFileInputRef.current?.click()}
+                  disabled={uploadingExtra}
+                  className="h-8 px-2.5 rounded-lg bg-secondary text-foreground flex items-center gap-1 text-[10px] font-semibold"
+                >
+                  {uploadingExtra ? "..." : <><ImagePlus className="h-3 w-3" /> Add</>}
+                </button>
+                <input ref={extraFileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleExtraImageUpload} />
+              </div>
+              {extraImages.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {extraImages.map((img, i) => (
+                    <div key={i} className="relative group">
+                      <img src={img.image_url} alt={`Extra ${i + 1}`} className="h-16 w-16 rounded-lg object-cover border border-border" />
+                      <button
+                        type="button"
+                        onClick={() => removeExtraImage(i)}
+                        className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
             <Input placeholder="Sizes (S, M, L, XL)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
             <label className="flex items-center gap-2 text-sm">
