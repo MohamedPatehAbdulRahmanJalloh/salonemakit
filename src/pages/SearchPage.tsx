@@ -233,6 +233,25 @@ const SearchPage = () => {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <p className="text-xs font-bold mb-3">Minimum Rating</p>
+                  <div className="flex gap-2">
+                    {[0, 3, 3.5, 4, 4.5].map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setMinRating(r)}
+                        className={cn(
+                          "flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border transition-all",
+                          minRating === r
+                            ? "bg-accent text-accent-foreground border-accent"
+                            : "bg-background border-border"
+                        )}
+                      >
+                        {r === 0 ? "All" : <><Star className="h-3 w-3 fill-current" /> {r}+</>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <Button
                   onClick={() => setFiltersOpen(false)}
                   className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg font-bold text-sm"
