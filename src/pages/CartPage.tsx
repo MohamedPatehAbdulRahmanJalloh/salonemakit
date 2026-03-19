@@ -12,7 +12,7 @@ const CartPage = () => {
   useDocumentTitle("Shopping Bag");
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
-  const { formatPrice } = useRegion();
+  const { formatPrice, getProductDisplayPrice, getProductRawPrice } = useRegion();
   const navigate = useNavigate();
 
   if (items.length === 0) {
