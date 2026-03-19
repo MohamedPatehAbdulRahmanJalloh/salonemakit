@@ -1,0 +1,100 @@
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+
+export type Region = "sl" | "dubai";
+
+interface RegionConfig {
+  region: Region;
+  currencyCode: string;
+  currencySymbol: string;
+  deliveryFee: number; // in smallest unit
+  districts: string[];
+  phonePattern: RegExp;
+  phoneHint: string;
+  paymentMethods: string[];
+}
+
+const SL_CONFIG: RegionConfig = {
+  region: "sl",
+  currencyCode: "SLL",
+  currencySymbol: "NLe",
+  deliveryFee: 30,
+  districts: [
+    "Western Area Urban (Freetown)", "Western Area Rural", "Bo", "Bonthe",
+    "Moyamba", "Pujehun", "Kenema", "Kailahun", "Kono", "Bombali",
+    "Kambia", "Koinadugu", "Port Loko", "Tonkolili", "Falaba", "Karene",
+  ],
+  phonePattern: /^(\+?232|0)?[2-9]\d{7}$/,
+  phoneHint: "+23276...",
+  paymentMethods: ["cod", "orange_money"],
+};
+
+// 1 AED ≈ 6,500 SLL (NLe 6.5) — stored as 6500 in smallest unit
+const SLL_TO_AED_RATE = 6500;
+
+const DUBAI_CONFIG: RegionConfig = {
+  region: "dubai",
+  currencyCode: "AED",
+  currencySymbol: "AED",
+  deliveryFee: 25 * 100, // 25 AED stored as 2500 (in fils-like unit for consistency)
+  districts: [
+    "Dubai Marina", "Downtown Dubai", "Deira", "Bur Dubai",
+    "Jumeirah", "Al Barsha", "Business Bay", "JBR",
+    "Dubai Silicon Oasis", "International City", "Al Nahda",
+    "Sharjah (nearby)", "Abu Dhabi", "Ajman",
+  ],
+  phonePattern: /^(\+?971|0)?[0-9]{8,9}$/,
+  phoneHint: "+971 5X...",
+  paymentMethods: ["cod"], // will add Stripe later
+};
+
+interface RegionContextValue {
+  region: Region;
+  setRegion: (r: Region) => void;
+  config: RegionConfig;
+  formatPrice: (priceSLL: number) => string;
+  convertPrice: (priceSLL: number) => number;
+}
+
+const RegionContext = createContext<RegionContextValue | null>(null);
+
+export const useRegion = () => {
+  const ctx = useContext(RegionContext);
+  if (!ctx) throw new Error("useRegion must be used within RegionProvider");
+  return ctx;
+};
+
+export const RegionProvider = ({ children }: { children: ReactNode }) => {
+  const [region, setRegionState] = useState<Region>(() => {
+    return (localStorage.getItem("region") as Region) || "sl";
+  });
+
+  const setRegion = (r: Region) => {
+    setRegionState(r);
+    localStorage.setItem("region", r);
+  };
+
+  const config = region === "dubai" ? DUBAI_CONFIG : SL_CONFIG;
+
+  const convertPrice = (priceSLL: number): number => {
+    if (region === "sl") return priceSLL;
+    // Convert from SLL smallest unit to AED
+    // priceSLL is in SLL (e.g. 65000 = NLe 65)
+    // AED = priceSLL / SLL_TO_AED_RATE → 65000/6500 = 10 AED
+    return Math.round(priceSLL / SLL_TO_AED_RATE * 100) / 100;
+  };
+
+  const formatPrice = (priceSLL: number): string => {
+    if (region === "sl") {
+      const amount = priceSLL / 1000;
+      return `NLe ${amount.toLocaleString("en-SL", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    }
+    const aed = convertPrice(priceSLL);
+    return `AED ${aed.toLocaleString("en-AE", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  };
+
+  return (
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice }}>
+      {children}
+    </RegionContext.Provider>
+  );
+};
