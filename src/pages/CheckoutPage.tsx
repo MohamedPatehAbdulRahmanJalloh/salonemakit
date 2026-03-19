@@ -178,7 +178,7 @@ const CheckoutPage = () => {
           </div>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Phone (+23276...)" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className={cn("pl-9 bg-secondary border-none h-11 rounded-lg text-sm", phoneError && "ring-2 ring-destructive")} />
+            <Input placeholder={`Phone (${config.phoneHint})`} value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className={cn("pl-9 bg-secondary border-none h-11 rounded-lg text-sm", phoneError && "ring-2 ring-destructive")} />
             {phoneError && <p className="text-[10px] text-destructive mt-0.5 pl-1">{phoneError}</p>}
           </div>
           <Select value={district} onValueChange={setDistrict}>
