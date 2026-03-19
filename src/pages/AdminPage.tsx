@@ -165,24 +165,56 @@ const AdminPage = () => {
       original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
     };
     let error;
-    if (editingId) { ({ error } = await supabase.from("products").update(payload).eq("id", editingId)); }
-    else { ({ error } = await supabase.from("products").insert(payload)); }
+    let productId = editingId;
+    if (editingId) {
+      ({ error } = await supabase.from("products").update(payload).eq("id", editingId));
+    } else {
+      const { data, error: insertErr } = await supabase.from("products").insert(payload).select("id").single();
+      error = insertErr;
+      if (data) productId = data.id;
+    }
+
+    // Save extra images
+    if (!error && productId) {
+      // Delete old extra images for this product
+      await supabase.from("product_images").delete().eq("product_id", productId);
+      // Insert new ones
+      if (extraImages.length > 0) {
+        const rows = extraImages.map((img, i) => ({
+          product_id: productId!,
+          image_url: img.image_url,
+          sort_order: i + 1,
+        }));
+        const { error: imgErr } = await supabase.from("product_images").insert(rows);
+        if (imgErr) toast.error("Failed to save extra images: " + imgErr.message);
+      }
+    }
+
     setSaving(false);
     if (error) { toast.error(error.message); }
     else {
       toast.success(editingId ? "Product updated!" : "Product added!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      setShowForm(false); setForm(emptyProduct); setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ["product-images"] });
+      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]);
     }
   };
 
-  const handleEdit = (p: any) => {
+  const handleEdit = async (p: any) => {
     setForm({
       name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
-    setEditingId(p.id); setShowForm(true);
+    setEditingId(p.id);
+    // Load existing extra images
+    const { data: imgs } = await supabase
+      .from("product_images")
+      .select("id, image_url")
+      .eq("product_id", p.id)
+      .order("sort_order", { ascending: true });
+    setExtraImages(imgs || []);
+    setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
