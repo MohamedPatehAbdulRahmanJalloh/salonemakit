@@ -5,7 +5,7 @@ import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus, Palette } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -48,6 +48,10 @@ const AdminPage = () => {
   const extraFileInputRef = useRef<HTMLInputElement>(null);
   const [extraImages, setExtraImages] = useState<{ id?: string; image_url: string }[]>([]);
   const [uploadingExtra, setUploadingExtra] = useState(false);
+  const [productColors, setProductColors] = useState<{ id?: string; color_name: string; color_hex: string; color_image: string }[]>([]);
+  const [colorImageUploading, setColorImageUploading] = useState(false);
+  const colorImageInputRef = useRef<HTMLInputElement>(null);
+  const [colorImageIndex, setColorImageIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
   // Staff management state
@@ -153,6 +157,21 @@ const AdminPage = () => {
     setExtraImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Color image upload
+  const handleColorImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || colorImageIndex === null) return;
+    setColorImageUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `color-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+    if (error) { toast.error("Upload failed"); setColorImageUploading(false); return; }
+    const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+    setProductColors((prev) => prev.map((c, i) => i === colorImageIndex ? { ...c, color_image: urlData.publicUrl } : c));
+    setColorImageUploading(false);
+    if (e.target) e.target.value = "";
+  };
+
   // Product CRUD
   const handleSave = async () => {
     if (!form.name || !form.price || !form.image) { toast.error("Name, price, and image required"); return; }
@@ -188,6 +207,19 @@ const AdminPage = () => {
         const { error: imgErr } = await supabase.from("product_images").insert(rows);
         if (imgErr) toast.error("Failed to save extra images: " + imgErr.message);
       }
+      // Save colors
+      await supabase.from("product_colors").delete().eq("product_id", productId);
+      if (productColors.length > 0) {
+        const colorRows = productColors.map((c, i) => ({
+          product_id: productId!,
+          color_name: c.color_name,
+          color_hex: c.color_hex,
+          color_image: c.color_image || null,
+          sort_order: i,
+        }));
+        const { error: clrErr } = await supabase.from("product_colors").insert(colorRows);
+        if (clrErr) toast.error("Failed to save colors: " + clrErr.message);
+      }
     }
 
     setSaving(false);
@@ -196,7 +228,9 @@ const AdminPage = () => {
       toast.success(editingId ? "Product updated!" : "Product added!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product-images"] });
-      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]);
+      queryClient.invalidateQueries({ queryKey: ["all-product-colors"] });
+      queryClient.invalidateQueries({ queryKey: ["product-colors"] });
+      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]); setProductColors([]);
     }
   };
 
@@ -207,13 +241,13 @@ const AdminPage = () => {
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
     setEditingId(p.id);
-    // Load existing extra images
-    const { data: imgs } = await supabase
-      .from("product_images")
-      .select("id, image_url")
-      .eq("product_id", p.id)
-      .order("sort_order", { ascending: true });
+    // Load existing extra images and colors
+    const [{ data: imgs }, { data: colors }] = await Promise.all([
+      supabase.from("product_images").select("id, image_url").eq("product_id", p.id).order("sort_order", { ascending: true }),
+      supabase.from("product_colors").select("id, color_name, color_hex, color_image").eq("product_id", p.id).order("sort_order", { ascending: true }),
+    ]);
     setExtraImages(imgs || []);
+    setProductColors((colors || []).map((c: any) => ({ id: c.id, color_name: c.color_name, color_hex: c.color_hex, color_image: c.color_image || "" })));
     setShowForm(true);
   };
 
@@ -388,7 +422,7 @@ const AdminPage = () => {
           </button>
         ))}
         {activeTab === "products" && (
-          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setExtraImages([]); setShowForm(true); }}
+          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setExtraImages([]); setProductColors([]); setShowForm(true); }}
             className="ml-auto h-9 w-9 shrink-0 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
             <Plus className="h-5 w-5" />
           </button>
@@ -665,6 +699,55 @@ const AdminPage = () => {
                 </div>
               )}
             </div>
+
+            {/* Colors */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Palette className="h-3.5 w-3.5 text-muted-foreground" />
+                  <p className="text-xs font-semibold text-muted-foreground">Available Colors</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProductColors((prev) => [...prev, { color_name: "", color_hex: "#000000", color_image: "" }])}
+                  className="h-8 px-2.5 rounded-lg bg-secondary text-foreground flex items-center gap-1 text-[10px] font-semibold"
+                >
+                  <Plus className="h-3 w-3" /> Add Color
+                </button>
+              </div>
+              {productColors.map((color, i) => (
+                <div key={i} className="flex items-center gap-2 bg-secondary/50 rounded-lg p-2">
+                  <input
+                    type="color"
+                    value={color.color_hex}
+                    onChange={(e) => setProductColors((prev) => prev.map((c, j) => j === i ? { ...c, color_hex: e.target.value } : c))}
+                    className="h-8 w-8 rounded cursor-pointer border-0 p-0"
+                  />
+                  <Input
+                    placeholder="Color name (e.g. Red)"
+                    value={color.color_name}
+                    onChange={(e) => setProductColors((prev) => prev.map((c, j) => j === i ? { ...c, color_name: e.target.value } : c))}
+                    className="rounded-lg flex-1 h-8 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setColorImageIndex(i); colorImageInputRef.current?.click(); }}
+                    className="h-8 px-2 rounded-lg bg-background border border-border text-[10px] font-medium shrink-0"
+                  >
+                    {color.color_image ? "✓ Img" : "📷"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProductColors((prev) => prev.filter((_, j) => j !== i))}
+                    className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center shrink-0"
+                  >
+                    <X className="h-3 w-3 text-destructive" />
+                  </button>
+                </div>
+              ))}
+              <input ref={colorImageInputRef} type="file" accept="image/*" className="hidden" onChange={handleColorImageUpload} />
+            </div>
+
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
             <Input placeholder="Sizes (S, M, L, XL)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
             <label className="flex items-center gap-2 text-sm">

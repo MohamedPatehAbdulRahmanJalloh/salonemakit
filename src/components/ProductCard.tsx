@@ -3,6 +3,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { useProductReviewStats } from "@/hooks/useProductReviewStats";
+import { useAllProductColors } from "@/hooks/useProductColors";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
@@ -24,7 +25,10 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { data: reviewStats = {} } = useProductReviewStats();
+  const { data: allColors = [] } = useAllProductColors();
   const navigate = useNavigate();
+
+  const productColors = allColors.filter((c) => c.product_id === product.id);
 
   const stats = reviewStats[product.id];
 
@@ -144,6 +148,22 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
               <span className="text-[10px] font-semibold text-foreground">{stats.avg.toFixed(1)}</span>
               <span className="text-[9px] text-muted-foreground">({stats.count})</span>
+            </div>
+          )}
+          {/* Color dots */}
+          {productColors.length > 0 && (
+            <div className="flex items-center gap-1 mt-1">
+              {productColors.slice(0, 5).map((c) => (
+                <span
+                  key={c.id}
+                  className="h-3 w-3 rounded-full border border-border"
+                  style={{ backgroundColor: c.color_hex }}
+                  title={c.color_name}
+                />
+              ))}
+              {productColors.length > 5 && (
+                <span className="text-[9px] text-muted-foreground">+{productColors.length - 5}</span>
+              )}
             </div>
           )}
           {!compact && product.category && (

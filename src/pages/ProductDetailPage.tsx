@@ -4,6 +4,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { ArrowLeft, Heart, Share2, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw, BadgeCheck } from "lucide-react";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useProductImages } from "@/hooks/useProductImages";
+import { useProductColors } from "@/hooks/useProductColors";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import SizeGuide from "@/components/SizeGuide";
 import { useCart } from "@/context/CartContext";
@@ -29,9 +30,11 @@ const ProductDetailPage = () => {
   const { data: product, isLoading } = useProduct(id || "");
   useDocumentTitle(product?.name);
   const { data: extraImages = [] } = useProductImages(id || "");
+  const { data: productColors = [] } = useProductColors(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
+  const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef(0);
@@ -94,9 +97,11 @@ const ProductDetailPage = () => {
       ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
       : null;
 
+  const currentColorObj = productColors.find((c) => c.color_name === selectedColor);
+
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(product, currentSize);
+      addItem(product, currentSize, selectedColor, currentColorObj?.color_image || undefined);
     }
     toast.success(`${quantity} item(s) added to cart`);
     if (navigator.vibrate) navigator.vibrate(50);
@@ -253,6 +258,39 @@ const ProductDetailPage = () => {
                 )}
               >
                 {size}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Color Selection */}
+      {productColors.length > 0 && (
+        <div className="px-4 py-3 border-b border-border">
+          <p className="text-xs font-bold text-foreground mb-2.5">Color</p>
+          <div className="flex gap-2 flex-wrap">
+            {productColors.map((color) => (
+              <button
+                key={color.id}
+                onClick={() => {
+                  setSelectedColor(color.color_name);
+                  if (color.color_image) {
+                    const imgIdx = allImages.indexOf(color.color_image);
+                    if (imgIdx >= 0) setCurrentImageIndex(imgIdx);
+                  }
+                }}
+                className={cn(
+                  "flex items-center gap-1.5 h-9 px-3 rounded-sm text-xs font-medium border transition-all",
+                  selectedColor === color.color_name
+                    ? "border-accent bg-accent/10"
+                    : "border-border hover:border-accent/50"
+                )}
+              >
+                <span
+                  className="h-4 w-4 rounded-full border border-border shrink-0"
+                  style={{ backgroundColor: color.color_hex }}
+                />
+                {color.color_name}
               </button>
             ))}
           </div>
