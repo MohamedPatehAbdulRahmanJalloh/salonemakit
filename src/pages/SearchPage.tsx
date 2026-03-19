@@ -310,6 +310,14 @@ const SearchPage = () => {
               {formatPrice(priceRange[0])} – {formatPrice(priceRange[1])}
             </span>
           )}
+          {minRating > 0 && (
+            <button
+              onClick={() => setMinRating(0)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold"
+            >
+              <Star className="h-2.5 w-2.5 fill-current" /> {minRating}+ <X className="h-2.5 w-2.5" />
+            </button>
+          )}
         </div>
       )}
 
