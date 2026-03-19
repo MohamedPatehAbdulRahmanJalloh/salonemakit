@@ -221,27 +221,29 @@ const CheckoutPage = () => {
               </div>
             </button>
 
-            <button
-              onClick={() => setPaymentMethod("orange_money")}
-              className={cn(
-                "w-full rounded-lg p-3 flex items-center gap-3 border transition-all text-left",
-                paymentMethod === "orange_money" ? "border-orange bg-orange/5" : "border-border bg-card"
-              )}
-            >
-              <span className="text-xl font-black text-orange">OM</span>
-              <div className="flex-1">
-                <p className="text-xs font-bold">Orange Money</p>
-                <p className="text-[10px] text-muted-foreground">Pay via mobile money</p>
-              </div>
-              <div className={cn(
-                "h-5 w-5 rounded-full border-2 flex items-center justify-center",
-                paymentMethod === "orange_money" ? "border-orange" : "border-muted-foreground/30"
-              )}>
-                {paymentMethod === "orange_money" && <div className="h-2.5 w-2.5 rounded-full bg-orange" />}
-              </div>
-            </button>
+            {region === "sl" && (
+              <button
+                onClick={() => setPaymentMethod("orange_money")}
+                className={cn(
+                  "w-full rounded-lg p-3 flex items-center gap-3 border transition-all text-left",
+                  paymentMethod === "orange_money" ? "border-orange bg-orange/5" : "border-border bg-card"
+                )}
+              >
+                <span className="text-xl font-black text-orange">OM</span>
+                <div className="flex-1">
+                  <p className="text-xs font-bold">Orange Money</p>
+                  <p className="text-[10px] text-muted-foreground">Pay via mobile money</p>
+                </div>
+                <div className={cn(
+                  "h-5 w-5 rounded-full border-2 flex items-center justify-center",
+                  paymentMethod === "orange_money" ? "border-orange" : "border-muted-foreground/30"
+                )}>
+                  {paymentMethod === "orange_money" && <div className="h-2.5 w-2.5 rounded-full bg-orange" />}
+                </div>
+              </button>
+            )}
 
-            {paymentMethod === "orange_money" && (
+            {paymentMethod === "orange_money" && region === "sl" && (
               <div className="rounded-lg bg-orange/5 border border-orange/20 p-3 mt-2 space-y-1.5">
                 <p className="text-[11px] font-bold text-orange">How to pay:</p>
                 <ol className="text-[10px] text-muted-foreground space-y-1 list-decimal list-inside leading-relaxed">
