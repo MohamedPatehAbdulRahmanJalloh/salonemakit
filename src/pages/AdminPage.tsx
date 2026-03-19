@@ -116,7 +116,7 @@ const AdminPage = () => {
     ? ["products", "orders", "coupons", "flash", "staff"]
     : ["products", "orders"]; // Staff only sees products & orders
 
-  // Image upload
+  // Image upload (main)
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -129,6 +129,28 @@ const AdminPage = () => {
     setForm({ ...form, image: urlData.publicUrl });
     setUploading(false);
     toast.success("Image uploaded!");
+  };
+
+  // Extra images upload
+  const handleExtraImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingExtra(true);
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+      if (error) { toast.error("Upload failed: " + error.message); continue; }
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+      setExtraImages((prev) => [...prev, { image_url: urlData.publicUrl }]);
+    }
+    setUploadingExtra(false);
+    toast.success("Extra images uploaded!");
+    if (e.target) e.target.value = "";
+  };
+
+  const removeExtraImage = (index: number) => {
+    setExtraImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Product CRUD
