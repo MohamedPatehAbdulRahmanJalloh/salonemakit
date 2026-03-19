@@ -147,5 +147,4 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </RegionContext.Provider>
   );
-  );
 };
