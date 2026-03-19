@@ -207,6 +207,19 @@ const AdminPage = () => {
         const { error: imgErr } = await supabase.from("product_images").insert(rows);
         if (imgErr) toast.error("Failed to save extra images: " + imgErr.message);
       }
+      // Save colors
+      await supabase.from("product_colors").delete().eq("product_id", productId);
+      if (productColors.length > 0) {
+        const colorRows = productColors.map((c, i) => ({
+          product_id: productId!,
+          color_name: c.color_name,
+          color_hex: c.color_hex,
+          color_image: c.color_image || null,
+          sort_order: i,
+        }));
+        const { error: clrErr } = await supabase.from("product_colors").insert(colorRows);
+        if (clrErr) toast.error("Failed to save colors: " + clrErr.message);
+      }
     }
 
     setSaving(false);
@@ -215,7 +228,9 @@ const AdminPage = () => {
       toast.success(editingId ? "Product updated!" : "Product added!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product-images"] });
-      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]);
+      queryClient.invalidateQueries({ queryKey: ["all-product-colors"] });
+      queryClient.invalidateQueries({ queryKey: ["product-colors"] });
+      setShowForm(false); setForm(emptyProduct); setEditingId(null); setExtraImages([]); setProductColors([]);
     }
   };
 
