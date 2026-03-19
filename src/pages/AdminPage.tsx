@@ -35,6 +35,7 @@ type AdminTab = "products" | "orders" | "coupons" | "flash" | "staff";
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  const { formatPrice } = useRegion();
   const { user, isAdmin, isStaff, signOut, loading: authLoading } = useAuth();
   const { data: products = [], isLoading: productsLoading } = useProducts(undefined, true);
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
