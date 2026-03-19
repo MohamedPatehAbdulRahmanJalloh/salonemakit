@@ -45,6 +45,37 @@ const ProductDetailPage = () => {
     if (id) addViewed(id);
   }, [id, addViewed]);
 
+  // JSON-LD structured data for SEO
+  useEffect(() => {
+    if (!product) return;
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      image: product.image,
+      description: product.description || product.name,
+      category: product.category,
+      offers: {
+        "@type": "Offer",
+        price: (product.price / 1000).toFixed(2),
+        priceCurrency: "SLL",
+        availability: product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      },
+      ...(reviewCount > 0 && {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: averageRating.toFixed(1),
+          reviewCount: reviewCount,
+        },
+      }),
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+    return () => { document.head.removeChild(script); };
+  }, [product, averageRating, reviewCount]);
+
   const wishlisted = product ? isInWishlist(product.id) : false;
 
   const allImages = product

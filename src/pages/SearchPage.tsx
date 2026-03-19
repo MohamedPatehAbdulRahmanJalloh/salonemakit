@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef } from "react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, ArrowUpDown, Clock } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, Clock, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
+import { useProductReviewStats } from "@/hooks/useProductReviewStats";
 import { CATEGORIES } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,11 +33,13 @@ const SearchPage = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const activeCategory = searchParams.get("category") || "all";
   const { data: products = [], isLoading } = useProducts();
+  const { data: reviewStats = {} } = useProductReviewStats();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState<number>(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Autocomplete suggestions
@@ -59,7 +62,7 @@ const SearchPage = () => {
     return Math.max(...products.map((p) => p.price));
   }, [products]);
 
-  const hasActiveFilters = selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice;
+  const hasActiveFilters = selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice || minRating > 0;
 
   const toggleSize = (size: string) => {
     setSelectedSizes((prev) =>
@@ -70,6 +73,7 @@ const SearchPage = () => {
   const clearFilters = () => {
     setSelectedSizes([]);
     setPriceRange([0, maxPrice]);
+    setMinRating(0);
     setSortBy("newest");
   };
 
@@ -90,6 +94,12 @@ const SearchPage = () => {
         p.sizes?.some((s) => selectedSizes.includes(s))
       );
     }
+    if (minRating > 0) {
+      results = results.filter((p) => {
+        const stats = reviewStats[p.id];
+        return stats && stats.avg >= minRating;
+      });
+    }
     switch (sortBy) {
       case "price_low":
         results = [...results].sort((a, b) => a.price - b.price);
@@ -104,7 +114,7 @@ const SearchPage = () => {
         break;
     }
     return results;
-  }, [activeCategory, query, products, priceRange, selectedSizes, sortBy]);
+  }, [activeCategory, query, products, priceRange, selectedSizes, sortBy, minRating, reviewStats]);
 
   return (
     <div className="pb-20 lg:pb-6 bg-background">
@@ -223,6 +233,25 @@ const SearchPage = () => {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <p className="text-xs font-bold mb-3">Minimum Rating</p>
+                  <div className="flex gap-2">
+                    {[0, 3, 3.5, 4, 4.5].map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setMinRating(r)}
+                        className={cn(
+                          "flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border transition-all",
+                          minRating === r
+                            ? "bg-accent text-accent-foreground border-accent"
+                            : "bg-background border-border"
+                        )}
+                      >
+                        {r === 0 ? "All" : <><Star className="h-3 w-3 fill-current" /> {r}+</>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <Button
                   onClick={() => setFiltersOpen(false)}
                   className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg font-bold text-sm"
@@ -280,6 +309,14 @@ const SearchPage = () => {
             <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold">
               {formatPrice(priceRange[0])} – {formatPrice(priceRange[1])}
             </span>
+          )}
+          {minRating > 0 && (
+            <button
+              onClick={() => setMinRating(0)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold"
+            >
+              <Star className="h-2.5 w-2.5 fill-current" /> {minRating}+ <X className="h-2.5 w-2.5" />
+            </button>
           )}
         </div>
       )}
