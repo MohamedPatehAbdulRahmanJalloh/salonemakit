@@ -22,55 +22,35 @@ export const useCreateOrder = () => {
     mutationFn: async (input: CreateOrderInput) => {
       // Get fresh session
       const { data: sessionData } = await supabase.auth.getSession();
-      const user = sessionData?.session?.user;
+      let currentUser = sessionData?.session?.user;
 
-      if (!user) {
-        // Try refreshing the session
+      if (!currentUser) {
         const { data: refreshData } = await supabase.auth.refreshSession();
-        if (!refreshData?.session?.user) {
+        currentUser = refreshData?.session?.user ?? null;
+        if (!currentUser) {
           throw new Error("Session expired. Please sign in again.");
         }
       }
 
-      const currentUser = user || (await supabase.auth.getSession()).data.session?.user;
-      if (!currentUser) {
-        throw new Error("Not authenticated. Please sign in.");
-      }
+      // Call secure server-side RPC — totals computed from actual DB prices
+      const { data: orderId, error } = await supabase.rpc("create_order_secure", {
+        p_customer_name: input.customerName,
+        p_phone: input.phone,
+        p_district: input.district,
+        p_address: input.address,
+        p_payment_method: input.paymentMethod,
+        p_delivery_fee: input.deliveryFee,
+        p_coupon_code: input.couponCode || null,
+        p_items: input.items.map((item) => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+          selected_size: item.selectedSize || "",
+        })),
+      });
 
-      const orderId = crypto.randomUUID();
-
-      const { error: orderError } = await supabase.from("orders").insert({
-        id: orderId,
-        customer_name: input.customerName,
-        phone: input.phone,
-        district: input.district,
-        address: input.address,
-        payment_method: input.paymentMethod,
-        subtotal: input.subtotal,
-        delivery_fee: input.deliveryFee,
-        total: input.total,
-        user_id: currentUser.id,
-        coupon_code: input.couponCode || null,
-      } as any);
-
-      if (orderError) {
-        console.error("Order insert error:", orderError);
-        throw new Error(`Order failed: ${orderError.message}`);
-      }
-
-      const orderItems = input.items.map((item) => ({
-        order_id: orderId,
-        product_id: item.product.id,
-        product_name: item.product.name,
-        product_price: item.product.price,
-        quantity: item.quantity,
-        selected_size: item.selectedSize || null,
-      }));
-
-      const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-      if (itemsError) {
-        console.error("Order items insert error:", itemsError);
-        throw new Error(`Order items failed: ${itemsError.message}`);
+      if (error) {
+        console.error("Order creation error:", error);
+        throw new Error(`Order failed: ${error.message}`);
       }
 
       // Send order confirmation email (fire-and-forget)
@@ -99,7 +79,7 @@ export const useCreateOrder = () => {
         }).catch((err) => console.error("Order confirmation email failed:", err));
       }
 
-      return { id: orderId };
+      return { id: orderId as string };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
