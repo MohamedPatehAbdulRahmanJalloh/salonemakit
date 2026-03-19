@@ -183,6 +183,7 @@ const AdminPage = () => {
       sizes: form.sizes ? form.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
       in_stock: form.in_stock, badge: form.badge || null,
       original_price: form.original_price ? Math.round(parseFloat(form.original_price) * 1000) : null,
+      price_aed: form.price_aed ? Math.round(parseFloat(form.price_aed)) : null,
     };
     let error;
     let productId = editingId;
