@@ -422,7 +422,7 @@ const AdminPage = () => {
           </button>
         ))}
         {activeTab === "products" && (
-          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setExtraImages([]); setShowForm(true); }}
+          <button onClick={() => { setForm(emptyProduct); setEditingId(null); setExtraImages([]); setProductColors([]); setShowForm(true); }}
             className="ml-auto h-9 w-9 shrink-0 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
             <Plus className="h-5 w-5" />
           </button>
