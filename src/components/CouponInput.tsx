@@ -17,6 +17,7 @@ interface CouponInputProps {
 const CouponInput = ({ subtotal, onApply, onRemove, appliedCode, discount }: CouponInputProps) => {
   const [code, setCode] = useState("");
   const [checking, setChecking] = useState(false);
+  const { formatPrice } = useRegion();
 
   const handleApply = async () => {
     if (!code.trim()) return;
