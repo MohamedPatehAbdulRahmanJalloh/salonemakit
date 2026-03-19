@@ -150,6 +150,22 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
               <span className="text-[9px] text-muted-foreground">({stats.count})</span>
             </div>
           )}
+          {/* Color dots */}
+          {productColors.length > 0 && (
+            <div className="flex items-center gap-1 mt-1">
+              {productColors.slice(0, 5).map((c) => (
+                <span
+                  key={c.id}
+                  className="h-3 w-3 rounded-full border border-border"
+                  style={{ backgroundColor: c.color_hex }}
+                  title={c.color_name}
+                />
+              ))}
+              {productColors.length > 5 && (
+                <span className="text-[9px] text-muted-foreground">+{productColors.length - 5}</span>
+              )}
+            </div>
+          )}
           {!compact && product.category && (
             <p className="text-[10px] text-muted-foreground capitalize mt-0.5">{product.category}</p>
           )}
