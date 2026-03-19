@@ -239,6 +239,7 @@ const AdminPage = () => {
   const handleEdit = async (p: any) => {
     setForm({
       name: p.name, price: String(p.price / 1000), original_price: p.original_price ? String(p.original_price / 1000) : "",
+      price_aed: p.price_aed ? String(p.price_aed) : "",
       category: p.category, image: p.image, description: p.description || "",
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
