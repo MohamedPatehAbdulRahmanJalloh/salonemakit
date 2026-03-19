@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
-import { Info } from "lucide-react";
+import { Info, Globe } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
 import { useRegion, Region } from "@/context/RegionContext";
 import { Link, useNavigate } from "react-router-dom";
