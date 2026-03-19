@@ -33,7 +33,7 @@ const ProductDetailPage = () => {
   const { data: productColors = [] } = useProductColors(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");
-  const { formatPrice } = useRegion();
+  const { formatPrice, getProductDisplayPrice } = useRegion();
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
