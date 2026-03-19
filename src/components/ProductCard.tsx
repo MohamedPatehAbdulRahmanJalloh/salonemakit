@@ -134,7 +134,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
               "text-sm font-extrabold",
               hasDiscount ? "text-destructive" : "text-foreground"
             )}>
-              {regionFormatPrice(product.price)}
+              {getProductDisplayPrice(product)}
             </p>
           </div>
           {hasDiscount && (
