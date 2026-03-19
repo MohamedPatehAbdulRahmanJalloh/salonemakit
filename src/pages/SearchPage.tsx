@@ -34,7 +34,7 @@ const SearchPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
