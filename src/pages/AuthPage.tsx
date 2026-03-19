@@ -108,6 +108,21 @@ const AuthPage = () => {
             />
           </div>
 
+          {mode === "signup" && (
+            <div className="relative">
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+              <Select value={country} onValueChange={setCountry}>
+                <SelectTrigger className="pl-10 h-12 rounded-lg bg-secondary border-none text-sm">
+                  <SelectValue placeholder="Select your country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sl">🇸🇱 Sierra Leone</SelectItem>
+                  <SelectItem value="dubai">🇦🇪 United Arab Emirates</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <Button
             type="submit"
             disabled={loading}
