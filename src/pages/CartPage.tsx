@@ -12,7 +12,7 @@ const CartPage = () => {
   useDocumentTitle("Shopping Bag");
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
   const { user } = useAuth();
-  const { formatPrice } = useRegion();
+  const { formatPrice, getProductDisplayPrice, getProductRawPrice } = useRegion();
   const navigate = useNavigate();
 
   if (items.length === 0) {
@@ -72,7 +72,7 @@ const CartPage = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <p className="text-sm font-extrabold text-foreground">{formatPrice(item.product.price)}</p>
+                  <p className="text-sm font-extrabold text-foreground">{getProductDisplayPrice(item.product)}</p>
                   <div className="flex items-center gap-0">
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
@@ -108,7 +108,7 @@ const CartPage = () => {
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <div className="flex-1">
             <p className="text-[10px] text-muted-foreground">Total</p>
-            <p className="text-base font-extrabold">{formatPrice(totalPrice)}</p>
+            <p className="text-base font-extrabold">{formatPrice(items.reduce((sum, i) => sum + getProductRawPrice(i.product) * i.quantity, 0))}</p>
           </div>
           {user ? (
             <Link to="/checkout" className="flex-1">

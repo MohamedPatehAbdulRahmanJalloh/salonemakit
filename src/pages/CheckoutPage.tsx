@@ -21,7 +21,7 @@ const CheckoutPage = () => {
   useDocumentTitle("Checkout");
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
-  const { region, config, formatPrice } = useRegion();
+  const { region, config, formatPrice, getProductDisplayPrice, getProductRawPrice } = useRegion();
   const navigate = useNavigate();
   const createOrder = useCreateOrder();
   const [step, setStep] = useState<"form" | "success">("form");
@@ -35,8 +35,9 @@ const CheckoutPage = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
 
+  const regionTotalPrice = items.reduce((sum, i) => sum + getProductRawPrice(i.product) * i.quantity, 0);
   const deliveryFee = config.deliveryFee;
-  const discountedSubtotal = Math.max(0, totalPrice - couponDiscount);
+  const discountedSubtotal = Math.max(0, regionTotalPrice - couponDiscount);
   const grandTotal = discountedSubtotal + deliveryFee;
 
   const isValidPhone = (p: string) => config.phonePattern.test(p.replace(/\s/g, ""));
@@ -260,7 +261,7 @@ const CheckoutPage = () => {
         <section>
           <h2 className="text-xs font-bold mb-2">Coupon Code</h2>
           <CouponInput
-            subtotal={totalPrice}
+            subtotal={regionTotalPrice}
             onApply={(discount, code) => { setCouponDiscount(discount); setAppliedCode(code); }}
             onRemove={() => { setCouponDiscount(0); setAppliedCode(null); }}
             appliedCode={appliedCode}
@@ -274,13 +275,13 @@ const CheckoutPage = () => {
           {items.map((item) => (
             <div key={item.product.id + (item.selectedSize || "")} className="flex justify-between text-xs">
               <span className="text-muted-foreground line-clamp-1 flex-1">{item.product.name} × {item.quantity}</span>
-              <span className="font-medium ml-2">{formatPrice(item.product.price * item.quantity)}</span>
+              <span className="font-medium ml-2">{getProductDisplayPrice(item.product)}{item.quantity > 1 ? ` × ${item.quantity}` : ""}</span>
             </div>
           ))}
           <div className="border-t border-border pt-2 space-y-1">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">Subtotal</span>
-              <span>{formatPrice(totalPrice)}</span>
+              <span>{formatPrice(regionTotalPrice)}</span>
             </div>
             {couponDiscount > 0 && (
               <div className="flex justify-between text-xs">
