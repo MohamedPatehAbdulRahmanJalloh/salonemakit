@@ -405,6 +405,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          region: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          region?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          region?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       push_tokens: {
         Row: {
           created_at: string
