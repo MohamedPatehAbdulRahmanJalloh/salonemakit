@@ -261,7 +261,7 @@ const CheckoutPage = () => {
         <section>
           <h2 className="text-xs font-bold mb-2">Coupon Code</h2>
           <CouponInput
-            subtotal={totalPrice}
+            subtotal={regionTotalPrice}
             onApply={(discount, code) => { setCouponDiscount(discount); setAppliedCode(code); }}
             onRemove={() => { setCouponDiscount(0); setAppliedCode(null); }}
             appliedCode={appliedCode}
