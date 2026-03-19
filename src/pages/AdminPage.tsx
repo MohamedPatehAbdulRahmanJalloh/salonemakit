@@ -241,13 +241,13 @@ const AdminPage = () => {
       sizes: p.sizes?.join(", ") || "", badge: p.badge || "", in_stock: p.in_stock ?? true,
     });
     setEditingId(p.id);
-    // Load existing extra images
-    const { data: imgs } = await supabase
-      .from("product_images")
-      .select("id, image_url")
-      .eq("product_id", p.id)
-      .order("sort_order", { ascending: true });
+    // Load existing extra images and colors
+    const [{ data: imgs }, { data: colors }] = await Promise.all([
+      supabase.from("product_images").select("id, image_url").eq("product_id", p.id).order("sort_order", { ascending: true }),
+      supabase.from("product_colors").select("id, color_name, color_hex, color_image").eq("product_id", p.id).order("sort_order", { ascending: true }),
+    ]);
     setExtraImages(imgs || []);
+    setProductColors((colors || []).map((c: any) => ({ id: c.id, color_name: c.color_name, color_hex: c.color_hex, color_image: c.color_image || "" })));
     setShowForm(true);
   };
 
