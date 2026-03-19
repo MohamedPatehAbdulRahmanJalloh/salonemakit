@@ -30,7 +30,7 @@ const AuthPage = () => {
       return;
     }
     setLoading(true);
-    const { error } = mode === "login" ? await signIn(email, password) : await signUp(email, password);
+    const { error } = mode === "login" ? await signIn(email, password) : await signUp(email, password, { region: country });
     setLoading(false);
 
     if (error) {
