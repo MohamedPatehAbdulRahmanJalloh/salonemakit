@@ -48,6 +48,10 @@ const AdminPage = () => {
   const extraFileInputRef = useRef<HTMLInputElement>(null);
   const [extraImages, setExtraImages] = useState<{ id?: string; image_url: string }[]>([]);
   const [uploadingExtra, setUploadingExtra] = useState(false);
+  const [productColors, setProductColors] = useState<{ id?: string; color_name: string; color_hex: string; color_image: string }[]>([]);
+  const [colorImageUploading, setColorImageUploading] = useState(false);
+  const colorImageInputRef = useRef<HTMLInputElement>(null);
+  const [colorImageIndex, setColorImageIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
   // Staff management state
