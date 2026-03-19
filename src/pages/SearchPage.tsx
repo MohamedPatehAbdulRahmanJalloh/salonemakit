@@ -114,7 +114,7 @@ const SearchPage = () => {
         break;
     }
     return results;
-  }, [activeCategory, query, products, priceRange, selectedSizes, sortBy]);
+  }, [activeCategory, query, products, priceRange, selectedSizes, sortBy, minRating, reviewStats]);
 
   return (
     <div className="pb-20 lg:pb-6 bg-background">
