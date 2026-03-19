@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Region = "sl" | "dubai";
 
@@ -54,10 +55,10 @@ interface RegionContextValue {
   config: RegionConfig;
   formatPrice: (priceSLL: number) => string;
   convertPrice: (priceSLL: number) => number;
-  /** Get display price for a product, preferring price_aed in Dubai */
   getProductDisplayPrice: (product: { price: number; price_aed?: number | null }) => string;
-  /** Get raw numeric price for a product (in SLL for SL, AED*100-equivalent for Dubai) */
   getProductRawPrice: (product: { price: number; price_aed?: number | null }) => number;
+  /** Update region in profile (persists to DB) */
+  updateProfileRegion: (r: Region) => Promise<void>;
 }
 
 const RegionContext = createContext<RegionContextValue | null>(null);
@@ -76,6 +77,31 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   const setRegion = (r: Region) => {
     setRegionState(r);
     localStorage.setItem("region", r);
+  };
+
+  // Sync region from user profile on auth state change
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("region")
+          .eq("id", session.user.id)
+          .single();
+        if (data?.region && (data.region === "sl" || data.region === "dubai")) {
+          setRegion(data.region as Region);
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const updateProfileRegion = async (r: Region) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from("profiles").update({ region: r }).eq("id", user.id);
+    }
+    setRegion(r);
   };
 
   const config = region === "dubai" ? UAE_CONFIG : SL_CONFIG;
@@ -117,7 +143,7 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice }}>
+    <RegionContext.Provider value={{ region, setRegion, config, formatPrice, convertPrice, getProductDisplayPrice, getProductRawPrice, updateProfileRegion }}>
       {children}
     </RegionContext.Provider>
   );

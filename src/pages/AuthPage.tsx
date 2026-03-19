@@ -5,7 +5,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, LogIn, UserPlus, Mail, Lock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, LogIn, UserPlus, Mail, Lock, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
@@ -19,6 +20,7 @@ const AuthPage = () => {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [country, setCountry] = useState<string>("sl");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,7 +30,7 @@ const AuthPage = () => {
       return;
     }
     setLoading(true);
-    const { error } = mode === "login" ? await signIn(email, password) : await signUp(email, password);
+    const { error } = mode === "login" ? await signIn(email, password) : await signUp(email, password, { region: country });
     setLoading(false);
 
     if (error) {
@@ -105,6 +107,21 @@ const AuthPage = () => {
               minLength={6}
             />
           </div>
+
+          {mode === "signup" && (
+            <div className="relative">
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+              <Select value={country} onValueChange={setCountry}>
+                <SelectTrigger className="pl-10 h-12 rounded-lg bg-secondary border-none text-sm">
+                  <SelectValue placeholder="Select your country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sl">🇸🇱 Sierra Leone</SelectItem>
+                  <SelectItem value="dubai">🇦🇪 United Arab Emirates</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <Button
             type="submit"

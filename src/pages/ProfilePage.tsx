@@ -3,10 +3,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useTheme } from "@/hooks/useTheme";
 import { useWishlist } from "@/hooks/useWishlist";
-import { Info } from "lucide-react";
+import { Info, Globe } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
-import { useRegion } from "@/context/RegionContext";
+import { useRegion, Region } from "@/context/RegionContext";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import RateAppModal from "@/components/RateAppModal";
 import {
@@ -19,7 +20,7 @@ import logo from "@/assets/logo.png";
 
 const ProfilePage = () => {
   useDocumentTitle("My Profile");
-  const { formatPrice } = useRegion();
+  const { formatPrice, region, updateProfileRegion } = useRegion();
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -65,6 +66,21 @@ const ProfilePage = () => {
         { icon: Heart, label: "Wishlist", value: `${wishlistCount}`, to: "/wishlist" },
         { icon: Tag, label: "Coupons", value: "", to: "/search" },
         { icon: Star, label: "Reviews", value: "", to: "/orders" },
+      ],
+    },
+    {
+      title: "Settings",
+      items: [
+        {
+          icon: Globe,
+          label: "Region",
+          value: region === "dubai" ? "🇦🇪 UAE" : "🇸🇱 Sierra Leone",
+          action: async () => {
+            const newRegion: Region = region === "sl" ? "dubai" : "sl";
+            await updateProfileRegion(newRegion);
+            toast.success(`Switched to ${newRegion === "dubai" ? "UAE (AED)" : "Sierra Leone (NLe)"}`);
+          },
+        },
       ],
     },
     ...(isAdmin ? [{
