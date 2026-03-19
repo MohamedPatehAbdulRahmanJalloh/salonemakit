@@ -15,6 +15,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import StaffPicksSection from "@/components/StaffPicksSection";
 import PromoBanner from "@/components/PromoBanner";
 import TrustBadges from "@/components/TrustBadges";
+import RegionSelector from "@/components/RegionSelector";
 import { toast } from "sonner";
 
 import categoryWomen from "@/assets/category-women.png";
