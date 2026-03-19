@@ -140,7 +140,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
           {hasDiscount && (
             <div className="flex items-center gap-1.5">
               <p className="text-[11px] text-muted-foreground line-through">
-                {formatPrice(originalPrice)}
+                {regionFormatPrice(originalPrice)}
               </p>
               <span className="text-[10px] text-destructive font-semibold">-{discountPercent}%</span>
             </div>
