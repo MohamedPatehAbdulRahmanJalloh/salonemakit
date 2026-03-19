@@ -5,7 +5,7 @@ import { CATEGORIES } from "@/data/products";
 import { formatPrice } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
