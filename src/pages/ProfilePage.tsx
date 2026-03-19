@@ -67,6 +67,21 @@ const ProfilePage = () => {
         { icon: Star, label: "Reviews", value: "", to: "/orders" },
       ],
     },
+    {
+      title: "Settings",
+      items: [
+        {
+          icon: Globe,
+          label: "Region",
+          value: region === "dubai" ? "🇦🇪 UAE" : "🇸🇱 Sierra Leone",
+          action: async () => {
+            const newRegion: Region = region === "sl" ? "dubai" : "sl";
+            await updateProfileRegion(newRegion);
+            toast.success(`Switched to ${newRegion === "dubai" ? "UAE (AED)" : "Sierra Leone (NLe)"}`);
+          },
+        },
+      ],
+    },
     ...(isAdmin ? [{
       title: "Admin",
       items: [
