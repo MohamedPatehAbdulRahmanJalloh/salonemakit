@@ -108,7 +108,7 @@ const CartPage = () => {
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <div className="flex-1">
             <p className="text-[10px] text-muted-foreground">Total</p>
-            <p className="text-base font-extrabold">{formatPrice(totalPrice)}</p>
+            <p className="text-base font-extrabold">{formatPrice(items.reduce((sum, i) => sum + getProductRawPrice(i.product) * i.quantity, 0))}</p>
           </div>
           {user ? (
             <Link to="/checkout" className="flex-1">
