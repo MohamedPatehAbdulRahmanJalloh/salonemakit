@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useOrders } from "@/hooks/useOrders";
 import { CATEGORIES } from "@/data/products";
