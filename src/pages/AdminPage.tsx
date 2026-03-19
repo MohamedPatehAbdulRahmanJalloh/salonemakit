@@ -45,6 +45,9 @@ const AdminPage = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const extraFileInputRef = useRef<HTMLInputElement>(null);
+  const [extraImages, setExtraImages] = useState<{ id?: string; image_url: string }[]>([]);
+  const [uploadingExtra, setUploadingExtra] = useState(false);
   const queryClient = useQueryClient();
 
   // Staff management state
