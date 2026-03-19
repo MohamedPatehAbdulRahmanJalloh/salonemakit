@@ -699,6 +699,55 @@ const AdminPage = () => {
                 </div>
               )}
             </div>
+
+            {/* Colors */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Palette className="h-3.5 w-3.5 text-muted-foreground" />
+                  <p className="text-xs font-semibold text-muted-foreground">Available Colors</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProductColors((prev) => [...prev, { color_name: "", color_hex: "#000000", color_image: "" }])}
+                  className="h-8 px-2.5 rounded-lg bg-secondary text-foreground flex items-center gap-1 text-[10px] font-semibold"
+                >
+                  <Plus className="h-3 w-3" /> Add Color
+                </button>
+              </div>
+              {productColors.map((color, i) => (
+                <div key={i} className="flex items-center gap-2 bg-secondary/50 rounded-lg p-2">
+                  <input
+                    type="color"
+                    value={color.color_hex}
+                    onChange={(e) => setProductColors((prev) => prev.map((c, j) => j === i ? { ...c, color_hex: e.target.value } : c))}
+                    className="h-8 w-8 rounded cursor-pointer border-0 p-0"
+                  />
+                  <Input
+                    placeholder="Color name (e.g. Red)"
+                    value={color.color_name}
+                    onChange={(e) => setProductColors((prev) => prev.map((c, j) => j === i ? { ...c, color_name: e.target.value } : c))}
+                    className="rounded-lg flex-1 h-8 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setColorImageIndex(i); colorImageInputRef.current?.click(); }}
+                    className="h-8 px-2 rounded-lg bg-background border border-border text-[10px] font-medium shrink-0"
+                  >
+                    {color.color_image ? "✓ Img" : "📷"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProductColors((prev) => prev.filter((_, j) => j !== i))}
+                    className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center shrink-0"
+                  >
+                    <X className="h-3 w-3 text-destructive" />
+                  </button>
+                </div>
+              ))}
+              <input ref={colorImageInputRef} type="file" accept="image/*" className="hidden" onChange={handleColorImageUpload} />
+            </div>
+
             <Input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" />
             <Input placeholder="Sizes (S, M, L, XL)" value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} className="rounded-xl" />
             <label className="flex items-center gap-2 text-sm">
