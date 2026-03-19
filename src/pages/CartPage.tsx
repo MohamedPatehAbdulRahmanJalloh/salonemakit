@@ -43,7 +43,7 @@ const CartPage = () => {
         <AnimatePresence>
           {items.map((item) => (
             <motion.div
-              key={item.product.id + (item.selectedSize || "")}
+              key={item.product.id + (item.selectedSize || "") + (item.selectedColor || "")}
               layout
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -51,22 +51,30 @@ const CartPage = () => {
               className="flex gap-3 bg-card border border-border rounded-lg p-3"
             >
               <img
-                src={item.product.image}
+                src={item.selectedColorImage || item.product.image}
                 alt={item.product.name}
                 className="w-20 h-24 object-cover rounded-md"
               />
               <div className="flex-1 flex flex-col justify-between min-w-0">
                 <div>
                   <h3 className="text-xs font-medium line-clamp-2 leading-tight">{item.product.name}</h3>
-                  {item.selectedSize && (
-                    <p className="text-[10px] text-muted-foreground mt-0.5">Size: {item.selectedSize}</p>
-                  )}
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {item.selectedSize && (
+                      <p className="text-[10px] text-muted-foreground">Size: {item.selectedSize}</p>
+                    )}
+                    {item.selectedColor && (
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] text-muted-foreground">Color:</span>
+                        <span className="text-[10px] text-muted-foreground">{item.selectedColor}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
                   <p className="text-sm font-extrabold text-foreground">{formatPrice(item.product.price)}</p>
                   <div className="flex items-center gap-0">
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedSize)}
+                      onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
                       className="h-7 w-7 rounded-l-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Minus className="h-3 w-3" />
@@ -75,7 +83,7 @@ const CartPage = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedSize)}
+                      onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedSize, item.selectedColor)}
                       className="h-7 w-7 rounded-r-md bg-secondary flex items-center justify-center border border-border"
                     >
                       <Plus className="h-3 w-3" />
@@ -84,7 +92,7 @@ const CartPage = () => {
                 </div>
               </div>
               <button
-                onClick={() => removeItem(item.product.id, item.selectedSize)}
+                onClick={() => removeItem(item.product.id, item.selectedSize, item.selectedColor)}
                 className="self-start h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
               >
                 <Trash2 className="h-4 w-4" />

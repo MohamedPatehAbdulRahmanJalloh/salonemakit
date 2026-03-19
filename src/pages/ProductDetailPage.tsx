@@ -30,9 +30,11 @@ const ProductDetailPage = () => {
   const { data: product, isLoading } = useProduct(id || "");
   useDocumentTitle(product?.name);
   const { data: extraImages = [] } = useProductImages(id || "");
+  const { data: productColors = [] } = useProductColors(id || "");
   const { data: allProducts = [] } = useProducts();
   const { averageRating, reviewCount } = useReviews(id || "");
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
+  const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef(0);
