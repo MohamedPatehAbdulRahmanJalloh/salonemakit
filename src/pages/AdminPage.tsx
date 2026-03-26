@@ -31,7 +31,7 @@ const emptyFlashSale = {
 
 const ORDER_STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
 
-type AdminTab = "products" | "orders" | "coupons" | "flash" | "staff";
+type AdminTab = "products" | "orders" | "coupons" | "flash" | "staff" | "notifications";
 
 const AdminPage = () => {
   const navigate = useNavigate();
