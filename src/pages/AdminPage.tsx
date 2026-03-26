@@ -371,10 +371,6 @@ const AdminPage = () => {
     }
   };
 
-  // Push notification campaign state
-  const [notifTitle, setNotifTitle] = useState("");
-  const [notifBody, setNotifBody] = useState("");
-  const [sendingNotif, setSendingNotif] = useState(false);
 
   const handleSendNotification = async () => {
     if (!notifTitle.trim() || !notifBody.trim()) { toast.error("Title and message required"); return; }
