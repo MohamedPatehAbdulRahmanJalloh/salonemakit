@@ -216,6 +216,16 @@ const OrderDetailPage = () => {
             <span className="text-accent">{formatPrice(order.total)}</span>
         </div>
 
+        {/* Download Invoice */}
+        <Button
+          onClick={() => downloadInvoice({ ...order, order_items: (order as any).order_items || [] }, formatPrice)}
+          variant="outline"
+          className="w-full rounded-2xl font-bold text-sm h-12 border-accent text-accent hover:bg-accent/10"
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Download Invoice
+        </Button>
+
         {/* WhatsApp Support */}
         <a
           href={`https://wa.me/23278928111?text=${encodeURIComponent(`Hi! I'd like to check on my order #${order.id.slice(0, 8).toUpperCase()}. Thank you!`)}`}
