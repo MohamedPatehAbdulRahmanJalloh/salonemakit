@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { downloadInvoice } from "@/utils/invoiceGenerator";
 import {
   AlertDialog,
   AlertDialogAction,
