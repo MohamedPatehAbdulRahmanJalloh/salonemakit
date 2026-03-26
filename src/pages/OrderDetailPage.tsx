@@ -1,13 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRegion } from "@/context/RegionContext";
+import { useCancelOrder } from "@/hooks/useOrders";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const TRACKING_STEPS = [
   { key: "pending", label: "Order Placed", icon: Clock, description: "Your order has been received" },
@@ -22,6 +35,7 @@ const OrderDetailPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { formatPrice } = useRegion();
+  const cancelOrder = useCancelOrder();
   useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({
@@ -211,6 +225,39 @@ const OrderDetailPage = () => {
           <MessageCircle className="h-4 w-4" />
           Ask About This Order on WhatsApp
         </a>
+
+        {/* Cancel Order */}
+        {currentStatus === "pending" && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full rounded-2xl border-destructive text-destructive hover:bg-destructive/10 font-bold text-sm h-12"
+                disabled={cancelOrder.isPending}
+              >
+                <XCircle className="h-4 w-4 mr-2" />
+                {cancelOrder.isPending ? "Cancelling..." : "Cancel Order"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Cancel this order?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. Your order #{order.id.slice(0, 8).toUpperCase()} will be cancelled.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Keep Order</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => cancelOrder.mutate(order.id)}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Yes, Cancel Order
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
     </div>
     </div>
