@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle, FileText } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
