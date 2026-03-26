@@ -660,7 +660,68 @@ const AdminPage = () => {
         )}
       </div>
 
-      {/* Add/Edit Product Dialog */}
+        {/* NOTIFICATIONS TAB (Admin only) */}
+        {activeTab === "notifications" && isAdmin && (
+          <div className="space-y-4">
+            <div className="bg-secondary rounded-2xl p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <Bell className="h-5 w-5 text-accent" />
+                <h3 className="text-sm font-bold">Send Push Notification</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">Send a notification to all users with the app installed on their devices.</p>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Notification Title</label>
+                  <Input
+                    placeholder="e.g. Flash Sale! 50% Off 🔥"
+                    value={notifTitle}
+                    onChange={(e) => setNotifTitle(e.target.value)}
+                    className="rounded-xl"
+                    maxLength={100}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Message</label>
+                  <textarea
+                    placeholder="e.g. Don't miss our biggest sale of the year! Shop now and save up to 50% on all items."
+                    value={notifBody}
+                    onChange={(e) => setNotifBody(e.target.value)}
+                    className="w-full rounded-xl bg-background border border-border p-3 text-sm min-h-[80px] resize-none focus:outline-none focus:ring-2 focus:ring-accent"
+                    maxLength={500}
+                  />
+                  <p className="text-[10px] text-muted-foreground mt-1 text-right">{notifBody.length}/500</p>
+                </div>
+
+                {/* Preview */}
+                {(notifTitle || notifBody) && (
+                  <div className="bg-background border border-border rounded-xl p-3 space-y-1">
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold">Preview</p>
+                    <div className="flex items-start gap-2">
+                      <div className="h-8 w-8 rounded-lg bg-accent/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <Bell className="h-4 w-4 text-accent" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold">{notifTitle || "Title"}</p>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2">{notifBody || "Message body"}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  onClick={handleSendNotification}
+                  disabled={sendingNotif || !notifTitle.trim() || !notifBody.trim()}
+                  className="w-full rounded-xl bg-accent hover:bg-accent/90 h-11 font-bold"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  {sendingNotif ? "Sending..." : "Send to All Users"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-[95vw] sm:max-w-md rounded-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{editingId ? "Edit Product" : "Add Product"}</DialogTitle></DialogHeader>
