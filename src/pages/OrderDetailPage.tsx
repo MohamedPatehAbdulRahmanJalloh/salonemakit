@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle, FileText } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { downloadInvoice } from "@/utils/invoiceGenerator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -214,6 +215,16 @@ const OrderDetailPage = () => {
             <span>Total</span>
             <span className="text-accent">{formatPrice(order.total)}</span>
         </div>
+
+        {/* Download Invoice */}
+        <Button
+          onClick={() => downloadInvoice({ ...order, order_items: (order as any).order_items || [] }, formatPrice)}
+          variant="outline"
+          className="w-full rounded-2xl font-bold text-sm h-12 border-accent text-accent hover:bg-accent/10"
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Download Invoice
+        </Button>
 
         {/* WhatsApp Support */}
         <a

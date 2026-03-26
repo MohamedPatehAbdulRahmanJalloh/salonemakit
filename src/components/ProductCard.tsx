@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface ProductCardProps {
   product: Product;
@@ -66,11 +67,12 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
           "relative overflow-hidden bg-secondary",
           compact ? "aspect-square rounded-lg" : "aspect-[3/4]"
         )}>
-          <img
+          <OptimizedImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            className={cn(
+              "w-full h-full transition-transform duration-500 group-hover:scale-105",
+            )}
           />
 
           {/* Discount badge - SHEIN style top-left */}
