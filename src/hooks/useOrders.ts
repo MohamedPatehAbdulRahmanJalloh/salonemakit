@@ -14,6 +14,7 @@ interface CreateOrderInput {
   deliveryFee: number;
   total: number;
   couponCode?: string | null;
+  region?: string;
 }
 
 export const useCreateOrder = () => {
@@ -21,7 +22,6 @@ export const useCreateOrder = () => {
 
   return useMutation({
     mutationFn: async (input: CreateOrderInput) => {
-      // Get fresh session
       const { data: sessionData } = await supabase.auth.getSession();
       let currentUser = sessionData?.session?.user;
 
@@ -33,7 +33,6 @@ export const useCreateOrder = () => {
         }
       }
 
-      // Call secure server-side RPC — totals computed from actual DB prices
       const { data: orderId, error } = await supabase.rpc("create_order_secure", {
         p_customer_name: input.customerName,
         p_phone: input.phone,
@@ -47,7 +46,8 @@ export const useCreateOrder = () => {
           quantity: item.quantity,
           selected_size: item.selectedSize || "",
         })),
-      });
+        p_region: input.region || "sl",
+      } as any);
 
       if (error) {
         console.error("Order creation error:", error);
@@ -84,6 +84,29 @@ export const useCreateOrder = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+};
+
+export const useCancelOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "cancelled" })
+        .eq("id", orderId);
+
+      if (error) throw new Error(`Cancel failed: ${error.message}`);
+    },
+    onSuccess: (_, orderId) => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["order-detail", orderId] });
+      toast.success("Order cancelled successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 };
