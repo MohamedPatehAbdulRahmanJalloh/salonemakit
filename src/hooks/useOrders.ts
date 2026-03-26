@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { CartItem } from "@/data/types";
+import { toast } from "sonner";
 
 interface CreateOrderInput {
   customerName: string;
