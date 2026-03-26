@@ -58,6 +58,7 @@ const CheckoutPage = () => {
         deliveryFee,
         total: grandTotal,
         couponCode: appliedCode,
+        region,
       });
       setOrderDistrict(district);
       setOrderId(result.id);

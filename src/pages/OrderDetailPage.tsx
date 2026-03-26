@@ -1,13 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle, Truck, Clock, MapPin, Phone, CreditCard, MessageCircle, XCircle } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRegion } from "@/context/RegionContext";
+import { useCancelOrder } from "@/hooks/useOrders";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const TRACKING_STEPS = [
   { key: "pending", label: "Order Placed", icon: Clock, description: "Your order has been received" },
