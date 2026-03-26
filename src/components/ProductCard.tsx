@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface ProductCardProps {
   product: Product;
