@@ -35,6 +35,7 @@ const OrderDetailPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { formatPrice } = useRegion();
+  const cancelOrder = useCancelOrder();
   useDocumentTitle("Order Tracking");
 
   const { data: order, isLoading } = useQuery({
