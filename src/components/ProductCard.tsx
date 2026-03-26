@@ -67,11 +67,12 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product, com
           "relative overflow-hidden bg-secondary",
           compact ? "aspect-square rounded-lg" : "aspect-[3/4]"
         )}>
-          <img
+          <OptimizedImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            className={cn(
+              "w-full h-full transition-transform duration-500 group-hover:scale-105",
+            )}
           />
 
           {/* Discount badge - SHEIN style top-left */}
