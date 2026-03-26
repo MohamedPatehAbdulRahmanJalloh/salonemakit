@@ -366,6 +366,22 @@ const AdminPage = () => {
     }
   };
 
+  // Push notification campaign state
+  const [notifTitle, setNotifTitle] = useState("");
+  const [notifBody, setNotifBody] = useState("");
+  const [sendingNotif, setSendingNotif] = useState(false);
+
+  const handleSendNotification = async () => {
+    if (!notifTitle.trim() || !notifBody.trim()) { toast.error("Title and message required"); return; }
+    setSendingNotif(true);
+    const { data, error } = await supabase.functions.invoke("send-push-notification", {
+      body: { title: notifTitle.trim(), body: notifBody.trim() },
+    });
+    setSendingNotif(false);
+    if (error) { toast.error("Failed to send notification"); }
+    else { toast.success(`Notification sent to ${data?.sent || 0} devices!`); setNotifTitle(""); setNotifBody(""); }
+  };
+
   const tabLabel = (tab: AdminTab) => {
     switch (tab) {
       case "products": return `Products (${products.length})`;
@@ -373,6 +389,7 @@ const AdminPage = () => {
       case "coupons": return `Coupons (${coupons.length})`;
       case "flash": return `Flash Sales (${flashSales.length})`;
       case "staff": return `Staff (${staffMembers.length})`;
+      case "notifications": return "Notify";
     }
   };
 
