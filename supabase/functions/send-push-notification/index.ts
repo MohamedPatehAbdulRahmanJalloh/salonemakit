@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import * as jose from "https://deno.land/x/jose@v5.2.0/index.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +10,59 @@ interface NotificationPayload {
   title: string;
   body: string;
   data?: Record<string, string>;
-  user_ids?: string[]; // specific users, or omit for all
+  user_ids?: string[];
+}
+
+async function createApnsJwt(): Promise<string> {
+  const keyId = Deno.env.get("APNS_KEY_ID")!;
+  const teamId = Deno.env.get("APNS_TEAM_ID")!;
+  const privateKeyPem = Deno.env.get("APNS_PRIVATE_KEY")!;
+
+  const privateKey = await jose.importPKCS8(privateKeyPem, "ES256");
+
+  const jwt = await new jose.SignJWT({})
+    .setProtectedHeader({ alg: "ES256", kid: keyId })
+    .setIssuer(teamId)
+    .setIssuedAt()
+    .sign(privateKey);
+
+  return jwt;
+}
+
+async function sendToApns(
+  token: string,
+  title: string,
+  body: string,
+  data?: Record<string, string>
+): Promise<{ success: boolean; status: number }> {
+  const jwt = await createApnsJwt();
+  const bundleId = "app.lovable.03bef03fed5040a9bfc05500cd196410";
+
+  const payload = {
+    aps: {
+      alert: { title, body },
+      sound: "default",
+      badge: 1,
+    },
+    ...(data || {}),
+  };
+
+  const response = await fetch(
+    `https://api.push.apple.com/3/device/${token}`,
+    {
+      method: "POST",
+      headers: {
+        authorization: `bearer ${jwt}`,
+        "apns-topic": bundleId,
+        "apns-push-type": "alert",
+        "apns-priority": "10",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  return { success: response.ok, status: response.status };
 }
 
 Deno.serve(async (req) => {
@@ -32,15 +85,12 @@ Deno.serve(async (req) => {
       });
     }
 
-    const token = authHeader.replace("Bearer ", "");
     const callerClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const { data: claimsData, error: claimsError } = await callerClient.auth.getClaims(token);
-    const userId = claimsData?.claims?.sub;
-
-    if (claimsError || !userId) {
+    const { data: { user }, error: userError } = await callerClient.auth.getUser();
+    if (userError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -48,8 +98,8 @@ Deno.serve(async (req) => {
     }
 
     // Check admin or staff role
-    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "admin" });
-    const { data: isStaff } = await supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "staff" });
+    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: user.id, _role: "admin" });
+    const { data: isStaff } = await supabaseAdmin.rpc("has_role", { _user_id: user.id, _role: "staff" });
 
     if (!isAdmin && !isStaff) {
       return new Response(JSON.stringify({ error: "Forbidden: admin or staff role required" }), {
@@ -74,9 +124,7 @@ Deno.serve(async (req) => {
     }
     const { data: tokens, error } = await query;
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     if (!tokens || tokens.length === 0) {
       return new Response(JSON.stringify({ message: "No push tokens found", sent: 0 }), {
@@ -84,20 +132,38 @@ Deno.serve(async (req) => {
       });
     }
 
-    // For now, log tokens — actual APNs sending requires APNs key configuration
-    // When Apple Developer account is ready, integrate with APNs HTTP/2 API
-    console.log(`Would send "${title}" to ${tokens.length} devices`);
+    // Send to each device
+    let successCount = 0;
+    let failCount = 0;
+    const errors: string[] = [];
 
-    // TODO: Implement APNs sending when Apple Developer account is approved
-    // This requires:
-    // 1. APNs Auth Key (.p8 file) from Apple Developer portal
-    // 2. Team ID and Key ID
-    // 3. HTTP/2 connection to api.push.apple.com
+    for (const t of tokens) {
+      try {
+        if (t.platform === "ios") {
+          const result = await sendToApns(t.token, title, body, data);
+          if (result.success) {
+            successCount++;
+          } else {
+            failCount++;
+            errors.push(`iOS token ${t.token.slice(0, 8)}... status ${result.status}`);
+          }
+        } else {
+          // Android/FCM not yet implemented
+          console.log(`Skipping non-iOS token for platform: ${t.platform}`);
+          failCount++;
+        }
+      } catch (sendErr) {
+        failCount++;
+        errors.push(`Error sending to ${t.token.slice(0, 8)}...: ${sendErr.message}`);
+      }
+    }
 
     return new Response(
       JSON.stringify({
-        message: `Notification queued for ${tokens.length} devices`,
-        sent: tokens.length,
+        message: `Sent ${successCount}/${tokens.length} notifications`,
+        sent: successCount,
+        failed: failCount,
+        errors: errors.length > 0 ? errors : undefined,
         title,
         body,
       }),
