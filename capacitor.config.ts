@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     url: 'https://salonemakitsl.com?forceHideBadge=true',
-    cleartext: true,
+    cleartext: false,
   },
   android: {
     buildOptions: {
