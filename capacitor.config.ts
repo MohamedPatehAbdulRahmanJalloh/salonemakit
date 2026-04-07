@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'SaloneMakitSL',
+  appId: 'com.salonemakit.app',
   appName: 'SaloneMakitSL',
   webDir: 'dist',
   server: {
