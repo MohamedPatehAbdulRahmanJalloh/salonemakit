@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Shield, Truck, RotateCcw, BadgeCheck } from "lucide-react";
 
 const badges = [
@@ -11,10 +12,10 @@ interface TrustBadgesProps {
   variant?: "horizontal" | "grid";
 }
 
-const TrustBadges = ({ variant = "horizontal" }: TrustBadgesProps) => {
+const TrustBadges = forwardRef<HTMLDivElement, TrustBadgesProps>(({ variant = "horizontal" }, ref) => {
   if (variant === "grid") {
     return (
-      <div className="grid grid-cols-2 gap-3 px-4 lg:px-0">
+      <div ref={ref} className="grid grid-cols-2 gap-3 px-4 lg:px-0">
         {badges.map((b) => (
           <div
             key={b.label}
@@ -34,7 +35,7 @@ const TrustBadges = ({ variant = "horizontal" }: TrustBadgesProps) => {
   }
 
   return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 lg:px-8 py-3">
+    <div ref={ref} className="flex gap-2 overflow-x-auto scrollbar-hide px-4 lg:px-8 py-3">
       {badges.map((b) => (
         <div
           key={b.label}
@@ -51,6 +52,8 @@ const TrustBadges = ({ variant = "horizontal" }: TrustBadgesProps) => {
       ))}
     </div>
   );
-};
+});
+
+TrustBadges.displayName = "TrustBadges";
 
 export default TrustBadges;

@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Star } from "lucide-react";
 
 const TESTIMONIALS = [
@@ -24,9 +25,9 @@ const TESTIMONIALS = [
   },
 ];
 
-const TestimonialsSection = () => {
+const TestimonialsSection = forwardRef<HTMLElement, Record<string, never>>((_, ref) => {
   return (
-    <section className="mt-6 px-4 lg:px-8">
+    <section ref={ref} className="mt-6 px-4 lg:px-8">
       <h2 className="text-sm lg:text-lg font-bold text-foreground mb-3">What Our Customers Say</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {TESTIMONIALS.map((t, i) => (
@@ -57,6 +58,8 @@ const TestimonialsSection = () => {
       </div>
     </section>
   );
-};
+});
+
+TestimonialsSection.displayName = "TestimonialsSection";
 
 export default TestimonialsSection;
