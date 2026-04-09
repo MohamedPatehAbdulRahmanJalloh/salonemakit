@@ -97,8 +97,11 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     if (detected) return;
 
     const detectRegion = async () => {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 5000);
+
       try {
-        const response = await fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(5000) });
+        const response = await fetch("https://ipapi.co/json/", { signal: controller.signal });
         if (!response.ok) return;
         const data = await response.json();
         const countryCode = data?.country_code?.toUpperCase();
@@ -120,6 +123,8 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch {
         localStorage.setItem("region_detected", "true");
+      } finally {
+        window.clearTimeout(timeoutId);
       }
     };
 
