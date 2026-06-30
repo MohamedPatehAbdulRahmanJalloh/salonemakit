@@ -22,13 +22,20 @@ interface OrderData {
 }
 
 export const generateInvoiceHTML = (order: OrderData, formatPrice: (n: number) => string) => {
+  const esc = (s: string | null | undefined) =>
+    String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;");
   const date = new Date(order.created_at).toLocaleDateString("en-GB", {
     day: "numeric", month: "long", year: "numeric",
   });
 
   const itemRows = order.order_items.map((item) => `
     <tr>
-      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">${item.product_name}${item.selected_size ? ` (${item.selected_size})` : ""}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">${esc(item.product_name)}${item.selected_size ? ` (${esc(item.selected_size)})` : ""}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${item.quantity}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:right;">${formatPrice(item.product_price)}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">${formatPrice(item.product_price * item.quantity)}</td>
@@ -74,7 +81,7 @@ export const generateInvoiceHTML = (order: OrderData, formatPrice: (n: number) =
         </div>
         <div class="invoice-title">
           <h1>INVOICE</h1>
-          <p>#${order.id.slice(0, 8).toUpperCase()}</p>
+          <p>#${esc(order.id.slice(0, 8).toUpperCase())}</p>
           <p>${date}</p>
         </div>
       </div>
@@ -82,15 +89,15 @@ export const generateInvoiceHTML = (order: OrderData, formatPrice: (n: number) =
       <div class="info-grid">
         <div class="info-box">
           <h3>Bill To</h3>
-          <p><strong>${order.customer_name}</strong></p>
-          <p>${order.address}</p>
-          <p>${order.district}</p>
-          <p>${order.phone}</p>
+          <p><strong>${esc(order.customer_name)}</strong></p>
+          <p>${esc(order.address)}</p>
+          <p>${esc(order.district)}</p>
+          <p>${esc(order.phone)}</p>
         </div>
         <div class="info-box">
           <h3>Payment</h3>
           <p>${order.payment_method === "orange_money" ? "Orange Money" : "Cash on Delivery"}</p>
-          ${order.coupon_code ? `<p style="margin-top:4px;">Coupon: <strong>${order.coupon_code}</strong></p>` : ""}
+          ${order.coupon_code ? `<p style="margin-top:4px;">Coupon: <strong>${esc(order.coupon_code)}</strong></p>` : ""}
         </div>
       </div>
 
