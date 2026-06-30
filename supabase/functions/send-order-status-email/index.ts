@@ -104,8 +104,16 @@ Deno.serve(async (req) => {
     const emoji = statusEmoji[newStatus] || "📋";
     const message = statusMessages[newStatus] || `Your order status has been updated to: ${newStatus}`;
 
+    const esc = (s: unknown) =>
+      String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
+
     const itemsHtml = (order.order_items || [])
-      .map((item: any) => `<li>${item.product_name} × ${item.quantity}</li>`)
+      .map((item: any) => `<li>${esc(item.product_name)} × ${esc(item.quantity)}</li>`)
       .join("");
 
     const amount = order.total / 1000;
@@ -125,9 +133,9 @@ Deno.serve(async (req) => {
     <h2 style="text-align: center; font-size: 18px; color: #1a3a2a;">Order ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}</h2>
     <p style="text-align: center; color: #6b7280; font-size: 14px; line-height: 1.6;">${message}</p>
     <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
-      <p style="margin: 0 0 8px; font-size: 12px; color: #9ca3af;">Order #${order.id.slice(0, 8).toUpperCase()}</p>
-      <p style="margin: 0 0 4px; font-size: 14px;"><strong>${order.customer_name}</strong></p>
-      <p style="margin: 0 0 4px; font-size: 13px; color: #6b7280;">📍 ${order.address}, ${order.district}</p>
+      <p style="margin: 0 0 8px; font-size: 12px; color: #9ca3af;">Order #${esc(order.id.slice(0, 8).toUpperCase())}</p>
+      <p style="margin: 0 0 4px; font-size: 14px;"><strong>${esc(order.customer_name)}</strong></p>
+      <p style="margin: 0 0 4px; font-size: 13px; color: #6b7280;">📍 ${esc(order.address)}, ${esc(order.district)}</p>
       <ul style="font-size: 13px; color: #374151; padding-left: 16px; margin: 12px 0;">${itemsHtml}</ul>
       <p style="margin: 12px 0 0; font-size: 16px; font-weight: bold; color: #2d7a4f;">Total: ${formattedTotal}</p>
     </div>
