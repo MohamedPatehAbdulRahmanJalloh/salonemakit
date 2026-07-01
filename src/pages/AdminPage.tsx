@@ -5,7 +5,7 @@ import { CATEGORIES } from "@/data/products";
 import { useRegion } from "@/context/RegionContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus, Palette, Bell, Send } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, ArrowLeft, Plus, Trash2, Edit2, Tag, Zap, Upload, BarChart3, Users, Shield, UserPlus, UserMinus, X, ImagePlus, Palette, Bell, Send, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -412,6 +412,40 @@ const AdminPage = () => {
         {isAdmin && (
           <button onClick={() => navigate("/admin/analytics")} className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center">
             <BarChart3 className="h-4 w-4 text-accent" />
+          </button>
+        )}
+        {(isAdmin || isStaff) && (
+          <button
+            onClick={async () => {
+              const t = toast.loading("Preparing customer export...");
+              try {
+                const { data: sess } = await supabase.auth.getSession();
+                const token = sess.session?.access_token;
+                if (!token) throw new Error("Not signed in");
+                const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-customers`;
+                const res = await fetch(url, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+                  },
+                });
+                if (!res.ok) throw new Error(await res.text());
+                const blob = await res.blob();
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = `salonemakitsl-customers-${new Date().toISOString().slice(0,10)}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                toast.success("Customer list downloaded", { id: t });
+              } catch (e: any) {
+                toast.error(e.message || "Export failed", { id: t });
+              }
+            }}
+            className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center"
+            title="Export customers to CSV (for Mailchimp / marketing)"
+          >
+            <Download className="h-4 w-4 text-accent" />
           </button>
         )}
         <button onClick={signOut} className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-full bg-secondary">Sign Out</button>
