@@ -1,5 +1,6 @@
 import { ArrowLeft, MapPin, Phone, Mail, Clock, Heart, Truck, Shield, MessageCircle, Instagram, Facebook, Target, Users, Globe, Sparkles } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import logo from "@/assets/logo.png";
@@ -13,6 +14,36 @@ const TIMELINE = [
 const AboutPage = () => {
   const navigate = useNavigate();
   useDocumentTitle("About Us", "Learn about SaloneMakitSL, Sierra Leone's premier online fashion store founded by Mohamed Pateh Abdul R Jalloh.");
+
+  // Inject Person schema so Google's Knowledge Graph can attribute the founder.
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "founder-person-schema";
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Mohamed Pateh Abdul R Jalloh",
+      jobTitle: "Founder & CEO",
+      worksFor: {
+        "@type": "Organization",
+        name: "SaloneMakitSL",
+        url: "https://salonemakitsl.com",
+      },
+      nationality: { "@type": "Country", name: "Sierra Leone" },
+      url: "https://salonemakitsl.com/about",
+      image: "https://salonemakitsl.com/app-icon-1024.png",
+      sameAs: [
+        "https://instagram.com/salonemakitsl",
+        "https://facebook.com/salonemakitsl",
+        "https://tiktok.com/@salonemakitsl",
+      ],
+    });
+    document.head.appendChild(script);
+    return () => {
+      document.getElementById("founder-person-schema")?.remove();
+    };
+  }, []);
 
   return (
     <div className="pb-20 bg-background">
