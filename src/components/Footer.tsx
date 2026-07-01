@@ -78,7 +78,13 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-8 pt-6 flex items-center justify-between">
-          <p className="text-[11px] text-muted-foreground">© {new Date().getFullYear()} SaloneMakitSL. All rights reserved.</p>
+          <p className="text-[11px] text-muted-foreground">
+            © {new Date().getFullYear()} SaloneMakitSL. Founded by{" "}
+            <Link to="/about" className="font-semibold text-foreground hover:text-accent transition-colors">
+              Mohamed Pateh Abdul R Jalloh
+            </Link>
+            . All rights reserved.
+          </p>
           <p className="text-[11px] text-muted-foreground">🇸🇱 Made in Sierra Leone</p>
         </div>
       </div>
